@@ -5,7 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>CastForge Arena</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@farcaster/frame-sdk@0.0.41/dist/index.umd.js"></script>
+<script type="module">
+import { sdk } from "https://esm.sh/@farcaster/frame-sdk";
+window.__farcasterSdk = sdk;
+</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -324,7 +327,7 @@ async function doSpin() {
   btn.textContent = 'Waiting...';
 
   try {
-    const sdk = window.FrameSDK || (window.farcaster && window.farcaster.sdk);
+    const sdk = window.__farcasterSdk || window.FrameSDK || (window.farcaster && window.farcaster.sdk);
     if (!sdk) throw new Error('Farcaster SDK not found');
 
     // Get spin cost from contract via eth_call
