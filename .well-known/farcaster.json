@@ -7,11 +7,11 @@
   "frame": {
     "version": "1",
     "name": "CastForge Arena ⚒",
-    "iconUrl": "https://castforge-arena-d4qq555ce-far-tryer-s-projects.vercel.app/icon.png",
-    "homeUrl": "https://castforge-arena-d4qq555ce-far-tryer-s-projects.vercel.app",
-    "imageUrl": "https://castforge-arena-d4qq555ce-far-tryer-s-projects.vercel.app/image.png",
+    "iconUrl": "https://castforge-arena.vercel.app/icon.png",
+    "homeUrl": "https://castforge-arena.vercel.app",
+    "imageUrl": "https://castforge-arena.vercel.app/image.png",
     "buttonTitle": "⚒ Enter the Arena",
-    "splashImageUrl": "https://castforge-arena-d4qq555ce-far-tryer-s-projects.vercel.app/splash.png",
+    "splashImageUrl": "https://castforge-arena.vercel.app/splash.png",
     "splashBackgroundColor": "#1a1a1a"
   }
 }
