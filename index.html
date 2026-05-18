@@ -169,15 +169,15 @@ body{background:#1a1a1a;color:#f0f0f0;font-family:-apple-system,BlinkMacSystemFo
     <div class="section-title">Social Tasks</div>
     <div class="task-card">
       <div class="task-info"><div class="task-name">Follow CastForge</div><div class="task-desc">Follow @castforge on Farcaster</div></div>
-      <div class="task-right"><div class="task-pts">+50 pts</div><button class="task-btn" id="task-follow" onclick="doTask('follow',50)">Follow</button></div>
+      <div class="task-right"><div class="task-pts">+50 pts</div><button class="task-btn" id="task-follow" onclick="doTask('follow',50,'https://farcaster.xyz/castforge')">Follow</button></div>
     </div>
     <div class="task-card">
       <div class="task-info"><div class="task-name">Like official cast</div><div class="task-desc">Like the pinned cast</div></div>
-      <div class="task-right"><div class="task-pts">+30 pts</div><button class="task-btn" id="task-like" onclick="doTask('like',30)">Like</button></div>
+      <div class="task-right"><div class="task-pts">+30 pts</div><button class="task-btn" id="task-like" onclick="doTask('like',30,'https://farcaster.xyz/castforge/0x3955ed79')">Like</button></div>
     </div>
     <div class="task-card">
       <div class="task-info"><div class="task-name">Recast official cast</div><div class="task-desc">Share to your followers</div></div>
-      <div class="task-right"><div class="task-pts">+50 pts</div><button class="task-btn" id="task-recast" onclick="doTask('recast',50)">Recast</button></div>
+      <div class="task-right"><div class="task-pts">+50 pts</div><button class="task-btn" id="task-recast" onclick="doTask('recast',50,'https://farcaster.xyz/castforge/0x3955ed79')">Recast</button></div>
     </div>
     <div class="section-title" style="margin-top:16px">Invite Tasks</div>
     <div class="task-card">
@@ -467,10 +467,24 @@ async function doClaim(type) {
   }
 }
 
-async function doTask(taskName, pts) {
+async function doTask(taskName, pts, url) {
   if (!userFid) return;
   const btn = document.getElementById('task-' + taskName);
   if (btn.classList.contains('done')) return;
+  
+  // Open link first
+  if (url) {
+    try {
+      const sdk = (window.miniapp && window.miniapp.sdk) || window.FrameSDK;
+      if (sdk && sdk.actions && sdk.actions.openUrl) {
+        await sdk.actions.openUrl(url);
+      } else {
+        window.open(url, '_blank');
+      }
+    } catch(e) { window.open(url, '_blank'); }
+  }
+
+  // Add points
   const { data: user } = await db.from('users').select('points').eq('fid', userFid).single();
   const newPts = (user.points || 0) + pts;
   await db.from('users').update({ points: newPts }).eq('fid', userFid);
