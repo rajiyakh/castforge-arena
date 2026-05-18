@@ -436,15 +436,22 @@ async function doClaim(type) {
   try {
     const sdk = (window.miniapp && window.miniapp.sdk) || window.FrameSDK;
     if (!sdk) throw new Error('SDK not found');
-    const provider = await sdk.wallet.getEthereumProvider();
+    const provider = sdk.wallet.ethProvider;
+    if (!provider) throw new Error('No wallet');
     const accounts = await provider.request({ method: 'eth_requestAccounts' });
 
     // ~$0.05 at $3000 ETH as fallback
-    const claimCost = BigInt(Math.floor(0.05 / 3000 * 1e18));
+    let ethPriceUsd = 3000;
+    try {
+      const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+      const data = await res.json();
+      ethPriceUsd = data.ethereum.usd;
+    } catch(e) {}
+    const claimCostWei = BigInt(Math.floor(0.05 / ethPriceUsd * 1e18));
 
     const txHash = await provider.request({
       method: 'eth_sendTransaction',
-      params: [{ from: accounts[0], to: CONTRACT, value: '0x' + claimCost.toString(16) }]
+      params: [{ from: accounts[0], to: CONTRACT, value: '0x' + claimCostWei.toString(16) }]
     });
 
     // Record claim and reset balance
