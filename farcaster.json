@@ -1,1 +1,17 @@
-
+{
+  "accountAssociation": {
+    "header": "eyJmaWQiOjEsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHg0NTU1NTJFODMzODJFNDFmZUI0NjhhOGQ4MzRkMjRjOCJ9",
+    "payload": "eyJkb21haW4iOiJjYXN0Zm9yZ2UtYXJlbmEudmVyY2VsLmFwcCJ9",
+    "signature": "REPLACE_AFTER_DEPLOY"
+  },
+  "frame": {
+    "version": "1",
+    "name": "CastForge Arena",
+    "iconUrl": "https://castforge-arena.vercel.app/icon.png",
+    "homeUrl": "https://castforge-arena.vercel.app",
+    "imageUrl": "https://castforge-arena.vercel.app/og.png",
+    "buttonTitle": "⚒ Enter the Arena",
+    "splashImageUrl": "https://castforge-arena.vercel.app/splash.png",
+    "splashBackgroundColor": "#1a1a1a"
+  }
+}
