@@ -5,21 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>CastForge Arena</title>
 
-<script>
-// Load Farcaster SDK
-(function() {
-  var s = document.createElement('script');
-  s.src = 'https://cdn.jsdelivr.net/npm/@farcaster/frame-sdk@0.0.28/dist/index.umd.js';
-  s.onload = function() {
-    // SDK may be under different names
-    window.__fcSdk = window.FrameSDK || window.sdk || (window.farcaster && window.farcaster.sdk);
-    console.log('SDK loaded:', !!window.__fcSdk);
-    if (window.__fcSdk) {
-      window.__fcSdk.actions.ready().catch(function(e){ console.log('ready err', e); });
-    }
-  };
-  document.head.appendChild(s);
-})();
+<script type="module">
+  import sdk from "https://esm.sh/@farcaster/frame-sdk@0.0.41";
+  window.__fcSdk = sdk;
+  try {
+    await sdk.actions.ready();
+    console.log("SDK ready called");
+  } catch(e) {
+    console.log("SDK ready error:", e);
+  }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
@@ -567,17 +561,16 @@ async function init() {
 
   try {
     // Try to get SDK - Farcaster injects it
-    // Wait for SDK
+    // Wait for SDK to be set by module script
     let attempts = 0;
-    while (!window.__fcSdk && attempts < 30) {
+    while (!window.__fcSdk && attempts < 25) {
       await new Promise(r => setTimeout(r, 200));
-      window.__fcSdk = window.FrameSDK || window.sdk || (window.farcaster && window.farcaster.sdk);
       attempts++;
     }
     const sdk = window.__fcSdk;
 
     if (sdk) {
-      try { await sdk.actions.ready(); } catch(e) {}
+      try { await sdk.actions.ready(); } catch(e) { console.log("ready:", e); }
 
       const ctx = await sdk.context;
       if (ctx && ctx.user) {
