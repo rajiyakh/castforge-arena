@@ -5,10 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>CastForge Arena</title>
 
-<script type="module">
-import { sdk } from "https://esm.sh/@farcaster/frame-sdk";
-window.__farcasterSdk = sdk;
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@farcaster/frame-sdk@0.0.28/dist/index.umd.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -550,79 +547,74 @@ function switchTab(name) {
 
 async function init() {
   drawWheel(0);
-
-  // Show content immediately, load user after
   document.getElementById('profile-loading').style.display = 'none';
   document.getElementById('profile-content').style.display = 'block';
 
   try {
-    // Wait for SDK to be available
-    let attempts = 0;
-    let sdk = null;
-    while (!sdk && attempts < 20) {
-      sdk = window.FrameSDK || (window.farcaster && window.farcaster.sdk);
-      if (!sdk) await new Promise(r => setTimeout(r, 200));
-      attempts++;
-    }
+    // Try to get SDK - Farcaster injects it
+    const sdk = window.FrameSDK;
 
-    if (!sdk) throw new Error('SDK timeout');
+    if (sdk) {
+      // Call ready to dismiss splash
+      await sdk.actions.ready();
 
-    await sdk.actions.ready();
+      const ctx = await sdk.context;
+      if (ctx && ctx.user) {
+        const user = ctx.user;
+        userFid = String(user.fid);
 
-    const ctx = await sdk.context;
-    if (!ctx || !ctx.user) throw new Error('No user');
+        let { data: dbUser } = await db.from('users').select('*').eq('fid', userFid).single();
 
-    const user = ctx.user;
-    userFid = String(user.fid);
+        const params = new URLSearchParams(window.location.search);
+        const invitedBy = params.get('ref');
 
-    let { data: dbUser } = await db.from('users').select('*').eq('fid', userFid).single();
+        if (!dbUser) {
+          const { data: newUser } = await db.from('users').insert({
+            fid: userFid,
+            username: user.username,
+            display_name: user.displayName,
+            pfp_url: user.pfpUrl,
+            invited_by: invitedBy || null
+          }).select().single();
+          dbUser = newUser;
+          if (invitedBy) {
+            await db.from('invites').insert({ inviter_fid: invitedBy, invitee_fid: userFid });
+          }
+        }
 
-    const params = new URLSearchParams(window.location.search);
-    const invitedBy = params.get('ref');
+        currentUser = dbUser;
 
-    if (!dbUser) {
-      const { data: newUser } = await db.from('users').insert({
-        fid: userFid,
-        username: user.username,
-        display_name: user.displayName,
-        pfp_url: user.pfpUrl,
-        invited_by: invitedBy || null
-      }).select().single();
-      dbUser = newUser;
-      if (invitedBy) {
-        await db.from('invites').insert({ inviter_fid: invitedBy, invitee_fid: userFid });
+        const { count } = await db.from('invites').select('*', { count: 'exact' }).eq('inviter_fid', userFid);
+        const { data: bonusData } = await db.from('invites').select('bonus_earned').eq('inviter_fid', userFid);
+        const totalBonus = (bonusData || []).reduce((a, b) => a + (b.bonus_earned || 0), 0);
+
+        document.getElementById('invited-count').textContent = count || 0;
+        document.getElementById('invite-bonus').textContent = totalBonus + ' pts';
+
+        if (user.pfpUrl) {
+          document.getElementById('profile-avatar').innerHTML = '<img src="' + user.pfpUrl + '"/>';
+        }
+        document.getElementById('profile-name').textContent = user.displayName || user.username || 'Forger';
+        document.getElementById('profile-handle').textContent = '@' + (user.username || 'forger');
+        document.getElementById('invite-url').textContent = window.location.origin + window.location.pathname + '?ref=' + userFid;
+
+        updateStats();
+        return;
       }
     }
-
-    currentUser = dbUser;
-
-    const { count } = await db.from('invites').select('*', { count: 'exact' }).eq('inviter_fid', userFid);
-    const { data: bonusData } = await db.from('invites').select('bonus_earned').eq('inviter_fid', userFid);
-    const totalBonus = (bonusData || []).reduce((a, b) => a + (b.bonus_earned || 0), 0);
-
-    document.getElementById('invited-count').textContent = count || 0;
-    document.getElementById('invite-bonus').textContent = totalBonus + ' pts';
-
-    if (user.pfpUrl) {
-      document.getElementById('profile-avatar').innerHTML = '<img src="' + user.pfpUrl + '"/>';
-    }
-    document.getElementById('profile-name').textContent = user.displayName || user.username || 'Forger';
-    document.getElementById('profile-handle').textContent = '@' + (user.username || 'forger');
-    document.getElementById('invite-url').textContent = window.location.origin + window.location.pathname + '?ref=' + userFid;
-
-    updateStats();
-
-  } catch (e) {
+  } catch(e) {
     console.log('SDK error:', e.message);
-    // Guest mode
-    userFid = 'guest';
-    currentUser = { fid: 'guest', points: 0, tokens: 0, total_spins: 0 };
-    document.getElementById('profile-name').textContent = 'Forger';
-    document.getElementById('profile-handle').textContent = '@castforge';
-    document.getElementById('invite-url').textContent = window.location.href + '?ref=guest';
-    updateStats();
   }
+
+  // Fallback - show app without user data
+  userFid = 'guest';
+  currentUser = { fid: 'guest', points: 0, tokens: 0, total_spins: 0 };
+  document.getElementById('profile-name').textContent = 'Forger';
+  document.getElementById('profile-handle').textContent = '@castforge';
+  document.getElementById('invite-url').textContent = window.location.href + '?ref=guest';
+  updateStats();
 }
+
 
 window.addEventListener('load', init);
 </script>
