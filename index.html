@@ -5,16 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>CastForge Arena</title>
 
-<script type="module">
-  import sdk from "https://esm.sh/@farcaster/frame-sdk@0.0.41";
-  window.__fcSdk = sdk;
-  try {
-    await sdk.actions.ready();
-    console.log("SDK ready called");
-  } catch(e) {
-    console.log("SDK ready error:", e);
-  }
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@farcaster/miniapp-sdk/dist/index.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -333,7 +324,7 @@ async function doSpin() {
   btn.textContent = 'Waiting...';
 
   try {
-    const sdk = window.__fcSdk || window.FrameSDK || (window.farcaster && window.farcaster.sdk);
+    const sdk = (window.miniapp && window.miniapp.sdk) || window.FrameSDK;
     if (!sdk) throw new Error('Farcaster SDK not found');
 
     // Get spin cost from contract via eth_call
@@ -443,7 +434,7 @@ async function showResult(idx, txHash) {
 async function doClaim(type) {
   if (!userFid) return;
   try {
-    const sdk = window.FrameSDK;
+    const sdk = (window.miniapp && window.miniapp.sdk) || window.FrameSDK;
     if (!sdk) throw new Error('SDK not found');
     const provider = await sdk.wallet.getEthereumProvider();
     const accounts = await provider.request({ method: 'eth_requestAccounts' });
@@ -561,14 +552,7 @@ async function init() {
 
   try {
     // Try to get SDK - Farcaster injects it
-    // Wait for SDK to be set by module script
-    let attempts = 0;
-    while (!window.__fcSdk && attempts < 25) {
-      await new Promise(r => setTimeout(r, 200));
-      attempts++;
-    }
-    const sdk = window.__fcSdk;
-
+    const sdk = (window.miniapp && window.miniapp.sdk) || window.FrameSDK;
     if (sdk) {
       try { await sdk.actions.ready(); } catch(e) { console.log("ready:", e); }
 
