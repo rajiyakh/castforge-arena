@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>CastForge Arena</title>
 
-<script src="https://unpkg.com/@farcaster/frame-sdk@0.0.41/dist/index.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@farcaster/frame-sdk@0.0.41/dist/index.umd.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -351,13 +351,7 @@ async function doSpin() {
       }]
     });
 
-      btn.textContent = 'Spinning...';
-    } else {
-      // Free spin!
-      await markFreeSpinUsed();
-      showToast('🎁 Daily free spin used!');
-      btn.textContent = 'Spinning...';
-    }
+    btn.textContent = 'Spinning...';
 
     // Pick result and animate
     const resultIdx = pickResult();
@@ -386,7 +380,7 @@ async function doSpin() {
   } catch (e) {
     showToast('Error: ' + (e.message || 'Transaction failed'));
     btn.disabled = false;
-    btn.textContent = '🔥 Spin to Forge';
+    
     isSpinning = false;
   }
 }
@@ -480,16 +474,6 @@ async function doTask(taskName, pts) {
   showToast('+' + pts + ' points earned!');
 }
 
-async function updateSpinBtn() {
-  const hasFree = await checkFreeSpin();
-  const btn = document.getElementById('spinBtn');
-  if (hasFree) {
-    btn.textContent = '🎁 Free Spin Available!';
-  } else {
-    btn.textContent = '🔥 Spin to Forge';
-  }
-}
-
 function updateStats() {
   if (!currentUser) return;
   document.getElementById('stat-points').textContent = currentUser.points || 0;
@@ -561,44 +545,35 @@ function switchTab(name) {
 }
 
 
-function getUTCResetTime() {
-  const now = new Date();
-  const reset = new Date();
-  reset.setUTCHours(6, 0, 0, 0);
-  if (now.getUTCHours() < 6) {
-    reset.setUTCDate(reset.getUTCDate() - 1);
-  }
-  return reset.toISOString();
-}
-
-async function checkFreeSpin() {
-  if (!userFid) return false;
-  const { data: user } = await db.from('users').select('free_spin_used_at').eq('fid', userFid).single();
-  if (!user || !user.free_spin_used_at) return true;
-  const lastUsed = new Date(user.free_spin_used_at);
-  const resetTime = new Date(getUTCResetTime());
-  return lastUsed < resetTime;
-}
-
-async function markFreeSpinUsed() {
-  await db.from('users').update({ free_spin_used_at: new Date().toISOString() }).eq('fid', userFid);
-}
-
 async function init() {
   drawWheel(0);
+
+  // Show content immediately, load user after
+  document.getElementById('profile-loading').style.display = 'none';
+  document.getElementById('profile-content').style.display = 'block';
+
   try {
-    await new Promise(r => setTimeout(r, 500));
-    const sdk = window.FrameSDK || (window.farcaster && window.farcaster.sdk);
-    if (!sdk) throw new Error('SDK not available');
+    // Wait for SDK to be available
+    let attempts = 0;
+    let sdk = null;
+    while (!sdk && attempts < 20) {
+      sdk = window.FrameSDK || (window.farcaster && window.farcaster.sdk);
+      if (!sdk) await new Promise(r => setTimeout(r, 200));
+      attempts++;
+    }
+
+    if (!sdk) throw new Error('SDK timeout');
+
     await sdk.actions.ready();
+
     const ctx = await sdk.context;
+    if (!ctx || !ctx.user) throw new Error('No user');
+
     const user = ctx.user;
     userFid = String(user.fid);
 
-    // Load or create user
     let { data: dbUser } = await db.from('users').select('*').eq('fid', userFid).single();
 
-    // Check invite param
     const params = new URLSearchParams(window.location.search);
     const invitedBy = params.get('ref');
 
@@ -618,7 +593,6 @@ async function init() {
 
     currentUser = dbUser;
 
-    // Invite count
     const { count } = await db.from('invites').select('*', { count: 'exact' }).eq('inviter_fid', userFid);
     const { data: bonusData } = await db.from('invites').select('bonus_earned').eq('inviter_fid', userFid);
     const totalBonus = (bonusData || []).reduce((a, b) => a + (b.bonus_earned || 0), 0);
@@ -626,31 +600,24 @@ async function init() {
     document.getElementById('invited-count').textContent = count || 0;
     document.getElementById('invite-bonus').textContent = totalBonus + ' pts';
 
-    // Profile UI
     if (user.pfpUrl) {
-      document.getElementById('profile-avatar').innerHTML = `<img src="${user.pfpUrl}"/>`;
+      document.getElementById('profile-avatar').innerHTML = '<img src="' + user.pfpUrl + '"/>';
     }
-    document.getElementById('profile-name').textContent = user.displayName || user.username;
-    document.getElementById('profile-handle').textContent = '@' + user.username;
-
-    const appUrl = window.location.origin + window.location.pathname;
-    document.getElementById('invite-url').textContent = appUrl + '?ref=' + userFid;
+    document.getElementById('profile-name').textContent = user.displayName || user.username || 'Forger';
+    document.getElementById('profile-handle').textContent = '@' + (user.username || 'forger');
+    document.getElementById('invite-url').textContent = window.location.origin + window.location.pathname + '?ref=' + userFid;
 
     updateStats();
-    updateSpinBtn();
-    document.getElementById('profile-loading').style.display = 'none';
-    document.getElementById('profile-content').style.display = 'block';
 
   } catch (e) {
-    // Dev mode fallback
-    userFid = 'dev_test';
-    currentUser = { fid: 'dev_test', points: 150, tokens: 500, total_spins: 5 };
-    document.getElementById('profile-name').textContent = 'Test Forger';
-    document.getElementById('profile-handle').textContent = '@testforger';
-    document.getElementById('invite-url').textContent = window.location.href + '?ref=dev_test';
+    console.log('SDK error:', e.message);
+    // Guest mode
+    userFid = 'guest';
+    currentUser = { fid: 'guest', points: 0, tokens: 0, total_spins: 0 };
+    document.getElementById('profile-name').textContent = 'Forger';
+    document.getElementById('profile-handle').textContent = '@castforge';
+    document.getElementById('invite-url').textContent = window.location.href + '?ref=guest';
     updateStats();
-    document.getElementById('profile-loading').style.display = 'none';
-    document.getElementById('profile-content').style.display = 'block';
   }
 }
 
