@@ -94,6 +94,25 @@ body{background:#1a1a1a;color:#f0f0f0;font-family:-apple-system,BlinkMacSystemFo
 .nav-btn.active svg{stroke:#E85D04;}
 .nav-btn.active span{color:#E85D04;}
 .loading{text-align:center;padding:40px;color:#666;}
+.spark-text {
+  font-size:12px;
+  font-weight:600;
+  text-align:center;
+  margin-top:8px;
+  background: linear-gradient(90deg, #E85D04, #FFD460, #F48C06, #FFD460, #E85D04);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: sparkShift 2s linear infinite;
+  letter-spacing:0.5px;
+}
+@keyframes sparkShift {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+.spark-text::before { content: '✦ '; }
+.spark-text::after { content: ' ✦'; }
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#E85D04;color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:100;opacity:0;transition:opacity 0.3s;pointer-events:none;}
 .toast.show{opacity:1;}
 </style>
@@ -160,7 +179,7 @@ body{background:#1a1a1a;color:#f0f0f0;font-family:-apple-system,BlinkMacSystemFo
         <div class="claim-val" id="pool-points">0</div>
         <button class="claim-btn" id="claimPtsBtn" onclick="doClaim('points')" disabled>Claim</button>
       </div>
-      
+      <div class="spark-text">Points Redeem Soon $FORGE Token</div>
     </div>
   </div>
 
@@ -438,7 +457,12 @@ async function doClaim(type) {
     if (!sdk) throw new Error('SDK not found');
     const provider = sdk.wallet.ethProvider;
     if (!provider) throw new Error('No wallet');
-    const accounts = await provider.request({ method: 'eth_requestAccounts' });
+    let accounts = [];
+    try { accounts = await provider.request({ method: 'eth_accounts' }); } catch(e) {}
+    if (!accounts || !accounts[0]) {
+      try { accounts = await provider.request({ method: 'eth_requestAccounts' }); } catch(e) {}
+    }
+    if (!accounts || !accounts[0]) throw new Error('No wallet address');
 
     // ~$0.05 at $3000 ETH as fallback
     let ethPriceUsd = 3000;
@@ -451,7 +475,7 @@ async function doClaim(type) {
 
     const txHash = await provider.request({
       method: 'eth_sendTransaction',
-      params: [{ from: accounts[0], to: CONTRACT, value: '0x' + claimCostWei.toString(16) }]
+      params: [{ from: accounts[0], to: CONTRACT, value: '0x' + claimCostWei.toString(16), chainId: '0x2105' }]
     });
 
     // Record claim and reset balance
