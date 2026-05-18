@@ -1,25 +1,17 @@
 {
+  "accountAssociation": {
+    "header": "eyJmaWQiOjMzMzE2MDIsInR5cGUiOiJhdXRoIiwia2V5IjoiMHg2MEYxMzYzOWVERjZlMGQ1MGQxNjY5NWI2ZTkzQzYxNTg3NTJmIn0",
+    "payload": "eyJkb21haW4iOiJjYXN0Zm9yZ2UtYXJlbmEtZDRxcTU1NWNlLWZhci10cnllci1zLXByb2plY3RzLnZlcmNlbC5hcHAifQ",
+    "signature": "L+i0X6s6zR2zl6zdm98SXDdcb4CIlTk1qyXyQWqGFlUBJvSWJy2Dyf82ClZ2LExMxFdCTKQe9uRMUzkqO6likhS="
+  },
   "frame": {
-    "name": "CastForge Arena ⚒",
     "version": "1",
+    "name": "CastForge Arena ⚒",
     "iconUrl": "https://castforge-arena-d4qq555ce-far-tryer-s-projects.vercel.app/icon.png",
     "homeUrl": "https://castforge-arena-d4qq555ce-far-tryer-s-projects.vercel.app",
     "imageUrl": "https://castforge-arena-d4qq555ce-far-tryer-s-projects.vercel.app/image.png",
     "buttonTitle": "⚒ Enter the Arena",
     "splashImageUrl": "https://castforge-arena-d4qq555ce-far-tryer-s-projects.vercel.app/splash.png",
-    "splashBackgroundColor": "#1A1A1A",
-    "webhookUrl": "https://castforge-arena-d4qq555ce-far-tryer-s-projects.vercel.app/api/webhook",
-    "subtitle": "Spin. Earn. Forge your legacy.",
-    "description": "CastForge Arena is a Farcaster mini app where you spin to earn $FORGE tokens and points. Complete social tasks, invite friends for 25% bonus, and climb the leaderboard.",
-    "primaryCategory": "games",
-    "tags": [],
-    "tagline": "Spin to earn FORGE tokens",
-    "ogTitle": "Spin to earn FORGE",
-    "ogDescription": "Spin to earn FORGE tokens and points. Join the arena!"
-  },
-  "accountAssociation": {
-    "header": "eyJmaWQiOjMzMzE2MDIsInR5cGUiOiJhdXRoIiwia2V5IjoiMHg2MEYxMzYzOWVERjZlMGQ1MGQ1M2QxNjY5NWI2ZTkzQzYxNTg3NTJmIn0",
-    "payload": "eyJkb21haW4iOiJjYXN0Zm9yZ2UtYXJlbmEtZDRxcTU1NWNlLWZhci10cnllci1zLXByb2plY3RzLnZlcmNlbC5hcHAifQ",
-    "signature": "L+i0X6s6zR2zl6zdm98SXDdcb4CIlTk1qyXyQWqGFlUBJvSWJy2Dyf82ClZ2LExMxFdCTKQe9uRMUzkqO61ikhs="
+    "splashBackgroundColor": "#1a1a1a"
   }
 }
