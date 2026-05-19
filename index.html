@@ -52,10 +52,11 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
 .task-desc{font-size:12px;color:#6a3a08;}
 .task-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
 .task-pts{font-size:13px;color:#F48C06;font-weight:600;white-space:nowrap;}
-.task-btn{background:#E85D04;color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer;position:relative;overflow:hidden;}
-.task-btn::before{content:'';position:absolute;top:-2px;left:-100%;width:60%;height:calc(100% + 4px);background:linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent);animation:btnSpark 2s linear infinite;pointer-events:none;}
-@keyframes btnSpark{0%{left:-100%;}100%{left:200%;}}
-.task-btn.done{background:#2a2a2a !important;color:#4ade80 !important;cursor:default;}
+.task-btn{background:#d4a017;color:#000;border:none;border-radius:8px;padding:6px 14px;font-size:13px;font-weight:700;cursor:pointer;position:relative;overflow:hidden;box-shadow:0 0 10px #d4a017,0 0 20px rgba(212,160,23,0.35);animation:btnGlow 2s ease-in-out infinite alternate;}
+@keyframes btnGlow{0%{box-shadow:0 0 8px #d4a017,0 0 16px rgba(212,160,23,0.3);}100%{box-shadow:0 0 14px #F48C06,0 0 28px rgba(244,140,6,0.5);}}
+.task-btn::before{content:'';position:absolute;top:-2px;left:-100%;width:50%;height:calc(100% + 4px);background:linear-gradient(90deg,transparent,rgba(255,255,255,0.5),transparent);animation:fireSpark 1.5s linear infinite;pointer-events:none;}
+@keyframes fireSpark{0%{left:-100%;}100%{left:200%;}}
+.task-btn.done{background:#1a3a1a !important;color:#4ade80 !important;cursor:default;box-shadow:none !important;animation:none !important;}
 .task-btn.done::before{display:none;}
 .invite-header{text-align:center;padding:10px 0 20px;}
 .invite-title{font-size:20px;font-weight:600;color:#ffd090;margin-bottom:6px;}
@@ -159,6 +160,15 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
       </div>
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d4a017" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
     </div>
+    <div onclick="openGameScreen('quiz')" style="background:#1a0d00;border:1px solid #7c3aed;border-radius:14px;padding:16px;margin-bottom:12px;cursor:pointer;display:flex;align-items:center;gap:14px;">
+      <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#4c1d95,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:26px;">⚡</div>
+      <div style="flex:1;">
+        <div style="font-size:15px;font-weight:700;color:#ffd090;margin-bottom:3px;">Forge Quiz</div>
+        <div style="font-size:11px;color:#7a5a30;margin-bottom:6px;">5 Web3 questions, 15s each</div>
+        <span style="background:#1a0a2a;border:0.5px solid #7c3aed;border-radius:20px;padding:2px 8px;font-size:10px;color:#a78bfa;">Win up to 150 pts</span>
+      </div>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+    </div>
     <div style="text-align:center;font-size:11px;color:#5a3a10;margin-top:4px;">More games coming soon ⚒</div>
   </div>
 
@@ -177,7 +187,7 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
         <div class="wheel-pointer">▼</div>
         <canvas id="spinCanvas" width="240" height="240"></canvas>
       </div>
-      <button class="spin-btn" id="spinBtn" onclick="doSpin()">🔥 Spin to Forge</button>
+      <button class="spin-btn" id="spinBtn" onclick="doSpin()">🔥 Spin to Earn</button>
       <div class="spin-result" id="spinResult">Spin to win tokens & points!</div>
     </div>
     <div style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:12px;padding:14px;">
@@ -297,6 +307,61 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
     </div>
   </div>
 
+  <!-- Forge Quiz -->
+  <div class="screen" id="s-quiz">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+      <button onclick="switchTab('games')" style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:8px;padding:6px 12px;color:#F48C06;font-size:12px;cursor:pointer;">← Back</button>
+      <div style="font-size:15px;font-weight:700;color:#ffd090;">⚡ Forge Quiz</div>
+    </div>
+    <!-- Lobby -->
+    <div id="quiz-lobby">
+      <div style="text-align:center;padding:20px 0;">
+        <div style="font-size:56px;margin-bottom:12px;">⚡</div>
+        <div style="font-size:20px;font-weight:700;color:#ffd090;margin-bottom:8px;">Forge Quiz</div>
+        <div style="font-size:13px;color:#7a5a30;margin-bottom:20px;line-height:1.6;">5 Web3 & Farcaster questions<br>Answer correctly to earn points!</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:20px;">
+          <div style="background:#1a0d00;border:0.5px solid #7c3aed;border-radius:10px;padding:10px;text-align:center;"><div style="font-size:16px;">✓</div><div style="font-size:14px;font-weight:700;color:#a78bfa;">30</div><div style="font-size:9px;color:#5a3a10;">pts/question</div></div>
+          <div style="background:#1a0d00;border:0.5px solid #E85D04;border-radius:10px;padding:10px;text-align:center;"><div style="font-size:16px;">🏆</div><div style="font-size:14px;font-weight:700;color:#E85D04;">150</div><div style="font-size:9px;color:#5a3a10;">pts perfect</div></div>
+          <div style="background:#1a0d00;border:0.5px solid #d4a017;border-radius:10px;padding:10px;text-align:center;"><div style="font-size:16px;">⏱</div><div style="font-size:14px;font-weight:700;color:#d4a017;">15s</div><div style="font-size:9px;color:#5a3a10;">per question</div></div>
+        </div>
+        <button onclick="payAndStartQuiz()" style="width:100%;background:linear-gradient(90deg,#4c1d95,#7c3aed);color:#fff;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;">⚡ Start Quiz</button>
+        <div style="font-size:10px;color:#3a2000;margin-top:8px;">5 questions • 15s each • Earn up to 150 pts!</div>
+      </div>
+    </div>
+    <!-- Game -->
+    <div id="quiz-game" style="display:none;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span id="quiz-qnum" style="font-size:12px;color:#7a5a30;font-weight:600;">Question 1 of 5</span>
+        <span id="quiz-pts-badge" style="background:#1a0d00;border:0.5px solid #7c3aed;border-radius:20px;padding:3px 10px;font-size:11px;color:#a78bfa;font-weight:700;">+30 pts</span>
+      </div>
+      <div style="height:4px;background:#1a0d00;border-radius:4px;margin-bottom:14px;overflow:hidden;"><div id="quiz-progress" style="height:100%;background:linear-gradient(90deg,#4c1d95,#7c3aed);border-radius:4px;width:20%;transition:width 0.4s;"></div></div>
+      <div style="background:#1a0d00;border:1px solid #3a1a00;border-radius:12px;padding:16px;margin-bottom:14px;">
+        <div id="quiz-emoji" style="font-size:28px;margin-bottom:8px;">🔵</div>
+        <div id="quiz-question" style="font-size:14px;font-weight:600;color:#ffd090;line-height:1.5;">Loading...</div>
+      </div>
+      <div id="quiz-options" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div style="font-size:12px;color:#7a5a30;">Time: <span id="quiz-timer" style="color:#E85D04;font-weight:700;">15</span>s</div>
+        <div style="display:flex;gap:8px;">
+          <span style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:20px;padding:3px 10px;font-size:11px;color:#F48C06;font-weight:600;">Score: <span id="quiz-score">0</span></span>
+          <span style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:20px;padding:3px 10px;font-size:11px;color:#2ecc71;font-weight:600;"><span id="quiz-correct">0</span>/5 ✓</span>
+        </div>
+      </div>
+    </div>
+    <!-- Result -->
+    <div id="quiz-result" style="display:none;text-align:center;padding:20px 0;">
+      <div id="quiz-result-emoji" style="font-size:52px;margin-bottom:12px;">🏆</div>
+      <div id="quiz-result-title" style="font-size:20px;font-weight:700;color:#ffd090;margin-bottom:6px;">Quiz Complete!</div>
+      <div id="quiz-result-sub" style="font-size:13px;color:#7a5a30;margin-bottom:20px;"></div>
+      <div style="background:#1a0d00;border:1px solid #7c3aed;border-radius:12px;padding:16px;margin-bottom:16px;">
+        <div style="font-size:12px;color:#7a5a30;margin-bottom:4px;">Points Earned</div>
+        <div id="quiz-result-pts" style="font-size:36px;font-weight:700;color:#a78bfa;">0</div>
+      </div>
+      <button onclick="resetQuiz()" style="width:100%;background:#1a0d00;border:1px solid #7c3aed;color:#a78bfa;border-radius:12px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:8px;">🔄 Play Again</button>
+      <button onclick="switchTab('games')" style="width:100%;background:#1a0d00;border:0.5px solid #3a1a00;color:#7a5a30;border-radius:12px;padding:14px;font-size:14px;cursor:pointer;">Back to Games</button>
+    </div>
+  </div>
+
   <!-- Pool -->
   <div class="screen" id="s-pool">
     <div class="pool-total"><div class="pool-label">Total Pool</div><div class="pool-amount">10,000,000</div><div class="pool-token">$FORGE</div></div>
@@ -341,14 +406,21 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
   <!-- Tasks -->
   <div class="screen" id="s-tasks">
     <div class="section-title">Social Tasks</div>
-    <div class="task-card"><div class="task-info"><div class="task-name">Follow CastForge</div><div class="task-desc">Follow @castforge on Farcaster</div></div><div class="task-right"><div class="task-pts">+50 pts</div><button class="task-btn" id="task-follow" onclick="doTask('follow',50,'https://farcaster.xyz/castforge')">Follow</button></div></div>
-    <div class="task-card"><div class="task-info"><div class="task-name">Like official cast</div><div class="task-desc">Like the pinned cast</div></div><div class="task-right"><div class="task-pts">+30 pts</div><button class="task-btn" id="task-like" onclick="doTask('like',30,'https://farcaster.xyz/castforge/0x3955ed79')">Like</button></div></div>
-    <div class="task-card"><div class="task-info"><div class="task-name">Recast official cast</div><div class="task-desc">Share to your followers</div></div><div class="task-right"><div class="task-pts">+50 pts</div><button class="task-btn" id="task-recast" onclick="doTask('recast',50,'https://farcaster.xyz/castforge/0x3955ed79')">Recast</button></div></div>
+    <div class="task-card"><div class="task-info"><div class="task-name">Follow CastForge</div><div class="task-desc">Follow @castforge on Farcaster</div></div><div class="task-right"><div class="task-pts">+50 $FORGE</div><button class="task-btn" id="task-follow" onclick="doTask('follow',50,'https://farcaster.xyz/castforge')">Follow</button></div></div>
+    <div class="task-card"><div class="task-info"><div class="task-name">Like official cast</div><div class="task-desc">Like the pinned cast</div></div><div class="task-right"><div class="task-pts">+30 $FORGE</div><button class="task-btn" id="task-like" onclick="doTask('like',30,'https://farcaster.xyz/castforge/0x3955ed79')">Like</button></div></div>
+    <div class="task-card"><div class="task-info"><div class="task-name">Recast official cast</div><div class="task-desc">Share to your followers</div></div><div class="task-right"><div class="task-pts">+50 $FORGE</div><button class="task-btn" id="task-recast" onclick="doTask('recast',50,'https://farcaster.xyz/castforge/0x3955ed79')">Recast</button></div></div>
     <div class="section-title" style="margin-top:16px">Game Tasks</div>
-    <div class="task-card"><div class="task-info"><div class="task-name">Play Token Rush</div><div class="task-desc">Catch 5+ coins in a game</div></div><div class="task-right"><div class="task-pts">+75 pts</div><button class="task-btn" id="task-tokenrush" onclick="doTask('tokenrush',75)">Play</button></div></div>
-    <div class="task-card"><div class="task-info"><div class="task-name">Spin the wheel</div><div class="task-desc">Use a free spin</div></div><div class="task-right"><div class="task-pts">+20 pts</div><button class="task-btn" id="task-firstspin" onclick="doTask('firstspin',20)">Spin</button></div></div>
+    <div class="task-card"><div class="task-info"><div class="task-name">Spin the wheel once</div><div class="task-desc">Complete 1 spin to earn points</div></div><div class="task-right"><div class="task-pts">+20 $FORGE</div><button class="task-btn" id="task-firstspin" onclick="startGameTask('firstspin',20,'spin')">Play</button></div></div>
+    <div class="task-card"><div class="task-info"><div class="task-name">Spin 3 times</div><div class="task-desc">Complete 3 spins total</div></div><div class="task-right"><div class="task-pts">+50 $FORGE</div><button class="task-btn" id="task-spin3" onclick="startGameTask('spin3',50,'spin')">Play</button></div></div>
+    <div class="task-card"><div class="task-info"><div class="task-name">Play Token Rush</div><div class="task-desc">Complete a full Token Rush game</div></div><div class="task-right"><div class="task-pts">+75 $FORGE</div><button class="task-btn" id="task-tokenrush" onclick="startGameTask('tokenrush',75,'tokenrush')">Play</button></div></div>
+    <div class="task-card"><div class="task-info"><div class="task-name">Catch 10 coins</div><div class="task-desc">Catch 10+ coins in one Token Rush game</div></div><div class="task-right"><div class="task-pts">+100 $FORGE</div><button class="task-btn" id="task-coins10" onclick="startGameTask('coins10',100,'tokenrush')">Play</button></div></div>
+    <div class="task-card"><div class="task-info"><div class="task-name">Win $FORGE from spin</div><div class="task-desc">Land on any $FORGE reward</div></div><div class="task-right"><div class="task-pts">+60 $FORGE</div><button class="task-btn" id="task-winforge" onclick="startGameTask('winforge',60,'spin')">Play</button></div></div>
+    <div class="section-title" style="margin-top:16px">Quiz Tasks</div>
+    <div class="task-card"><div class="task-info"><div class="task-name">Play Forge Quiz</div><div class="task-desc">Complete one full quiz</div></div><div class="task-right"><div class="task-pts">+50 $FORGE</div><button class="task-btn" id="task-quiz1" onclick="startGameTask('quiz1',50,'quiz')">Play</button></div></div>
+    <div class="task-card"><div class="task-info"><div class="task-name">Answer 3 correctly</div><div class="task-desc">Get 3+ correct in one quiz</div></div><div class="task-right"><div class="task-pts">+80 $FORGE</div><button class="task-btn" id="task-quiz3" onclick="startGameTask('quiz3',80,'quiz')">Play</button></div></div>
+    <div class="task-card"><div class="task-info"><div class="task-name">Perfect Score!</div><div class="task-desc">Answer all 5 correctly</div></div><div class="task-right"><div class="task-pts">+150 $FORGE</div><button class="task-btn" id="task-quizperfect" onclick="startGameTask('quizperfect',150,'quiz')">Play</button></div></div>
     <div class="section-title" style="margin-top:16px">Invite Tasks</div>
-    <div class="task-card"><div class="task-info"><div class="task-name">Invite 1 friend</div><div class="task-desc">Earn 25% bonus from their spins</div></div><div class="task-right"><div class="task-pts">+100 pts</div><button class="task-btn" onclick="switchTab('invite')">Invite</button></div></div>
+    <div class="task-card"><div class="task-info"><div class="task-name">Invite 1 friend</div><div class="task-desc">Earn 25% bonus from their spins</div></div><div class="task-right"><div class="task-pts">+100 $FORGE</div><button class="task-btn" onclick="switchTab('invite')">Invite</button></div></div>
   </div>
 
   <!-- Invite -->
@@ -446,12 +518,13 @@ let currentUser=null,userFid=null,isSpinning=false,currentAngle=0;
 
 const SEGMENTS=[
   {label:'500 $FORGE',color:'#E85D04',type:'token',amount:500},
-  {label:'100 pts',color:'#F48C06',type:'points',amount:100},
-  {label:'100 $FORGE',color:'#C04B00',type:'token',amount:100},
-  {label:'Try Again!',color:'#444',type:'try_again',amount:0},
-  {label:'50 pts',color:'#9A3B00',type:'points',amount:50},
+  {label:'50 $FORGE',color:'#C04B00',type:'token',amount:50},
+  {label:'100 $FORGE',color:'#F48C06',type:'token',amount:100},
+  {label:'Try Again!',color:'#2a2a2a',type:'try_again',amount:0},
+  {label:'200 $FORGE',color:'#8B2500',type:'token',amount:200},
 ];
-const WEIGHTS=[1,2,2,1,2];
+// tokens=25% total, try_again=75% — try_again slot gets huge weight
+const WEIGHTS=[2,2,3,27,2];
 
 function drawWheel(angle){
   const canvas=document.getElementById('spinCanvas');
@@ -511,8 +584,14 @@ async function showResult(idx,txHash){
     resultEl.textContent='🔄 Try Again! Spin once more free!';
     await db.from('spin_history').insert({fid:userFid,reward_type:'try_again',reward_amount:0,tx_hash:txHash});
     document.getElementById('spinBtn').disabled=false;
-    document.getElementById('spinBtn').textContent='🔥 Spin Again (Free)';
-    isSpinning=false;return;
+    document.getElementById('spinBtn').textContent='🔥 Spin to Earn';
+    isSpinning=false;
+    // Spin tasks count even on try again
+    const pt2 = window.__pendingGameTask;
+    if (pt2 && pt2.name === 'firstspin' && pt2.gameType === 'spin') completeGameTask('firstspin', pt2.pts);
+    if (pt2 && pt2.name === 'spin3') { window.__spinCount = (window.__spinCount||0)+1; if(window.__spinCount>=3) completeGameTask('spin3', pt2.pts); else showToast('Spins: '+window.__spinCount+'/3'); }
+    window.__totalSpins = (window.__totalSpins || 0) + 1;
+    return;
   }
   resultEl.textContent='🎉 You won '+seg.label+'!';
   await db.from('spin_history').insert({fid:userFid,reward_type:seg.type,reward_amount:seg.amount,tx_hash:txHash});
@@ -528,8 +607,25 @@ async function showResult(idx,txHash){
   currentUser={...user,[field]:newVal,total_spins:newSpins};
   updateStats();showToast('🎉 '+seg.label+' added!');
   document.getElementById('spinBtn').disabled=false;
-  document.getElementById('spinBtn').textContent='🔥 Spin to Forge';
+  document.getElementById('spinBtn').textContent='🔥 Spin to Earn';
   isSpinning=false;
+
+  // Check pending spin tasks
+  const pt = window.__pendingGameTask;
+  if (pt && pt.gameType === 'spin') {
+    if (pt.name === 'firstspin') {
+      completeGameTask('firstspin', pt.pts);
+    } else if (pt.name === 'spin3') {
+      // Track spin count
+      window.__spinCount = (window.__spinCount || 0) + 1;
+      if (window.__spinCount >= 3) completeGameTask('spin3', pt.pts);
+      else showToast('Spins: ' + window.__spinCount + '/3');
+    } else if (pt.name === 'winforge' && seg.type === 'token') {
+      completeGameTask('winforge', pt.pts);
+    }
+  }
+  // Always track spin3 even without task active
+  window.__totalSpins = (window.__totalSpins || 0) + 1;
 }
 
 function updateStats(){
@@ -555,7 +651,7 @@ function getRank(pts){
 }
 
 function switchTab(name){
-  const map={games:'s-games',profile:'s-profile',pool:'s-pool',tasks:'s-tasks',invite:'s-invite',leaders:'s-leaders',spin:'s-spin',tokenrush:'s-tokenrush'};
+  const map={games:'s-games',profile:'s-profile',pool:'s-pool',tasks:'s-tasks',invite:'s-invite',leaders:'s-leaders',spin:'s-spin',tokenrush:'s-tokenrush',quiz:'s-quiz'};
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   const screen=document.getElementById(map[name]);
   if(screen)screen.classList.add('active');
@@ -589,6 +685,9 @@ function openGameScreen(name){
     document.getElementById('tr-lobby').style.display='block';
     document.getElementById('tr-game').style.display='none';
     document.getElementById('tr-result').style.display='none';
+  } else if(name==='quiz'){
+    switchTab('quiz');
+    resetQuiz();
   }
 }
 
@@ -623,8 +722,12 @@ async function doFcfsClaim(){
     if(userData.fcfs_claimed)throw new Error('Already claimed');
     let ethPrice=3000;try{const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');const d=await r.json();ethPrice=d.ethereum.usd;}catch(e){}
     const wei=BigInt(Math.floor(0.05/ethPrice*1e18));
-    const result=await sdk.wallet.sendTransaction({chainId:'eip155:8453',calls:[{to:CONTRACT,value:'0x'+wei.toString(16),data:'0x'}]});
-    const txHash=result.hash||result.transactionHash||('fcfs_'+Date.now());
+    const provider=sdk.wallet.ethProvider;
+    if(!provider)throw new Error('No wallet');
+    let accs=[];try{accs=await provider.request({method:'eth_accounts'});}catch(e){}
+    if(!accs||!accs[0])accs=await provider.request({method:'eth_requestAccounts'});
+    await provider.request({method:'eth_sendTransaction',params:[{from:accs[0],to:CONTRACT,value:'0x'+wei.toString(16),chainId:'0x2105'}]});
+    const txHash='fcfs_'+Date.now();
     await db.from('users').update({fcfs_claimed:true,tokens:(currentUser.tokens||0)+1000}).eq('fid',userFid);
     await db.from('claim_history').insert({fid:userFid,claim_type:'fcfs',amount:1000,tx_hash:txHash});
     currentUser.tokens=(currentUser.tokens||0)+1000;updateStats();loadFcfsStatus();showToast('🎉 1,000 $FORGE FCFS reward claimed!');
@@ -643,8 +746,12 @@ async function doClaimReferral(){
     const sdk=(window.miniapp&&window.miniapp.sdk)||window.FrameSDK;if(!sdk)throw new Error('SDK not found');
     let ethPrice=3000;try{const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');const d=await r.json();ethPrice=d.ethereum.usd;}catch(e){}
     const wei=BigInt(Math.floor(0.05/ethPrice*1e18));
-    const result=await sdk.wallet.sendTransaction({chainId:'eip155:8453',calls:[{to:CONTRACT,value:'0x'+wei.toString(16),data:'0x'}]});
-    const txHash=result.hash||result.transactionHash||('ref_'+Date.now());
+    const provider=sdk.wallet.ethProvider;
+    if(!provider)throw new Error('No wallet');
+    let accs=[];try{accs=await provider.request({method:'eth_accounts'});}catch(e){}
+    if(!accs||!accs[0])accs=await provider.request({method:'eth_requestAccounts'});
+    await provider.request({method:'eth_sendTransaction',params:[{from:accs[0],to:CONTRACT,value:'0x'+wei.toString(16),chainId:'0x2105'}]});
+    const txHash='ref_'+Date.now();
     await db.from('users').update({tokens:(currentUser.tokens||0)+claimable,referral_tokens_claimed:totalEarned}).eq('fid',userFid);
     await db.from('claim_history').insert({fid:userFid,claim_type:'referral',amount:claimable,tx_hash:txHash});
     currentUser.tokens=(currentUser.tokens||0)+claimable;updateStats();updateReferralRewards();showToast('🎁 '+claimable+' $FORGE claimed!');
@@ -665,17 +772,71 @@ async function updateReferralRewards(){
 async function doClaim(type){
   if(!userFid)return;
   try{
-    const sdk=(window.miniapp&&window.miniapp.sdk)||window.FrameSDK;if(!sdk)throw new Error('SDK not found');
-    let ethPrice=3000;try{const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');const d=await r.json();ethPrice=d.ethereum.usd;}catch(e){}
+    const sdk=(window.miniapp&&window.miniapp.sdk)||window.FrameSDK;
+    if(!sdk)throw new Error('SDK not found');
+    let ethPrice=3000;
+    try{const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');const d=await r.json();ethPrice=d.ethereum.usd;}catch(e){}
     const wei=BigInt(Math.floor(0.05/ethPrice*1e18));
-    const result=await sdk.wallet.sendTransaction({chainId:'eip155:8453',calls:[{to:CONTRACT,value:'0x'+wei.toString(16),data:'0x'}]});
-    const txHash=result.hash||result.transactionHash||('claim_'+Date.now());
+    // Try sendTransaction first (newer SDK), fallback to ethProvider
+    try{
+      if(sdk.wallet&&sdk.wallet.sendTransaction){
+        await sdk.wallet.sendTransaction({chainId:'eip155:8453',calls:[{to:CONTRACT,value:'0x'+wei.toString(16),data:'0x'}]});
+      } else {
+        const provider=sdk.wallet.ethProvider;
+        if(!provider)throw new Error('No wallet');
+        let accs=[];
+        try{accs=await provider.request({method:'eth_accounts'});}catch(e){}
+        if(!accs||!accs[0])accs=await provider.request({method:'eth_requestAccounts'});
+        await provider.request({method:'eth_sendTransaction',params:[{from:accs[0],to:CONTRACT,value:'0x'+wei.toString(16),chainId:'0x2105'}]});
+      }
+    }catch(txErr){
+      // If sendTransaction fails, try ethProvider
+      const provider=sdk.wallet&&sdk.wallet.ethProvider;
+      if(!provider)throw txErr;
+      let accs=[];
+      try{accs=await provider.request({method:'eth_accounts'});}catch(e){}
+      if(!accs||!accs[0])accs=await provider.request({method:'eth_requestAccounts'});
+      await provider.request({method:'eth_sendTransaction',params:[{from:accs[0],to:CONTRACT,value:'0x'+wei.toString(16),chainId:'0x2105'}]});
+    }
     const field=type==='token'?'tokens':'points';
     const amount=currentUser[field]||0;
+    const txHash='claim_'+Date.now();
     await db.from('claim_history').insert({fid:userFid,claim_type:type,amount,tx_hash:txHash});
     await db.from('users').update({[field]:0}).eq('fid',userFid);
     currentUser[field]=0;updateStats();showToast('✅ Claimed! Check your wallet.');
   }catch(e){showToast('Error: '+(e.message||'Claim failed'));}
+}
+
+// Track pending game tasks
+window.__pendingGameTask = null;
+
+function startGameTask(taskName, pts, gameType) {
+  if (!userFid) return;
+  const btn = document.getElementById('task-' + taskName);
+  if (btn && btn.classList.contains('done')) return;
+  window.__pendingGameTask = { name: taskName, pts, gameType };
+  if (gameType === 'spin') switchTab('spin');
+  else if (gameType === 'tokenrush') openGameScreen('tokenrush');
+  else if (gameType === 'quiz') openGameScreen('quiz');
+  showToast('Complete the game to earn ' + pts + ' pts!');
+}
+
+async function completeGameTask(taskName, pts) {
+  if (!userFid) return;
+  const btn = document.getElementById('task-' + taskName);
+  if (!btn || btn.classList.contains('done')) return;
+  const { data: user } = await db.from('users').select('tokens, completed_tasks').eq('fid', userFid).single();
+  const newTokens = (user.tokens || 0) + pts;
+  const completed = user.completed_tasks || [];
+  if (!completed.includes(taskName)) completed.push(taskName);
+  await db.from('users').update({ tokens: newTokens, completed_tasks: completed }).eq('fid', userFid);
+  currentUser.tokens = newTokens;
+  updateStats();
+  btn.classList.add('done');
+  btn.textContent = '✓ Done';
+  btn.onclick = null;
+  showToast('✅ Task complete! +' + pts + ' $FORGE');
+  window.__pendingGameTask = null;
 }
 
 async function doTask(taskName,pts,url){
@@ -697,7 +858,7 @@ async function loadCompletedTasks(){
   if(!userFid)return;
   const{data}=await db.from('users').select('completed_tasks').eq('fid',userFid).single();
   const completed=data&&data.completed_tasks?data.completed_tasks:[];
-  ['follow','like','recast','tokenrush','firstspin'].forEach(task=>{
+  ['follow','like','recast','tokenrush','firstspin','spin3','coins10','winforge','quiz1','quiz3','quizperfect'].forEach(task=>{
     if(completed.includes(task)){const btn=document.getElementById('task-'+task);if(btn){btn.classList.add('done');btn.textContent='✓ Done';btn.onclick=null;}}
   });
 }
@@ -856,9 +1017,16 @@ async function payAndStartRush(){
   const sdk=(window.miniapp&&window.miniapp.sdk)||window.FrameSDK;
   if(!sdk){showToast('SDK not found');return;}
   try{
-    let ethPrice=3000;try{const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');const d=await r.json();ethPrice=d.ethereum.usd;}catch(e){}
+    let ethPrice=3000;
+    try{const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');const d=await r.json();ethPrice=d.ethereum.usd;}catch(e){}
     const wei=BigInt(Math.floor(0.05/ethPrice*1e18));
-    const result=await sdk.wallet.sendTransaction({chainId:'eip155:8453',calls:[{to:CONTRACT,value:'0x'+wei.toString(16),data:'0x'}]});
+    const provider=sdk.wallet.ethProvider;
+    if(!provider)throw new Error('No wallet provider');
+    let accounts=[];
+    try{accounts=await provider.request({method:'eth_accounts'});}catch(e){}
+    if(!accounts||!accounts[0])accounts=await provider.request({method:'eth_requestAccounts'});
+    if(!accounts||!accounts[0])throw new Error('No wallet address');
+    await provider.request({method:'eth_sendTransaction',params:[{from:accounts[0],to:CONTRACT,value:'0x'+wei.toString(16),chainId:'0x2105'}]});
     beginTokenRush();
   }catch(e){showToast('Payment failed: '+(e.message||'Try again'));}
 }
@@ -929,6 +1097,19 @@ async function endTokenRush(){
     const{data:u}=await db.from('users').select('points').eq('fid',userFid).single();
     await db.from('users').update({points:(u.points||0)+reward}).eq('fid',userFid);
     currentUser.points=(currentUser.points||0)+reward;updateStats();showToast('🪙 +'+reward+' points earned!');
+  }
+  // Check pending token rush tasks
+  const pt = window.__pendingGameTask;
+  if (pt && pt.gameType === 'tokenrush') {
+    if (pt.name === 'tokenrush') {
+      // Just completing a game is enough
+      completeGameTask('tokenrush', pt.pts);
+    } else if (pt.name === 'coins10' && trCoins >= 10) {
+      completeGameTask('coins10', pt.pts);
+    } else if (pt.name === 'coins10' && trCoins < 10) {
+      showToast('Need 10 coins! You got ' + trCoins + '. Try again!');
+      window.__pendingGameTask = pt; // keep pending
+    }
   }
 }
 
@@ -1041,6 +1222,200 @@ function runDoorAnimation(){
     else{overlay.style.transition='opacity 0.5s ease';overlay.style.opacity='0';setTimeout(()=>{overlay.style.display='none';overlay.style.opacity='1';},500);}
   }
   animate();
+}
+
+// Forge Quiz
+const QUIZ_QUESTIONS = [
+  {emoji:'🔵',q:'What blockchain is CastForge Arena built on?',opts:['Ethereum','Base Network','Polygon','Solana'],ans:1},
+  {emoji:'🎭',q:'What is Farcaster?',opts:['A crypto exchange','A decentralized social protocol','A blockchain game','An NFT marketplace'],ans:1},
+  {emoji:'⚒',q:'What does $FORGE token represent in CastForge Arena?',opts:['A stablecoin','The platform reward token','A governance token','An NFT collection'],ans:1},
+  {emoji:'🪙',q:'What is a "Cast" on Farcaster?',opts:['A vote','A post or message','A transaction','A wallet address'],ans:1},
+  {emoji:'🔗',q:'What does "FID" stand for in Farcaster?',opts:['Farcaster Identity Document','Farcaster ID','Fast ID','Forge ID'],ans:1},
+  {emoji:'💎',q:'Which network is known for low fees and fast transactions on Ethereum L2?',opts:['Bitcoin','Arbitrum','Base','Cardano'],ans:2},
+  {emoji:'🚀',q:'What is a Mini App on Farcaster?',opts:['A mobile app','An app that runs inside Farcaster frames','A desktop app','A browser extension'],ans:1},
+  {emoji:'⚡',q:'What is the maximum $FORGE you can win from one spin?',opts:['100','200','500','1000'],ans:2},
+  {emoji:'🎯',q:'How many free spins does a new user get on CastForge Arena?',opts:['1','3','5','10'],ans:2},
+  {emoji:'🏆',q:'What happens when you invite a friend to CastForge Arena?',opts:['Nothing','You get 1 extra free spin','You lose points','Your rank drops'],ans:1},
+];
+
+let quizState = { qIndex:0, score:0, correct:0, timer:null, answered:false, questions:[] };
+
+function shuffleQuestions() {
+  const shuffled = [...QUIZ_QUESTIONS].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, 5);
+}
+
+async function payAndStartQuiz() {
+  const sdk = (window.miniapp && window.miniapp.sdk) || window.FrameSDK;
+  if (!sdk) { showToast('SDK not found'); return; }
+  try {
+    let ethPrice = 3000;
+    try { const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'); const d = await r.json(); ethPrice = d.ethereum.usd; } catch(e) {}
+    const wei = BigInt(Math.floor(0.05 / ethPrice * 1e18));
+    try {
+      if (sdk.wallet && sdk.wallet.sendTransaction) {
+        await sdk.wallet.sendTransaction({ chainId: 'eip155:8453', calls: [{ to: CONTRACT, value: '0x' + wei.toString(16), data: '0x' }] });
+      } else {
+        const provider = sdk.wallet.ethProvider;
+        if (!provider) throw new Error('No wallet');
+        let accs = []; try { accs = await provider.request({ method: 'eth_accounts' }); } catch(e) {}
+        if (!accs || !accs[0]) accs = await provider.request({ method: 'eth_requestAccounts' });
+        await provider.request({ method: 'eth_sendTransaction', params: [{ from: accs[0], to: CONTRACT, value: '0x' + wei.toString(16), chainId: '0x2105' }] });
+      }
+    } catch(txErr) {
+      const provider = sdk.wallet && sdk.wallet.ethProvider;
+      if (!provider) throw txErr;
+      let accs = []; try { accs = await provider.request({ method: 'eth_accounts' }); } catch(e) {}
+      if (!accs || !accs[0]) accs = await provider.request({ method: 'eth_requestAccounts' });
+      await provider.request({ method: 'eth_sendTransaction', params: [{ from: accs[0], to: CONTRACT, value: '0x' + wei.toString(16), chainId: '0x2105' }] });
+    }
+    startQuiz();
+  } catch(e) { showToast('Payment failed: ' + (e.message || 'Try again')); }
+}
+
+function startQuiz() {
+  quizState = { qIndex:0, score:0, correct:0, timer:null, answered:false, questions: shuffleQuestions() };
+  document.getElementById('quiz-lobby').style.display = 'none';
+  document.getElementById('quiz-game').style.display = 'block';
+  document.getElementById('quiz-result').style.display = 'none';
+  document.getElementById('quiz-score').textContent = '0';
+  document.getElementById('quiz-correct').textContent = '0';
+  showQuizQuestion();
+}
+
+function showQuizQuestion() {
+  const q = quizState.questions[quizState.qIndex];
+  const total = quizState.questions.length;
+  quizState.answered = false;
+
+  document.getElementById('quiz-qnum').textContent = 'Question ' + (quizState.qIndex+1) + ' of ' + total;
+  document.getElementById('quiz-progress').style.width = ((quizState.qIndex+1)/total*100) + '%';
+  document.getElementById('quiz-emoji').textContent = q.emoji;
+  document.getElementById('quiz-question').textContent = q.q;
+
+  const opts = document.getElementById('quiz-options');
+  const letters = ['A','B','C','D'];
+  opts.innerHTML = q.opts.map((opt, i) => `
+    <div onclick="selectAnswer(${i})" id="qopt-${i}" style="background:#160c00;border:0.5px solid #3a1a00;border-radius:10px;padding:11px 14px;font-size:13px;color:#ffd090;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all 0.2s;">
+      <div style="width:22px;height:22px;border-radius:6px;background:#2a1400;color:#F48C06;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${letters[i]}</div>
+      ${opt}
+    </div>`).join('');
+
+  // Timer
+  let timeLeft = 15;
+  document.getElementById('quiz-timer').textContent = timeLeft;
+  if (quizState.timer) clearInterval(quizState.timer);
+  quizState.timer = setInterval(() => {
+    timeLeft--;
+    const el = document.getElementById('quiz-timer');
+    if (el) el.textContent = timeLeft;
+    if (timeLeft <= 5 && el) el.style.color = '#e74c3c';
+    else if (el) el.style.color = '#E85D04';
+    if (timeLeft <= 0) {
+      clearInterval(quizState.timer);
+      if (!quizState.answered) selectAnswer(-1); // timeout
+    }
+  }, 1000);
+}
+
+function selectAnswer(idx) {
+  if (quizState.answered) return;
+  quizState.answered = true;
+  clearInterval(quizState.timer);
+
+  const q = quizState.questions[quizState.qIndex];
+  const correct = q.ans;
+  const letters = ['A','B','C','D'];
+
+  // Highlight options
+  q.opts.forEach((_, i) => {
+    const el = document.getElementById('qopt-' + i);
+    if (!el) return;
+    const letter = el.querySelector('div');
+    if (i === correct) {
+      el.style.border = '1px solid #2ecc71';
+      el.style.background = '#0a1a0a';
+      if (letter) { letter.style.background = '#2ecc71'; letter.style.color = '#000'; }
+    } else if (i === idx && i !== correct) {
+      el.style.border = '1px solid #e74c3c';
+      el.style.background = '#1a0a0a';
+      if (letter) { letter.style.background = '#e74c3c'; letter.style.color = '#fff'; }
+    }
+    el.onclick = null;
+  });
+
+  if (idx === correct) {
+    quizState.score += 30;
+    quizState.correct++;
+    document.getElementById('quiz-score').textContent = quizState.score;
+    document.getElementById('quiz-correct').textContent = quizState.correct;
+    showToast('✓ Correct! +30 pts');
+  } else if (idx === -1) {
+    showToast('⏱ Time up!');
+  } else {
+    showToast('✗ Wrong!');
+  }
+
+  // Next question after delay
+  setTimeout(() => {
+    quizState.qIndex++;
+    if (quizState.qIndex < quizState.questions.length) {
+      showQuizQuestion();
+    } else {
+      endQuiz();
+    }
+  }, 1200);
+}
+
+async function endQuiz() {
+  document.getElementById('quiz-game').style.display = 'none';
+  document.getElementById('quiz-result').style.display = 'block';
+
+  const score = quizState.score;
+  const correct = quizState.correct;
+
+  let emoji = correct === 5 ? '🏆' : correct >= 3 ? '🎉' : correct >= 1 ? '👍' : '😔';
+  let title = correct === 5 ? 'Perfect Score!' : correct >= 3 ? 'Great job!' : correct >= 1 ? 'Keep practicing!' : 'Better luck next time!';
+
+  document.getElementById('quiz-result-emoji').textContent = emoji;
+  document.getElementById('quiz-result-title').textContent = title;
+  document.getElementById('quiz-result-sub').textContent = correct + '/5 correct answers';
+  document.getElementById('quiz-result-pts').textContent = score + ' pts';
+
+  // Save to DB
+  if (score > 0 && userFid) {
+    const { data: u } = await db.from('users').select('points').eq('fid', userFid).single();
+    await db.from('users').update({ points: (u.points||0) + score }).eq('fid', userFid);
+    currentUser.points = (currentUser.points||0) + score;
+    updateStats();
+    showToast('🎉 +' + score + ' pts earned!');
+  }
+
+  // Check pending quiz tasks - MUST actually play to get points
+  const pt = window.__pendingGameTask;
+  if (pt && pt.gameType === 'quiz') {
+    if (pt.name === 'quiz1') {
+      // Just completing quiz is enough
+      completeGameTask('quiz1', pt.pts);
+    } else if (pt.name === 'quiz3' && correct >= 3) {
+      completeGameTask('quiz3', pt.pts);
+    } else if (pt.name === 'quiz3' && correct < 3) {
+      showToast('Need 3 correct answers! You got ' + correct + '. Try again!');
+      window.__pendingGameTask = pt;
+    } else if (pt.name === 'quizperfect' && correct === 5) {
+      completeGameTask('quizperfect', pt.pts);
+    } else if (pt.name === 'quizperfect' && correct < 5) {
+      showToast('Need perfect score! You got ' + correct + '/5. Try again!');
+      window.__pendingGameTask = pt;
+    }
+  }
+}
+
+function resetQuiz() {
+  document.getElementById('quiz-lobby').style.display = 'block';
+  document.getElementById('quiz-game').style.display = 'none';
+  document.getElementById('quiz-result').style.display = 'none';
+  if (quizState.timer) clearInterval(quizState.timer);
 }
 
 function initLavaBackground(){
