@@ -9,91 +9,262 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:#1a1a1a;color:#f0f0f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:430px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;}
-.topbar{background:#111;padding:14px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #2a2a2a;position:sticky;top:0;z-index:10;}
+body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:430px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;}
+.topbar{background:#0d0600;padding:14px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #3a1a00;position:sticky;top:0;z-index:10;}
 .topbar-icon{width:32px;height:32px;background:#E85D04;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;}
-.topbar-title{font-size:16px;font-weight:600;color:#f0f0f0;}
+.topbar-title{font-size:16px;font-weight:600;color:#ffd090;}
 .content{flex:1;padding:16px;overflow-y:auto;}
 .screen{display:none;}.screen.active{display:block;}
 /* Profile */
 .profile-avatar{width:72px;height:72px;border-radius:50%;background:#E85D04;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px;overflow:hidden;}
 .profile-avatar img{width:100%;height:100%;object-fit:cover;}
-.profile-name{text-align:center;font-size:20px;font-weight:600;color:#f0f0f0;margin-bottom:4px;}
-.profile-handle{text-align:center;font-size:13px;color:#888;margin-bottom:20px;}
+.profile-name{text-align:center;font-size:20px;font-weight:600;color:#ffd090;margin-bottom:4px;}
+.profile-handle{text-align:center;font-size:13px;color:#7a4a10;margin-bottom:20px;}
 .stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;}
-.stat-card{background:#252525;border-radius:10px;padding:12px 8px;text-align:center;border:0.5px solid #333;}
+.stat-card{background:#160c00;border-radius:10px;padding:12px 8px;text-align:center;border:0.5px solid #3a1a00;}
 .stat-val{font-size:20px;font-weight:600;color:#E85D04;}
-.stat-label{font-size:11px;color:#888;margin-top:2px;}
-.rank-badge{background:#252525;border-radius:10px;padding:12px 16px;border:0.5px solid #333;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.stat-label{font-size:11px;color:#7a4a10;margin-top:2px;}
+.rank-badge{background:#160c00;border-radius:10px;padding:12px 16px;border:0.5px solid #3a1a00;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
 .rank-val{font-size:14px;font-weight:600;color:#F48C06;}
 /* Spin Wheel */
-.spin-section{background:#252525;border-radius:14px;padding:20px;margin-bottom:16px;border:0.5px solid #333;text-align:center;}
-.spin-cost{font-size:12px;color:#888;margin-bottom:16px;}
+.spin-section{background:#160c00;border-radius:14px;padding:20px;margin-bottom:16px;border:0.5px solid #3a1a00;text-align:center;}
+.spin-cost{font-size:12px;color:#7a4a10;margin-bottom:16px;}
 .spin-cost span{color:#E85D04;font-weight:600;}
 .wheel-wrap{position:relative;width:240px;height:240px;margin:0 auto 20px;}
 #spinCanvas{border-radius:50%;border:3px solid #E85D04;}
 .wheel-pointer{position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:24px;z-index:2;}
 .spin-btn{background:#E85D04;color:#fff;border:none;border-radius:12px;padding:14px 40px;font-size:16px;font-weight:600;cursor:pointer;width:100%;transition:opacity 0.2s;}
 .spin-btn:disabled{opacity:0.5;cursor:not-allowed;}
-.spin-result{margin-top:14px;padding:12px;background:#1a1a1a;border-radius:10px;font-size:14px;color:#F48C06;font-weight:600;min-height:44px;display:flex;align-items:center;justify-content:center;}
+.spin-result{margin-top:14px;padding:12px;background:#0a0500;border-radius:10px;font-size:14px;color:#F48C06;font-weight:600;min-height:44px;display:flex;align-items:center;justify-content:center;}
 /* Pool */
-.pool-total{background:#252525;border-radius:12px;padding:18px;text-align:center;margin-bottom:14px;border:1px solid #E85D04;}
-.pool-label{font-size:12px;color:#888;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
+.pool-total{background:#160c00;border-radius:12px;padding:18px;text-align:center;margin-bottom:14px;border:1px solid #E85D04;}
+.pool-label{font-size:12px;color:#7a4a10;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
 .pool-amount{font-size:34px;font-weight:700;color:#E85D04;}
 .pool-token{font-size:14px;color:#F48C06;}
 .pool-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
-.pool-mini{background:#1e1e1e;border-radius:10px;padding:12px;border:0.5px solid #333;}
-.pool-mini-label{font-size:11px;color:#777;margin-bottom:4px;}
-.pool-mini-val{font-size:18px;font-weight:600;color:#f0f0f0;}
-.claim-box{background:#252525;border-radius:12px;padding:16px;border:0.5px solid #333;margin-bottom:14px;}
-.claim-title{font-size:14px;color:#aaa;margin-bottom:10px;}
+.pool-mini{background:#110800;border-radius:10px;padding:12px;border:0.5px solid #3a1a00;}
+.pool-mini-label{font-size:11px;color:#6a3a08;margin-bottom:4px;}
+.pool-mini-val{font-size:18px;font-weight:600;color:#ffd090;}
+.claim-box{background:#160c00;border-radius:12px;padding:16px;border:0.5px solid #3a1a00;margin-bottom:14px;}
+.claim-title{font-size:14px;color:#c07830;margin-bottom:10px;}
 .claim-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
-.claim-val{font-size:20px;font-weight:600;color:#f0f0f0;}
+.claim-val{font-size:20px;font-weight:600;color:#ffd090;}
 .claim-btn{background:#E85D04;color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:600;cursor:pointer;}
 .claim-btn:disabled{opacity:0.4;cursor:not-allowed;}
-.claim-fee{font-size:11px;color:#666;margin-top:4px;}
+.claim-fee{font-size:11px;color:#5a3008;margin-top:4px;}
 /* Tasks */
 .section-title{font-size:16px;font-weight:600;color:#E85D04;margin-bottom:12px;margin-top:4px;}
-.task-card{background:#252525;border-radius:10px;padding:14px;margin-bottom:10px;border:0.5px solid #333;display:flex;align-items:center;justify-content:space-between;}
+.task-card{background:#160c00;border-radius:10px;padding:14px;margin-bottom:10px;border:0.5px solid #3a1a00;display:flex;align-items:center;justify-content:space-between;}
 .task-info{flex:1;}
-.task-name{font-size:14px;font-weight:600;color:#f0f0f0;margin-bottom:2px;}
-.task-desc{font-size:12px;color:#777;}
+.task-name{font-size:14px;font-weight:600;color:#ffd090;margin-bottom:2px;}
+.task-desc{font-size:12px;color:#6a3a08;}
 .task-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
 .task-pts{font-size:13px;color:#F48C06;font-weight:600;white-space:nowrap;}
-.task-btn{background:#E85D04;color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer;}
-.task-btn.done{background:#333;color:#666;cursor:not-allowed;}
+
+
 /* Invite */
 .invite-header{text-align:center;padding:10px 0 20px;}
-.invite-title{font-size:20px;font-weight:600;color:#f0f0f0;margin-bottom:6px;}
-.invite-sub{font-size:13px;color:#888;}
-.invite-link-box{background:#252525;border-radius:10px;padding:12px 16px;margin-bottom:14px;border:0.5px solid #333;}
-.invite-link-label{font-size:11px;color:#777;margin-bottom:6px;}
+.invite-title{font-size:20px;font-weight:600;color:#ffd090;margin-bottom:6px;}
+.invite-sub{font-size:13px;color:#7a4a10;}
+.invite-link-box{background:#160c00;border-radius:10px;padding:12px 16px;margin-bottom:14px;border:0.5px solid #3a1a00;}
+.invite-link-label{font-size:11px;color:#6a3a08;margin-bottom:6px;}
 .invite-link-row{display:flex;align-items:center;gap:8px;}
 .invite-link-url{font-size:12px;color:#E85D04;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .copy-btn{background:#E85D04;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:600;}
 .share-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
 .share-btn{border:none;border-radius:10px;padding:12px;font-size:13px;font-weight:600;cursor:pointer;}
 .share-fc{background:#7c3aed;color:#fff;}
-.share-x{background:#111;color:#fff;border:0.5px solid #444;}
+.share-x{background:#0d0600;color:#fff;border:0.5px solid #444;}
 .invite-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.invite-stat{background:#252525;border-radius:10px;padding:12px 16px;border:0.5px solid #333;}
-.invite-stat-label{font-size:11px;color:#777;margin-bottom:4px;}
-.invite-stat-val{font-size:22px;font-weight:600;color:#f0f0f0;}
+.invite-stat{background:#160c00;border-radius:10px;padding:12px 16px;border:0.5px solid #3a1a00;}
+.invite-stat-label{font-size:11px;color:#6a3a08;margin-bottom:4px;}
+.invite-stat-val{font-size:22px;font-weight:600;color:#ffd090;}
 /* Leaders */
-.leader-item{background:#252525;border-radius:10px;padding:12px 16px;margin-bottom:8px;border:0.5px solid #333;display:flex;align-items:center;gap:12px;}
-.leader-rank{font-size:14px;font-weight:600;color:#888;width:24px;text-align:center;}
+.leader-item{background:#160c00;border-radius:10px;padding:12px 16px;margin-bottom:8px;border:0.5px solid #3a1a00;display:flex;align-items:center;gap:12px;}
+.leader-rank{font-size:14px;font-weight:600;color:#7a4a10;width:24px;text-align:center;}
 .leader-avatar{width:36px;height:36px;border-radius:50%;background:#333;display:flex;align-items:center;justify-content:center;font-size:14px;overflow:hidden;}
 .leader-avatar img{width:100%;height:100%;object-fit:cover;}
-.leader-name{flex:1;font-size:14px;color:#f0f0f0;}
+.leader-name{flex:1;font-size:14px;color:#ffd090;}
 .leader-pts{font-size:14px;font-weight:600;color:#E85D04;}
 /* Nav */
-.bottom-nav{background:#111;border-top:1px solid #2a2a2a;display:flex;position:sticky;bottom:0;}
+.bottom-nav{background:#0d0600;border-top:1px solid #2a2a2a;display:flex;position:sticky;bottom:0;}
 .nav-btn{flex:1;padding:10px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;cursor:pointer;}
-.nav-btn svg{width:20px;height:20px;stroke:#555;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
-.nav-btn span{font-size:10px;color:#555;}
+.nav-btn svg{width:20px;height:20px;stroke:#6a3a00;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.nav-btn span{font-size:10px;color:#4a2806;}
 .nav-btn.active svg{stroke:#E85D04;}
 .nav-btn.active span{color:#E85D04;}
-.loading{text-align:center;padding:40px;color:#666;}
+.loading{text-align:center;padding:40px;color:#5a3008;}
+.task-btn {
+  background: #E85D04;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.task-btn::before {
+  content: '';
+  position: absolute;
+  top: -2px; left: -100%;
+  width: 60%;
+  height: calc(100% + 4px);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: btnSpark 2s linear infinite;
+  pointer-events: none;
+}
+@keyframes btnSpark {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+.task-btn.done {
+  background: #2a2a2a !important;
+  color: #4ade80 !important;
+  cursor: default;
+  font-size: 12px;
+}
+.task-btn.done::before { display: none; }
+.fcfs-box {
+  background:#110800;
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 14px;
+  border: 1px solid #333;
+  overflow: hidden;
+  position: relative;
+}
+.fcfs-title {
+  font-size: 13px;
+  color:#7a4a10;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+.fcfs-count {
+  font-size: 28px;
+  font-weight: 700;
+  color:#ffd090;
+  margin-bottom: 12px;
+}
+.fcfs-count span { color: #E85D04; }
+.hammer-bar-wrap {
+  width: 100%;
+  position: relative;
+  margin-bottom: 12px;
+  padding-top: 36px;
+}
+.hammer-track {
+  width: 100%;
+  height: 14px;
+  background: #2a2a2a;
+  border-radius: 20px;
+  overflow: visible;
+  position: relative;
+}
+.hammer-fill {
+  height: 100%;
+  border-radius: 20px;
+  background: linear-gradient(90deg, #8B2500, #C04B00, #E85D04, #F48C06);
+  background-size: 300% 100%;
+  animation: forgeGlow 2s ease-in-out infinite;
+  transition: width 1.2s cubic-bezier(.34,1.56,.64,1);
+  position: relative;
+  min-width: 14px;
+}
+@keyframes forgeGlow {
+  0%,100% { background-position: 0% 50%; filter: brightness(1); }
+  50% { background-position: 100% 50%; filter: brightness(1.3); }
+}
+.hammer-icon {
+  position: absolute;
+  top: -30px;
+  font-size: 22px;
+  transform: translateX(-50%);
+  transition: left 1.2s cubic-bezier(.34,1.56,.64,1);
+  animation: hammerStrike 0.4s ease-in-out infinite alternate;
+  transform-origin: bottom right;
+  z-index: 5;
+  filter: drop-shadow(0 0 6px #E85D04);
+}
+@keyframes hammerStrike {
+  0% { transform: translateX(-50%) rotate(-30deg) translateY(0px); }
+  100% { transform: translateX(-50%) rotate(10deg) translateY(4px); }
+}
+.spark-burst {
+  position: absolute;
+  top: -18px;
+  font-size: 10px;
+  animation: sparkFly 0.6s ease-out infinite;
+  pointer-events: none;
+  transition: left 1.2s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes sparkFly {
+  0% { opacity:1; transform: translateY(0) scale(1); }
+  100% { opacity:0; transform: translateY(-16px) scale(0.5); }
+}
+.hammer-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #666;
+  margin-top: 6px;
+}
+.wave-wrap {
+  width: 100%;
+  height: 36px;
+  background: #2a2a2a;
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 8px;
+}
+.wave-fill {
+  height: 100%;
+  border-radius: 20px;
+  background: linear-gradient(90deg, #C04B00, #E85D04, #F48C06);
+  transition: width 1s ease;
+  position: relative;
+  min-width: 4px;
+}
+.wave-shimmer { display:none; }
+.wave-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #666;
+}
+.fcfs-claim-btn {
+  width: 100%;
+  background: linear-gradient(90deg, #E85D04, #F48C06);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 12px;
+  display: none;
+}
+.fcfs-claim-btn:disabled {
+  background: #333;
+  color: #666;
+  cursor: not-allowed;
+}
+.fcfs-badge {
+  display: inline-block;
+  background: #E85D04;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
 .spark-text {
   font-size:12px;
   font-weight:600;
@@ -124,7 +295,13 @@ body{background:#1a1a1a;color:#f0f0f0;font-family:-apple-system,BlinkMacSystemFo
   <span class="topbar-title">CastForge Arena</span>
 </div>
 
-<div class="content">
+<canvas id="lavaCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;"></canvas>
+<div class="content" style="position:relative;z-index:1;">
+  <!-- Shared Door Animation Overlay -->
+  <div id="door-overlay" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;pointer-events:all;display:none;background:#050200;">
+    <canvas id="doorCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;display:block;"></canvas>
+  </div>
+
   <!-- Profile -->
   <div class="screen active" id="s-profile">
     <div class="loading" id="profile-loading">Loading...</div>
@@ -138,7 +315,7 @@ body{background:#1a1a1a;color:#f0f0f0;font-family:-apple-system,BlinkMacSystemFo
         <div class="stat-card"><div class="stat-val" id="stat-spins">0</div><div class="stat-label">Spins</div></div>
       </div>
       <div class="rank-badge">
-        <span style="font-size:13px;color:#aaa;">Rank</span>
+        <span style="font-size:13px;color:#c07830;">Rank</span>
         <span class="rank-val" id="profile-rank">Apprentice Forger</span>
       </div>
       <!-- Spin Section -->
@@ -161,6 +338,28 @@ body{background:#1a1a1a;color:#f0f0f0;font-family:-apple-system,BlinkMacSystemFo
       <div class="pool-amount">10,000,000</div>
       <div class="pool-token">$FORGE</div>
     </div>
+
+    <div class="fcfs-box">
+      <div style="display:flex;align-items:center;margin-bottom:6px;">
+        <div class="fcfs-title">FCFS Airdrop</div>
+        <span class="fcfs-badge" id="fcfs-badge">LIVE</span>
+      </div>
+      <div class="fcfs-count"><span id="fcfs-joined">0</span> / 5,000 <span style="font-size:14px;color:#7a4a10;">joined</span></div>
+      <div class="hammer-bar-wrap">
+        <div class="hammer-track">
+          <div class="hammer-fill" id="wave-fill" style="width:0%"></div>
+          <div class="hammer-icon" id="hammer-icon" style="left:0%">⚒</div>
+          <div class="spark-burst" id="spark-burst" style="left:0%">✦</div>
+        </div>
+        <div class="hammer-label">
+          <span>0</span>
+          <span id="fcfs-pct">0% filled</span>
+          <span>5,000</span>
+        </div>
+      </div>
+      <div id="fcfs-reward-info" style="font-size:12px;color:#c07830;margin-top:10px;text-align:center;display:none;"></div>
+      <button class="fcfs-claim-btn" id="fcfsClaim" onclick="doFcfsClaim()">🔥 Claim 1,000 $FORGE</button>
+    </div>
     <div class="pool-row">
       <div class="pool-mini"><div class="pool-mini-label">FCFS</div><div class="pool-mini-val">5,000</div></div>
       <div class="pool-mini"><div class="pool-mini-label">Each Claim</div><div class="pool-mini-val">1,000</div></div>
@@ -180,6 +379,18 @@ body{background:#1a1a1a;color:#f0f0f0;font-family:-apple-system,BlinkMacSystemFo
         <button class="claim-btn" id="claimPtsBtn" onclick="doClaim('points')" disabled>Claim</button>
       </div>
       <div class="spark-text">Points Redeem Soon $FORGE Token</div>
+    </div>
+    <div class="claim-box" style="border-color:#7c3aed;">
+      <div class="claim-title" style="color:#a78bfa;">Referral Rewards 🎁</div>
+      <div style="font-size:12px;color:#7a4a10;margin-bottom:10px;">75 $FORGE per successful invite</div>
+      <div class="claim-row">
+        <div>
+          <div class="claim-val" id="referral-pending">0</div>
+          <div style="font-size:11px;color:#5a3008;">$FORGE pending</div>
+        </div>
+        <button class="claim-btn" id="claimRefBtn" onclick="doClaimReferral()" disabled style="background:#7c3aed;">Claim</button>
+      </div>
+      <div style="font-size:11px;color:#5a3008;margin-top:6px;">Total invites: <span id="referral-invite-count" style="color:#a78bfa;">0</span></div>
     </div>
   </div>
 
@@ -225,6 +436,10 @@ body{background:#1a1a1a;color:#f0f0f0;font-family:-apple-system,BlinkMacSystemFo
     <div class="invite-stats">
       <div class="invite-stat"><div class="invite-stat-label">Invited Friends</div><div class="invite-stat-val" id="invited-count">0</div></div>
       <div class="invite-stat"><div class="invite-stat-label">Bonus Earned</div><div class="invite-stat-val" id="invite-bonus">0 pts</div></div>
+    </div>
+    <div style="margin-top:16px;">
+      <div style="font-size:15px;font-weight:600;color:#E85D04;margin-bottom:10px;">Your Invites ⚒</div>
+      <div id="invited-list"><div style="text-align:center;color:#5a3008;font-size:13px;padding:12px;">Loading...</div></div>
     </div>
   </div>
 
@@ -450,6 +665,216 @@ async function showResult(idx, txHash) {
   isSpinning = false;
 }
 
+async function loadFcfsStatus() {
+  if (!userFid) return;
+
+  // Get total joined count
+  const { count: totalJoined } = await db.from('users')
+    .select('*', { count: 'exact' })
+    .eq('fcfs_eligible', true);
+
+  const joined = totalJoined || 0;
+  const pct = Math.min((joined / 5000) * 100, 100).toFixed(1);
+
+  document.getElementById('fcfs-joined').textContent = joined.toLocaleString();
+  document.getElementById('wave-fill').style.width = pct + '%';
+  document.getElementById('fcfs-pct').textContent = pct + '% filled';
+  // Move hammer to end of fill bar
+  const hammerLeft = Math.max(2, Math.min(parseFloat(pct), 98));
+  document.getElementById('hammer-icon').style.left = hammerLeft + '%';
+  document.getElementById('spark-burst').style.left = hammerLeft + '%';
+  // Change sparks randomly
+  const sparks = ['✦','⚡','🔥','✸','★'];
+  setInterval(() => {
+    const el = document.getElementById('spark-burst');
+    if (el) el.textContent = sparks[Math.floor(Math.random()*sparks.length)];
+  }, 400);
+
+  if (joined >= 5000) {
+    document.getElementById('fcfs-badge').textContent = 'CLOSED';
+    document.getElementById('fcfs-badge').style.background = '#555';
+  }
+
+  // Check if current user is eligible
+  const { data: userData } = await db.from('users')
+    .select('fcfs_eligible, fcfs_claimed')
+    .eq('fid', userFid)
+    .single();
+
+  const claimBtn = document.getElementById('fcfsClaim');
+  const rewardInfo = document.getElementById('fcfs-reward-info');
+
+  if (!userData) return;
+
+  if (userData.fcfs_eligible && !userData.fcfs_claimed) {
+    claimBtn.style.display = 'block';
+    claimBtn.disabled = false;
+    rewardInfo.style.display = 'block';
+    rewardInfo.textContent = '🎉 You are eligible! Claim your 1,000 $FORGE';
+    rewardInfo.style.color = '#F48C06';
+  } else if (userData.fcfs_eligible && userData.fcfs_claimed) {
+    claimBtn.style.display = 'block';
+    claimBtn.disabled = true;
+    claimBtn.textContent = '✓ Already Claimed';
+    rewardInfo.style.display = 'block';
+    rewardInfo.textContent = '✅ You claimed your 1,000 $FORGE!';
+    rewardInfo.style.color = '#4ade80';
+  } else if (joined >= 5000) {
+    rewardInfo.style.display = 'block';
+    rewardInfo.textContent = '❌ FCFS pool is full. Better luck next time!';
+    rewardInfo.style.color = '#888';
+  } else {
+    rewardInfo.style.display = 'block';
+    rewardInfo.textContent = 'Join as a new user to be eligible for FCFS airdrop';
+    rewardInfo.style.color = '#666';
+  }
+}
+
+async function doFcfsClaim() {
+  if (!userFid) return;
+  const btn = document.getElementById('fcfsClaim');
+  btn.disabled = true;
+  btn.textContent = 'Processing...';
+
+  try {
+    const sdk = (window.miniapp && window.miniapp.sdk) || window.FrameSDK;
+    if (!sdk) throw new Error('SDK not found');
+
+    // Verify eligibility again
+    const { data: userData } = await db.from('users')
+      .select('fcfs_eligible, fcfs_claimed')
+      .eq('fid', userFid)
+      .single();
+
+    if (!userData || !userData.fcfs_eligible) throw new Error('Not eligible for FCFS');
+    if (userData.fcfs_claimed) throw new Error('Already claimed');
+
+    // Pay $0.05 claim fee
+    let ethPriceUsd = 3000;
+    try {
+      const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+      const data = await res.json();
+      ethPriceUsd = data.ethereum.usd;
+    } catch(e) {}
+
+    const claimCostWei = BigInt(Math.floor(0.05 / ethPriceUsd * 1e18));
+
+    const result = await sdk.wallet.sendTransaction({
+      chainId: 'eip155:8453',
+      calls: [{ to: CONTRACT, value: '0x' + claimCostWei.toString(16), data: '0x' }]
+    });
+
+    const txHash = result.hash || result.transactionHash || ('fcfs_' + Date.now());
+
+    // Mark claimed and add tokens
+    await db.from('users').update({
+      fcfs_claimed: true,
+      tokens: (currentUser.tokens || 0) + 1000
+    }).eq('fid', userFid);
+
+    await db.from('claim_history').insert({
+      fid: userFid,
+      claim_type: 'fcfs',
+      amount: 1000,
+      tx_hash: txHash
+    });
+
+    currentUser.tokens = (currentUser.tokens || 0) + 1000;
+    updateStats();
+    loadFcfsStatus();
+    showToast('🎉 1,000 $FORGE FCFS reward claimed!');
+
+  } catch(e) {
+    showToast('Error: ' + (e.message || 'Claim failed'));
+    btn.disabled = false;
+    btn.textContent = '🔥 Claim 1,000 $FORGE';
+  }
+}
+
+async function doClaimReferral() {
+  if (!userFid) return;
+  const btn = document.getElementById('claimRefBtn');
+  btn.disabled = true;
+  btn.textContent = 'Processing...';
+
+  try {
+    // Get invite count and already claimed
+    const { count } = await db.from('invites').select('*', { count: 'exact' }).eq('inviter_fid', userFid);
+    const { data: userData } = await db.from('users').select('referral_tokens_claimed').eq('fid', userFid).single();
+    const alreadyClaimed = userData ? (userData.referral_tokens_claimed || 0) : 0;
+    const totalEarned = (count || 0) * 75;
+    const claimable = totalEarned - alreadyClaimed;
+
+    if (claimable <= 0) {
+      showToast('No referral rewards to claim!');
+      btn.disabled = false;
+      btn.textContent = 'Claim';
+      return;
+    }
+
+    const sdk = (window.miniapp && window.miniapp.sdk) || window.FrameSDK;
+    if (!sdk) throw new Error('SDK not found');
+
+    // Get ETH price
+    let ethPriceUsd = 3000;
+    try {
+      const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+      const data = await res.json();
+      ethPriceUsd = data.ethereum.usd;
+    } catch(e) {}
+
+    const claimCostWei = BigInt(Math.floor(0.05 / ethPriceUsd * 1e18));
+
+    const result = await sdk.wallet.sendTransaction({
+      chainId: 'eip155:8453',
+      calls: [{
+        to: CONTRACT,
+        value: '0x' + claimCostWei.toString(16),
+        data: '0x'
+      }]
+    });
+
+    const txHash = result.hash || result.transactionHash || ('refclaim_' + Date.now());
+
+    // Update DB
+    await db.from('users').update({
+      tokens: (currentUser.tokens || 0) + claimable,
+      referral_tokens_claimed: totalEarned
+    }).eq('fid', userFid);
+
+    await db.from('claim_history').insert({
+      fid: userFid,
+      claim_type: 'referral',
+      amount: claimable,
+      tx_hash: txHash
+    });
+
+    currentUser.tokens = (currentUser.tokens || 0) + claimable;
+    currentUser.referral_tokens_claimed = totalEarned;
+    updateStats();
+    updateReferralRewards();
+    showToast('🎁 ' + claimable + ' $FORGE referral reward claimed!');
+
+  } catch(e) {
+    showToast('Error: ' + (e.message || 'Claim failed'));
+    btn.disabled = false;
+    btn.textContent = 'Claim';
+  }
+}
+
+async function updateReferralRewards() {
+  if (!userFid) return;
+  const { count } = await db.from('invites').select('*', { count: 'exact' }).eq('inviter_fid', userFid);
+  const { data: userData } = await db.from('users').select('referral_tokens_claimed').eq('fid', userFid).single();
+  const alreadyClaimed = userData ? (userData.referral_tokens_claimed || 0) : 0;
+  const totalEarned = (count || 0) * 75;
+  const claimable = totalEarned - alreadyClaimed;
+
+  document.getElementById('referral-pending').textContent = claimable;
+  document.getElementById('referral-invite-count').textContent = count || 0;
+  document.getElementById('claimRefBtn').disabled = claimable <= 0;
+}
+
 async function doClaim(type) {
   if (!userFid) return;
   try {
@@ -508,15 +933,37 @@ async function doTask(taskName, pts, url) {
     } catch(e) { window.open(url, '_blank'); }
   }
 
-  // Add points
-  const { data: user } = await db.from('users').select('points').eq('fid', userFid).single();
+  // Add points and save completed task
+  const { data: user } = await db.from('users').select('points, completed_tasks').eq('fid', userFid).single();
   const newPts = (user.points || 0) + pts;
-  await db.from('users').update({ points: newPts }).eq('fid', userFid);
+  const completed = user.completed_tasks || [];
+  if (!completed.includes(taskName)) completed.push(taskName);
+  await db.from('users').update({ points: newPts, completed_tasks: completed }).eq('fid', userFid);
   currentUser.points = newPts;
   updateStats();
+
+  // Hide button permanently
   btn.classList.add('done');
-  btn.textContent = 'Done ✓';
+  btn.textContent = '✓ Done';
+  btn.onclick = null;
   showToast('+' + pts + ' points earned!');
+}
+
+async function loadCompletedTasks() {
+  if (!userFid) return;
+  // Store completed tasks in DB using a simple column
+  const { data } = await db.from('users').select('completed_tasks').eq('fid', userFid).single();
+  const completed = data && data.completed_tasks ? data.completed_tasks : [];
+  ['follow','like','recast'].forEach(task => {
+    if (completed.includes(task)) {
+      const btn = document.getElementById('task-' + task);
+      if (btn) {
+        btn.classList.add('done');
+        btn.textContent = '✓ Done';
+        btn.onclick = null;
+      }
+    }
+  });
 }
 
 function updateStats() {
@@ -555,18 +1002,40 @@ async function loadLeaderboard() {
 }
 
 function copyInvite() {
-  const url = document.getElementById('invite-url').textContent;
-  navigator.clipboard.writeText(url).then(() => showToast('Link copied!'));
+  const url = window.__inviteUrl || document.getElementById('invite-url').textContent;
+  navigator.clipboard.writeText(url).then(() => showToast('✅ Invite link copied!')).catch(() => {
+    const el = document.createElement('textarea');
+    el.value = url;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    showToast('✅ Invite link copied!');
+  });
 }
 
-function shareOnFarcaster() {
-  const url = document.getElementById('invite-url').textContent;
-  const text = encodeURIComponent('Join me on CastForge Arena ⚒🔥 Spin to earn $FORGE tokens! ' + url);
-  window.open('https://warpcast.com/~/compose?text=' + text);
+async function shareOnFarcaster() {
+  const url = window.__inviteUrl || document.getElementById('invite-url').textContent;
+  const sdk = (window.miniapp && window.miniapp.sdk) || window.FrameSDK;
+  const text = 'Join me on CastForge Arena ⚒🔥 Spin to earn $FORGE tokens!';
+  try {
+    if (sdk && sdk.actions && sdk.actions.composeCast) {
+      await sdk.actions.composeCast({
+        text: text,
+        embeds: [url]
+      });
+    } else {
+      const encoded = encodeURIComponent(text + ' ' + url);
+      window.open('https://warpcast.com/~/compose?text=' + encoded);
+    }
+  } catch(e) {
+    const encoded = encodeURIComponent(text + ' ' + url);
+    window.open('https://warpcast.com/~/compose?text=' + encoded);
+  }
 }
 
 function shareOnX() {
-  const url = document.getElementById('invite-url').textContent;
+  const url = window.__inviteUrl || document.getElementById('invite-url').textContent;
   const text = encodeURIComponent('Earning $FORGE tokens on CastForge Arena ⚒🔥 Join me! ' + url);
   window.open('https://twitter.com/intent/tweet?text=' + text);
 }
@@ -586,9 +1055,65 @@ function switchTab(name) {
   const idx = ['profile','pool','tasks','invite','leaders'].indexOf(name);
   document.querySelectorAll('.nav-btn')[idx].classList.add('active');
   if (name === 'leaders') loadLeaderboard();
-  if (name === 'pool') updateStats();
+  if (name === 'pool') { updateStats(); updateReferralRewards(); loadFcfsStatus(); }
+  if (name === 'invite' && window.__userFid) loadInvitedUsers(window.__userFid);
+
+  // Door animation on non-profile tabs, hammer strike on profile
+  setTimeout(() => {
+    const overlay = document.getElementById('door-overlay');
+    const canvas = document.getElementById('doorCanvas');
+    if (!overlay || !canvas) return;
+    overlay.style.display = 'block';
+    overlay.style.opacity = '1';
+    canvas.width = canvas.offsetWidth || window.innerWidth;
+    canvas.height = canvas.offsetHeight || window.innerHeight;
+    if (name === 'profile') {
+      runHammerStrike();
+    } else {
+      runDoorAnimation();
+    }
+  }, 50);
 }
 
+
+async function loadInvitedUsers(fid) {
+  const { data } = await db.from('invites')
+    .select('invitee_fid, created_at')
+    .eq('inviter_fid', fid)
+    .order('created_at', { ascending: false });
+
+  const container = document.getElementById('invited-list');
+  if (!container) return;
+
+  if (!data || data.length === 0) {
+    container.innerHTML = '<div style="text-align:center;color:#5a3008;font-size:13px;padding:12px;">No invites yet. Share your link!</div>';
+    return;
+  }
+
+  // Fetch user details for each invitee
+  const fids = data.map(d => d.invitee_fid);
+  const { data: users } = await db.from('users')
+    .select('fid, display_name, username, pfp_url')
+    .in('fid', fids);
+
+  const userMap = {};
+  (users || []).forEach(u => userMap[u.fid] = u);
+
+  container.innerHTML = data.map((inv, i) => {
+    const u = userMap[inv.invitee_fid] || {};
+    const name = u.display_name || u.username || 'Forger #' + (i+1);
+    const date = new Date(inv.created_at).toLocaleDateString();
+    const avatar = u.pfp_url
+      ? '<img src="' + u.pfp_url + '" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">'
+      : '<div style="width:32px;height:32px;border-radius:50%;background:#E85D04;display:flex;align-items:center;justify-content:center;font-size:14px;">⚒</div>';
+    return '<div style="display:flex;align-items:center;gap:10px;padding:10px;background:#160c00;border-radius:10px;margin-bottom:8px;border:0.5px solid #3a1a00;">'
+      + avatar
+      + '<div style="flex:1;"><div style="font-size:13px;color:#ffd090;font-weight:600;">' + name + '</div>'
+      + '<div style="font-size:11px;color:#5a3008;">Joined ' + date + '</div></div>'
+      + '<div style="font-size:12px;color:#E85D04;">+25% bonus</div>'
+      + '</div>';
+  }).join('');
+}
 
 async function init() {
   drawWheel(0);
@@ -612,12 +1137,18 @@ async function init() {
         const invitedBy = params.get('ref');
 
         if (!dbUser) {
+          // Check FCFS slot available
+          const { count: fcfsCount } = await db.from('users').select('*', { count: 'exact' }).eq('fcfs_eligible', true);
+          const isFcfsEligible = (fcfsCount || 0) < 5000;
+
           const { data: newUser } = await db.from('users').insert({
             fid: userFid,
             username: user.username,
             display_name: user.displayName,
             pfp_url: user.pfpUrl,
-            invited_by: invitedBy || null
+            invited_by: invitedBy || null,
+            fcfs_eligible: isFcfsEligible,
+            join_order: (fcfsCount || 0) + 1
           }).select().single();
           dbUser = newUser;
           if (invitedBy) {
@@ -639,7 +1170,10 @@ async function init() {
         }
         document.getElementById('profile-name').textContent = user.displayName || user.username || 'Forger';
         document.getElementById('profile-handle').textContent = '@' + (user.username || 'forger');
-        document.getElementById('invite-url').textContent = window.location.origin + window.location.pathname + '?ref=' + userFid;
+        const inviteUrl = 'https://farcaster.xyz/miniapps/7ZcAcVmacXA9/castforge-arena-?ref=' + userFid;
+    document.getElementById('invite-url').textContent = inviteUrl;
+    window.__inviteUrl = inviteUrl;
+    window.__userFid = userFid;
 
         updateStats();
         return;
@@ -654,12 +1188,458 @@ async function init() {
   currentUser = { fid: 'guest', points: 0, tokens: 0, total_spins: 0 };
   document.getElementById('profile-name').textContent = 'Forger';
   document.getElementById('profile-handle').textContent = '@castforge';
-  document.getElementById('invite-url').textContent = window.location.href + '?ref=guest';
+  const _gUrl = 'https://farcaster.xyz/miniapps/7ZcAcVmacXA9/castforge-arena-?ref=guest';
+    document.getElementById('invite-url').textContent = _gUrl;
+    window.__inviteUrl = _gUrl;
   updateStats();
 }
 
 
-window.addEventListener('load', init);
+function runHammerStrike() {
+  const overlay = document.getElementById('door-overlay');
+  const canvas = document.getElementById('doorCanvas');
+  if (!overlay || !canvas) return;
+
+  overlay.style.display = 'block';
+  overlay.style.opacity = '1';
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const W = canvas.width;
+  const H = canvas.height;
+  const ctx = canvas.getContext('2d');
+
+  let frame = 0;
+  const TOTAL = 75;
+  let raf;
+
+  // Lightning bolt generator
+  function genBolt(x1,y1,x2,y2,depth) {
+    if (depth <= 0) return [[x1,y1],[x2,y2]];
+    const mx = (x1+x2)/2 + (Math.random()-0.5)*(Math.abs(y2-y1)*0.7);
+    const my = (y1+y2)/2 + (Math.random()-0.5)*(Math.abs(x2-x1)*0.2);
+    return [...genBolt(x1,y1,mx,my,depth-1),...genBolt(mx,my,x2,y2,depth-1)];
+  }
+
+  // Pre-generate bolts
+  const cx = W/2, cy = H/2;
+  const bolts = [];
+  const angles = [0,45,90,135,180,225,270,315];
+  angles.forEach(ang => {
+    const rad = ang * Math.PI/180;
+    const len = Math.min(W,H) * 0.55;
+    bolts.push(genBolt(cx, cy, cx+Math.cos(rad)*len, cy+Math.sin(rad)*len, 5));
+  });
+
+  // Sparks
+  const sparks = Array.from({length:60}, () => ({
+    x: cx + (Math.random()-0.5)*60,
+    y: cy + (Math.random()-0.5)*60,
+    vx: (Math.random()-0.5)*12,
+    vy: (Math.random()-0.5)*12,
+    life: 0,
+    maxLife: 20+Math.random()*25,
+    size: 1+Math.random()*3,
+    color: ['#E85D04','#F48C06','#FFD460','#ffffff'][Math.floor(Math.random()*4)]
+  }));
+
+  function draw() {
+    ctx.clearRect(0,0,W,H);
+
+    const progress = frame/TOTAL;
+    const impactFrame = 15; // hammer hits at frame 15
+
+    // Solid dark background
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(0,0,W,H);
+
+    // Hammer animation
+    const hammerSize = Math.min(W,H)*0.22;
+    const swingProgress = Math.min(frame/impactFrame, 1);
+    // Start from top-right, swing down to center
+    const startX = cx + hammerSize*1.2;
+    const startY = cy - hammerSize*1.5;
+    const hamX = startX + (cx - startX) * swingProgress;
+    const hamY = startY + (cy - startY) * swingProgress;
+    const hamRot = -1.2 + swingProgress * 1.2;
+
+    ctx.save();
+    ctx.translate(hamX, hamY);
+    ctx.rotate(hamRot);
+    ctx.font = `${hammerSize}px sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    if (frame >= impactFrame) {
+      ctx.shadowColor = '#E85D04';
+      ctx.shadowBlur = 30;
+    }
+    ctx.fillText('⚒', 0, 0);
+    ctx.shadowBlur = 0;
+    ctx.restore();
+
+    // Impact effects after hammer hits
+    if (frame >= impactFrame) {
+      const afterImpact = frame - impactFrame;
+      const boltAlpha = Math.max(0, 1 - afterImpact/20);
+
+      // Draw lightning bolts
+      bolts.forEach((bolt, bi) => {
+        if (afterImpact < bi*1.5) return;
+        const boltFade = Math.max(0, boltAlpha - bi*0.05);
+        ctx.beginPath();
+        ctx.globalAlpha = boltFade * (0.6 + Math.random()*0.4);
+        ctx.strokeStyle = bi%2===0 ? '#E85D04' : '#FFD460';
+        ctx.lineWidth = 2 - bi*0.15;
+        ctx.shadowColor = bi%2===0 ? '#E85D04' : '#F48C06';
+        ctx.shadowBlur = 12;
+        for (let i=0;i<bolt.length-1;i++) {
+          ctx.moveTo(bolt[i][0],bolt[i][1]);
+          ctx.lineTo(bolt[i+1][0],bolt[i+1][1]);
+        }
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+        ctx.shadowBlur = 0;
+      });
+
+      // Impact flash
+      if (afterImpact < 6) {
+        const flashAlpha = (6-afterImpact)/6 * 0.5;
+        const flashGrad = ctx.createRadialGradient(cx,cy,0,cx,cy,W*0.4);
+        flashGrad.addColorStop(0,`rgba(255,200,100,${flashAlpha})`);
+        flashGrad.addColorStop(0.3,`rgba(232,93,4,${flashAlpha*0.5})`);
+        flashGrad.addColorStop(1,'rgba(0,0,0,0)');
+        ctx.fillStyle = flashGrad;
+        ctx.fillRect(0,0,W,H);
+      }
+
+      // Sparks
+      sparks.forEach(s => {
+        if (afterImpact < 2) return;
+        s.x += s.vx;
+        s.y += s.vy;
+        s.vy += 0.4;
+        s.vx *= 0.96;
+        s.life++;
+        const a = Math.max(0, 1 - s.life/s.maxLife);
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size*a, 0, Math.PI*2);
+        ctx.fillStyle = s.color;
+        ctx.globalAlpha = a;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      });
+
+      // "CastForge Entering" text
+      const textAlpha = Math.min(afterImpact/8, 1);
+      ctx.save();
+      ctx.globalAlpha = textAlpha;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      // Main title
+      ctx.font = `bold ${Math.min(W*0.07, 28)}px sans-serif`;
+      ctx.fillStyle = '#E85D04';
+      ctx.shadowColor = '#E85D04';
+      ctx.shadowBlur = 16;
+      ctx.fillText('CASTFORGE', cx, cy + H*0.22);
+      // Subtitle
+      ctx.font = `${Math.min(W*0.04, 15)}px sans-serif`;
+      ctx.fillStyle = '#F48C06';
+      ctx.shadowBlur = 8;
+      ctx.letterSpacing = '6px';
+      ctx.fillText('E N T E R I N G . . .', cx, cy + H*0.22 + Math.min(W*0.07,28) + 10);
+      ctx.shadowBlur = 0;
+      ctx.restore();
+
+    // Shockwave rings
+      [8,16,24].forEach(delay => {
+        if (afterImpact < delay) return;
+        const r = (afterImpact-delay) * 7;
+        const a = Math.max(0, 1-(afterImpact-delay)/18);
+        ctx.beginPath();
+        ctx.arc(cx,cy,r,0,Math.PI*2);
+        ctx.strokeStyle = `rgba(232,93,4,${a*0.6})`;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      });
+    }
+
+    frame++;
+    if (frame <= TOTAL) {
+      raf = requestAnimationFrame(draw);
+    } else {
+      overlay.style.transition = 'opacity 0.4s ease';
+      overlay.style.opacity = '0';
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        overlay.style.opacity = '1';
+        cancelAnimationFrame(raf);
+      }, 400);
+    }
+  }
+  draw();
+}
+
+function runDoorAnimation() {
+  const overlay = document.getElementById('door-overlay');
+  const canvas = document.getElementById('doorCanvas');
+  if (!overlay || !canvas) return;
+
+  overlay.style.display = 'block';
+  overlay.style.opacity = '1';
+  const W = canvas.width = window.innerWidth;
+  const H = canvas.height = window.innerHeight;
+  const ctx = canvas.getContext('2d');
+
+  let frame = 0;
+  const TOTAL = 90;
+  let raf;
+
+  function drawDoor(progress) {
+    ctx.clearRect(0, 0, W, H);
+
+    // Dark background
+    ctx.fillStyle = '#0d0d0d';
+    ctx.fillRect(0, 0, W, H);
+
+    const cx = W / 2;
+    const cy = H / 2;
+    const doorW = Math.min(W * 0.72, 300);
+    const doorH = Math.min(H * 0.72, 480);
+    const doorX = cx - doorW / 2;
+    const doorY = cy - doorH / 2;
+    const openAngle = progress * Math.PI * 0.52;
+
+    // Glow behind door
+    const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, doorW * 0.9);
+    glow.addColorStop(0, `rgba(232,93,4,${0.35 * progress})`);
+    glow.addColorStop(0.5, `rgba(244,140,6,${0.15 * progress})`);
+    glow.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = glow;
+    ctx.fillRect(0, 0, W, H);
+
+    // Door frame (stone/metal)
+    const frameThick = 14;
+    ctx.fillStyle = '#2a2a2a';
+    ctx.strokeStyle = '#E85D04';
+    ctx.lineWidth = 2;
+    // Top
+    ctx.fillRect(doorX - frameThick, doorY - frameThick, doorW + frameThick*2, frameThick);
+    ctx.strokeRect(doorX - frameThick, doorY - frameThick, doorW + frameThick*2, frameThick);
+    // Left
+    ctx.fillRect(doorX - frameThick, doorY, frameThick, doorH + frameThick);
+    ctx.strokeRect(doorX - frameThick, doorY, frameThick, doorH + frameThick);
+    // Right
+    ctx.fillRect(doorX + doorW, doorY, frameThick, doorH + frameThick);
+    ctx.strokeRect(doorX + doorW, doorY, frameThick, doorH + frameThick);
+    // Bottom
+    ctx.fillRect(doorX - frameThick, doorY + doorH, doorW + frameThick*2, frameThick);
+    ctx.strokeRect(doorX - frameThick, doorY + doorH, doorW + frameThick*2, frameThick);
+
+    // Arch above door
+    ctx.beginPath();
+    ctx.arc(cx, doorY, doorW * 0.38, Math.PI, 0);
+    ctx.strokeStyle = '#E85D04';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    // Hammer icon above door (in arch)
+    ctx.font = `${Math.min(38, doorW * 0.18)}px sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#E85D04';
+    ctx.shadowColor = '#E85D04';
+    ctx.shadowBlur = 12 + 8 * Math.sin(frame * 0.15);
+    ctx.fillText('⚒', cx, doorY - doorW * 0.2);
+    ctx.shadowBlur = 0;
+
+    // App name below hammer
+    ctx.font = `bold ${Math.min(13, doorW*0.06)}px sans-serif`;
+    ctx.fillStyle = '#F48C06';
+    ctx.letterSpacing = '2px';
+    ctx.fillText('CASTFORGE ARENA', cx, doorY - doorW * 0.08);
+
+    // Left door panel (opens left with perspective)
+    const leftW = doorW / 2;
+    const perspW = leftW * Math.cos(openAngle);
+    if (perspW > 0) {
+      ctx.save();
+      // Left panel
+      const lx = doorX;
+      const grad = ctx.createLinearGradient(lx, 0, lx + perspW, 0);
+      grad.addColorStop(0, '#1a1a1a');
+      grad.addColorStop(0.7, '#2a2a2a');
+      grad.addColorStop(1, '#111');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.moveTo(lx, doorY);
+      ctx.lineTo(lx + perspW, doorY);
+      ctx.lineTo(lx + perspW, doorY + doorH);
+      ctx.lineTo(lx, doorY + doorH);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = '#333';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      // Panel details
+      if (perspW > 20) {
+        ctx.strokeStyle = '#444';
+        ctx.lineWidth = 0.5;
+        ctx.strokeRect(lx + perspW*0.15, doorY + doorH*0.1, perspW*0.65, doorH*0.35);
+        ctx.strokeRect(lx + perspW*0.15, doorY + doorH*0.55, perspW*0.65, doorH*0.33);
+        // Knob
+        ctx.beginPath();
+        ctx.arc(lx + perspW * 0.82, doorY + doorH * 0.5, 5 * Math.cos(openAngle*0.5), 0, Math.PI*2);
+        ctx.fillStyle = '#E85D04';
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    // Right door panel (opens right)
+    const rx = cx;
+    const rightPerspW = leftW * Math.cos(openAngle);
+    if (rightPerspW > 0) {
+      ctx.save();
+      const grad2 = ctx.createLinearGradient(rx + rightPerspW, 0, rx, 0);
+      grad2.addColorStop(0, '#1a1a1a');
+      grad2.addColorStop(0.7, '#2a2a2a');
+      grad2.addColorStop(1, '#111');
+      ctx.fillStyle = grad2;
+      ctx.beginPath();
+      ctx.moveTo(rx + rightPerspW, doorY);
+      ctx.lineTo(rx, doorY);
+      ctx.lineTo(rx, doorY + doorH);
+      ctx.lineTo(rx + rightPerspW, doorY + doorH);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = '#333';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      if (rightPerspW > 20) {
+        ctx.strokeStyle = '#444';
+        ctx.lineWidth = 0.5;
+        ctx.strokeRect(rx + rightPerspW*0.2, doorY + doorH*0.1, rightPerspW*0.65, doorH*0.35);
+        ctx.strokeRect(rx + rightPerspW*0.2, doorY + doorH*0.55, rightPerspW*0.65, doorH*0.33);
+        ctx.beginPath();
+        ctx.arc(rx + rightPerspW * 0.18, doorY + doorH * 0.5, 5 * Math.cos(openAngle*0.5), 0, Math.PI*2);
+        ctx.fillStyle = '#E85D04';
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    // Light beam when door opens
+    if (progress > 0.3) {
+      const beamAlpha = (progress - 0.3) / 0.7 * 0.25;
+      const openGap = doorW * Math.sin(openAngle) * 0.98;
+      const beamGrad = ctx.createLinearGradient(cx, doorY, cx, H);
+      beamGrad.addColorStop(0, `rgba(232,93,4,${beamAlpha})`);
+      beamGrad.addColorStop(0.4, `rgba(244,140,6,${beamAlpha*0.5})`);
+      beamGrad.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = beamGrad;
+      ctx.beginPath();
+      ctx.moveTo(cx - openGap/2, doorY);
+      ctx.lineTo(cx + openGap/2, doorY);
+      ctx.lineTo(cx + openGap/2 + H*0.4, H);
+      ctx.lineTo(cx - openGap/2 - H*0.4, H);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    // Sparks at hinges when opening
+    if (progress > 0.1 && progress < 0.8) {
+      const sparkCount = 3;
+      for (let i = 0; i < sparkCount; i++) {
+        const sx = doorX + (Math.random() - 0.5) * 20;
+        const sy = doorY + doorH * (0.1 + Math.random() * 0.8);
+        ctx.beginPath();
+        ctx.arc(sx, sy, 1.5 + Math.random()*2, 0, Math.PI*2);
+        ctx.fillStyle = Math.random() > 0.5 ? '#FFD460' : '#E85D04';
+        ctx.globalAlpha = Math.random();
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        const sx2 = doorX + doorW + (Math.random()-0.5)*20;
+        ctx.beginPath();
+        ctx.arc(sx2, sy, 1.5 + Math.random()*2, 0, Math.PI*2);
+        ctx.fillStyle = Math.random() > 0.5 ? '#FFD460' : '#F48C06';
+        ctx.globalAlpha = Math.random();
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+    }
+  }
+
+  function animate() {
+    const ease = t => t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
+    const progress = ease(Math.min(frame / TOTAL, 1));
+    drawDoor(progress);
+    frame++;
+
+    if (frame <= TOTAL + 15) {
+      raf = requestAnimationFrame(animate);
+    } else {
+      overlay.style.transition = 'opacity 0.5s ease';
+      overlay.style.opacity = '0';
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        overlay.style.opacity = '1';
+        cancelAnimationFrame(raf);
+      }, 500);
+    }
+  }
+  animate();
+}
+
+
+// Lava ember background
+function initLavaBackground() {
+  const canvas = document.getElementById('lavaCanvas');
+  if (!canvas) return;
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  const ctx = canvas.getContext('2d');
+  const embers = Array.from({length: 55}, () => ({
+    x: Math.random() * window.innerWidth,
+    y: window.innerHeight + Math.random() * window.innerHeight,
+    vy: -(0.3 + Math.random() * 0.7),
+    vx: (Math.random() - 0.5) * 0.5,
+    r: 0.6 + Math.random() * 2.2,
+    life: Math.random(),
+    maxLife: 0.5 + Math.random() * 0.5,
+    color: ['#FF6600','#FF4400','#FFD460','#FF8800','#E85D04'][Math.floor(Math.random()*5)]
+  }));
+
+  function draw() {
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+    embers.forEach(e => {
+      e.y += e.vy;
+      e.x += e.vx + Math.sin(e.life * 8) * 0.3;
+      e.life += 0.006;
+      if (e.y < -10 || e.life > e.maxLife) {
+        e.x = Math.random() * W;
+        e.y = H + 10;
+        e.life = 0;
+        e.vy = -(0.3 + Math.random() * 0.7);
+        e.vx = (Math.random() - 0.5) * 0.5;
+      }
+      const a = Math.sin(e.life / e.maxLife * Math.PI) * 0.65;
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, e.r, 0, Math.PI * 2);
+      ctx.fillStyle = e.color;
+      ctx.globalAlpha = a;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+window.addEventListener('load', () => { init(); initLavaBackground(); });
 </script>
 </body>
 </html>
