@@ -9,7 +9,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:430px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;}
+body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:430px;margin:0 auto;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;}
 .topbar{background:#0d0600;padding:14px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #3a1a00;position:sticky;top:0;z-index:10;}
 .topbar-icon{width:32px;height:32px;background:#E85D04;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;}
 .topbar-title{font-size:16px;font-weight:600;color:#ffd090;}
@@ -293,45 +293,227 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
 <div class="topbar">
   <div class="topbar-icon">⚒</div>
   <span class="topbar-title">CastForge Arena</span>
+  <div style="flex:1;"></div>
+  <button onclick="openWallet()" style="background:#1a0d00;border:1px solid #3a1a00;border-radius:20px;padding:6px 14px;color:#F48C06;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F48C06" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 12h.01"/></svg>
+    My Wallet
+  </button>
 </div>
 
 <canvas id="lavaCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;"></canvas>
-<div class="content" style="position:relative;z-index:1;">
+<div class="content" style="position:relative;z-index:1;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;min-height:0;padding-bottom:80px;">
   <!-- Shared Door Animation Overlay -->
   <div id="door-overlay" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;pointer-events:all;display:none;background:#050200;">
     <canvas id="doorCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;display:block;"></canvas>
   </div>
 
   <!-- Profile -->
-  <div class="screen active" id="s-profile">
+  <!-- Games Lobby -->
+  <!-- Games Hub -->
+  <div class="screen active" id="s-games">
+    <div style="padding:8px 0 14px;text-align:center;">
+      <div style="font-size:18px;font-weight:700;color:#ffd090;margin-bottom:4px;">⚒ Games Arena</div>
+      <div style="font-size:12px;color:#7a5a30;">Pick a game to earn rewards</div>
+    </div>
+
+    <!-- Spin Now Card -->
+    <div onclick="switchTab('spin')" style="background:#1a0d00;border:1px solid #E85D04;border-radius:14px;padding:16px;margin-bottom:12px;cursor:pointer;display:flex;align-items:center;gap:14px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:0;right:0;bottom:0;width:40%;background:linear-gradient(90deg,transparent,rgba(232,93,4,0.08));pointer-events:none;"></div>
+      <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#C04B00,#E85D04);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:26px;">🎡</div>
+      <div style="flex:1;">
+        <div style="font-size:15px;font-weight:700;color:#ffd090;margin-bottom:3px;">Spin to Forge</div>
+        <div style="font-size:11px;color:#7a5a30;margin-bottom:6px;">Spin the wheel, win $FORGE tokens & points</div>
+        <div style="display:flex;gap:6px;">
+          <span style="background:#2a1500;border:0.5px solid #E85D04;border-radius:20px;padding:2px 8px;font-size:10px;color:#E85D04;">FREE spins</span>
+          <span style="background:#2a1500;border:0.5px solid #F48C06;border-radius:20px;padding:2px 8px;font-size:10px;color:#F48C06;">500 $FORGE max</span>
+        </div>
+      </div>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E85D04" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+    </div>
+
+    <!-- Token Rush Card -->
+    <div onclick="openGameScreen('tokenrush')" style="background:#1a0d00;border:1px solid #d4a017;border-radius:14px;padding:16px;margin-bottom:12px;cursor:pointer;display:flex;align-items:center;gap:14px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:0;right:0;bottom:0;width:40%;background:linear-gradient(90deg,transparent,rgba(212,160,23,0.08));pointer-events:none;"></div>
+      <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#8B6914,#d4a017);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:26px;">🪙</div>
+      <div style="flex:1;">
+        <div style="font-size:15px;font-weight:700;color:#ffd090;margin-bottom:3px;">Token Rush</div>
+        <div style="font-size:11px;color:#7a5a30;margin-bottom:6px;">Catch falling coins in 30 seconds</div>
+        <div style="display:flex;gap:6px;">
+          <span style="background:#1a1200;border:0.5px solid #d4a017;border-radius:20px;padding:2px 8px;font-size:10px;color:#d4a017;">Win up to 200 pts</span>
+          <span style="background:#1a1200;border:0.5px solid #F48C06;border-radius:20px;padding:2px 8px;font-size:10px;color:#F48C06;">Points reward</span>
+        </div>
+      </div>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d4a017" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+    </div>
+
+    <div style="text-align:center;font-size:11px;color:#5a3a10;margin-top:4px;">More games coming soon ⚒</div>
+  </div>
+
+  <!-- Spin Sub-screen -->
+  <!-- Token Rush Sub-screen -->
+  <div class="screen" id="s-tokenrush">
+    <div style="display:flex;align-items:center;gap:10px;padding:4px 0 12px;">
+      <button onclick="switchTab('games')" style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:8px;padding:6px 12px;color:#F48C06;font-size:12px;cursor:pointer;">← Back</button>
+      <div style="font-size:16px;font-weight:700;color:#ffd090;">🪙 Token Rush</div>
+    </div>
+    <div id="tr-lobby" style="text-align:center;padding:20px 0;">
+      <div style="font-size:64px;margin-bottom:12px;animation:coinSpin 2s ease-in-out infinite alternate;display:inline-block;">🪙</div>
+      <div style="font-size:20px;font-weight:700;color:#ffd090;margin-bottom:6px;">Token Rush</div>
+      <div style="font-size:13px;color:#7a5a30;margin-bottom:18px;line-height:1.6;">Coins are raining — catch them all<br>before time runs out! ⚡</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;">
+        <div style="background:#110800;border:1px solid #2ecc71;border-radius:10px;padding:10px;">
+          <div style="font-size:16px;">🏆</div>
+          <div style="font-size:15px;font-weight:700;color:#2ecc71;">200</div>
+          <div style="font-size:9px;color:#5a3a10;">pts • 20 coins</div>
+        </div>
+        <div style="background:#110800;border:1px solid #F48C06;border-radius:10px;padding:10px;">
+          <div style="font-size:16px;">🥇</div>
+          <div style="font-size:15px;font-weight:700;color:#F48C06;">100</div>
+          <div style="font-size:9px;color:#5a3a10;">pts • 10 coins</div>
+        </div>
+        <div style="background:#110800;border:1px solid #d4a017;border-radius:10px;padding:10px;">
+          <div style="font-size:16px;">🎯</div>
+          <div style="font-size:15px;font-weight:700;color:#d4a017;">50</div>
+          <div style="font-size:9px;color:#5a3a10;">pts • 5 coins</div>
+        </div>
+      </div>
+      <div style="background:#110800;border-radius:10px;padding:10px;margin-bottom:16px;text-align:left;">
+        <div style="font-size:11px;color:#7a5a30;margin-bottom:6px;font-weight:700;">COIN TYPES</div>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <div style="display:flex;justify-content:space-between;font-size:12px;"><span>🪙 Common</span><span style="color:#F48C06;">+10 pts</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;"><span>💰 Rare</span><span style="color:#F48C06;">+25 pts</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;"><span>💎 Epic</span><span style="color:#2ecc71;">+50 pts</span></div>
+        </div>
+      </div>
+      <button id="tr-start-btn" onclick="payAndStartRush()" style="width:100%;background:linear-gradient(90deg,#E85D04,#d4a017);color:#fff;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;">▶ Start Game</button>
+      <div style="font-size:10px;color:#3a2000;margin-top:8px;">30 seconds • Move fast • Earn big!</div>
+    </div>
+    <div id="tr-game" style="display:none;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div style="font-size:14px;color:#ffd090;">Coins: <span id="tr-coins" style="color:#d4a017;font-weight:700;">0</span></div>
+        <div style="font-size:14px;color:#ffd090;">Time: <span id="tr-time" style="color:#e74c3c;font-weight:700;">30</span>s</div>
+      </div>
+      <canvas id="tr-canvas" width="358" height="420" style="width:100%;border-radius:12px;background:#0a0500;border:1px solid #3a1a00;display:block;touch-action:none;"></canvas>
+    </div>
+    <div id="tr-result" style="display:none;text-align:center;padding:20px 0;">
+      <div style="font-size:48px;margin-bottom:12px;">🏆</div>
+      <div style="font-size:18px;font-weight:700;color:#ffd090;margin-bottom:8px;">Game Over!</div>
+      <div style="font-size:14px;color:#7a5a30;margin-bottom:4px;">Coins caught: <span id="tr-final-coins" style="color:#d4a017;font-weight:700;">0</span></div>
+      <div style="font-size:14px;color:#7a5a30;margin-bottom:20px;">Points earned: <span id="tr-final-pts" style="color:#2ecc71;font-weight:700;">0</span></div>
+      <button onclick="resetTokenRush()" style="width:100%;background:#1a0d00;border:1px solid #d4a017;color:#d4a017;border-radius:12px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px;">🔄 Play Again</button>
+      <button onclick="switchTab('games')" style="width:100%;background:#1a0d00;border:0.5px solid #3a1a00;color:#7a5a30;border-radius:12px;padding:12px;font-size:14px;cursor:pointer;">Back to Games</button>
+    </div>
+  </div>
+
+  <div class="screen" id="s-profile">
     <div class="loading" id="profile-loading">Loading...</div>
     <div id="profile-content" style="display:none">
       <div class="profile-avatar" id="profile-avatar">⚒</div>
       <div class="profile-name" id="profile-name">—</div>
       <div class="profile-handle" id="profile-handle">—</div>
+
+      <div style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:12px;padding:16px;margin-bottom:12px;">
+        <div style="font-size:12px;color:#7a5a30;margin-bottom:12px;font-weight:600;">Farcaster Info</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:13px;color:#7a5a30;">Username</span>
+            <span style="font-size:13px;color:#ffd090;font-weight:600;" id="profile-username">—</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:13px;color:#7a5a30;">FID</span>
+            <span style="font-size:13px;color:#ffd090;font-weight:600;" id="profile-fid">—</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:13px;color:#7a5a30;">Joined</span>
+            <span style="font-size:13px;color:#ffd090;font-weight:600;" id="profile-joined">—</span>
+          </div>
+        </div>
+      </div>
+
       <div class="stat-grid">
         <div class="stat-card"><div class="stat-val" id="stat-points">0</div><div class="stat-label">Points</div></div>
         <div class="stat-card"><div class="stat-val" id="stat-tokens">0</div><div class="stat-label">$FORGE</div></div>
-        <div class="stat-card"><div class="stat-val" id="stat-spins">0</div><div class="stat-label">Spins</div></div>
+        <div class="stat-card"><div class="stat-val" id="stat-freespins" style="color:#2ecc71;">0</div><div class="stat-label">Free Spins</div></div>
       </div>
+
       <div class="rank-badge">
         <span style="font-size:13px;color:#c07830;">Rank</span>
         <span class="rank-val" id="profile-rank">Apprentice Forger</span>
       </div>
-      <!-- Spin Section -->
-      <div class="spin-section">
-        
-        <div class="wheel-wrap">
-          <div class="wheel-pointer">▼</div>
-          <canvas id="spinCanvas" width="240" height="240"></canvas>
-        </div>
-        <button class="spin-btn" id="spinBtn" onclick="doSpin()">🔥 Spin to Forge</button>
-        <div class="spin-result" id="spinResult">Spin to win tokens & points!</div>
+
+      <!-- Mystery Box Reward -->
+      <div id="mystery-box-section" style="display:none;background:linear-gradient(135deg,#1e0a2a,#2a0a3a);border:1px solid #7c3aed;border-radius:12px;padding:14px;margin-top:12px;">
+        <div style="font-size:12px;color:#a855f7;font-weight:700;margin-bottom:4px;">🎁 Mystery Box Reward</div>
+        <div style="font-size:16px;font-weight:700;color:#d4aaff;" id="profile-mystery-reward">—</div>
+        <div style="font-size:10px;color:#7c3aed;margin-top:4px;">Redeem Soon ✨</div>
       </div>
+
+      <!-- $FORGE Token Price Section -->
+      <div style="background:#1a0d00;border:1px solid #E85D04;border-radius:14px;padding:16px;margin-top:14px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#C04B00,#E85D04);display:flex;align-items:center;justify-content:center;font-size:14px;">⚒</div>
+            <div>
+              <div style="font-size:14px;font-weight:700;color:#ffd090;">$FORGE</div>
+              <div style="font-size:10px;color:#7a5a30;">CastForge Arena Token</div>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:11px;color:#7a5a30;margin-bottom:2px;">Price</div>
+            <div id="forge-price" style="font-size:20px;font-weight:700;color:#E85D04;">--</div>
+            <div id="forge-change" style="font-size:11px;color:#7a5a30;">Coming Soon</div>
+          </div>
+        </div>
+
+        <!-- Chart area -->
+        <div style="position:relative;margin-bottom:10px;">
+          <canvas id="forgeChart" height="90" style="width:100%;border-radius:8px;"></canvas>
+          <div id="forge-chart-overlay" style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,5,0,0.7);border-radius:8px;">
+            <div style="font-size:22px;margin-bottom:4px;">🚀</div>
+            <div style="font-size:12px;font-weight:700;color:#E85D04;">Token Launching Soon</div>
+            <div style="font-size:10px;color:#7a5a30;margin-top:2px;">Live price will appear here</div>
+          </div>
+        </div>
+
+        <!-- Stats row -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;">
+          <div style="background:#110800;border-radius:8px;padding:8px;text-align:center;">
+            <div style="font-size:10px;color:#7a5a30;margin-bottom:2px;">Market Cap</div>
+            <div style="font-size:12px;font-weight:700;color:#ffd090;" id="forge-mcap">--</div>
+          </div>
+          <div style="background:#110800;border-radius:8px;padding:8px;text-align:center;">
+            <div style="font-size:10px;color:#7a5a30;margin-bottom:2px;">24h Vol</div>
+            <div style="font-size:12px;font-weight:700;color:#ffd090;" id="forge-vol">--</div>
+          </div>
+          <div style="background:#110800;border-radius:8px;padding:8px;text-align:center;">
+            <div style="font-size:10px;color:#7a5a30;margin-bottom:2px;">Holders</div>
+            <div style="font-size:12px;font-weight:700;color:#ffd090;" id="forge-holders">--</div>
+          </div>
+        </div>
+
+        <!-- Network badge -->
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div style="width:6px;height:6px;border-radius:50%;background:#0052FF;"></div>
+            <span style="font-size:11px;color:#7a5a30;">Base Network</span>
+          </div>
+          <div style="background:#0052FF22;border:0.5px solid #0052FF55;border-radius:20px;padding:3px 10px;">
+            <span style="font-size:10px;color:#4d8eff;font-weight:600;">BASE</span>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <!-- Pool -->
+<canvas id="lavaCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;"></canvas>
+<div class="content" style="position:relative;z-index:1;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;min-height:0;padding-bottom:80px;">
+  <!-- Shared Door Animation Overlay -->
+  <div id="door-overlay" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;pointer-events:all;display:none;background:#050200;">
+    <canvas id="doorCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;display:block;"></canvas>
+  </div>
+
+  <!-- Profile -->
   <div class="screen" id="s-pool">
     <div class="pool-total">
       <div class="pool-label">Total Pool</div>
@@ -394,6 +576,48 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
     </div>
   </div>
 
+  <!-- Spin Now -->
+  <div class="screen" id="s-spin">
+    <div style="text-align:center;padding:10px 0 4px;">
+      <div style="font-size:13px;color:#7a5a30;margin-bottom:2px;">Free Spins Available</div>
+      <div id="freeSpinCount" style="font-size:36px;font-weight:700;color:#2ecc71;line-height:1;">0</div>
+      <div style="font-size:11px;color:#5a3a10;margin-top:2px;">Invite friends to earn more spins</div>
+    </div>
+    <div class="spin-section">
+      <div class="wheel-wrap">
+        <div class="wheel-pointer">▼</div>
+        <canvas id="spinCanvas" width="240" height="240"></canvas>
+      </div>
+      <button class="spin-btn" id="spinBtn" onclick="doSpin()">🔥 Spin to Forge</button>
+      <div class="spin-result" id="spinResult">Spin to win tokens & points!</div>
+    </div>
+    <div style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:12px;padding:14px;margin-top:4px;">
+      <div style="font-size:12px;color:#7a5a30;margin-bottom:10px;font-weight:600;">🎯 Rewards</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div style="background:#110800;border-radius:8px;padding:10px;text-align:center;">
+          <div style="font-size:18px;font-weight:700;color:#E85D04;">500</div>
+          <div style="font-size:10px;color:#5a3a10;">$FORGE</div>
+        </div>
+        <div style="background:#110800;border-radius:8px;padding:10px;text-align:center;">
+          <div style="font-size:18px;font-weight:700;color:#E85D04;">100</div>
+          <div style="font-size:10px;color:#5a3a10;">$FORGE</div>
+        </div>
+        <div style="background:#110800;border-radius:8px;padding:10px;text-align:center;">
+          <div style="font-size:18px;font-weight:700;color:#F48C06;">100</div>
+          <div style="font-size:10px;color:#5a3a10;">Points</div>
+        </div>
+        <div style="background:#110800;border-radius:8px;padding:10px;text-align:center;">
+          <div style="font-size:18px;font-weight:700;color:#F48C06;">50</div>
+          <div style="font-size:10px;color:#5a3a10;">Points</div>
+        </div>
+      </div>
+      <div style="margin-top:8px;background:#110800;border-radius:8px;padding:10px;text-align:center;">
+        <div style="font-size:14px;font-weight:700;color:#666;">🔄 Try Again</div>
+        <div style="font-size:10px;color:#5a3a10;">Free extra spin!</div>
+      </div>
+    </div>
+  </div>
+
   <!-- Tasks -->
   <div class="screen" id="s-tasks">
     <div class="section-title">Social Tasks</div>
@@ -409,6 +633,29 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
       <div class="task-info"><div class="task-name">Recast official cast</div><div class="task-desc">Share to your followers</div></div>
       <div class="task-right"><div class="task-pts">+50 pts</div><button class="task-btn" id="task-recast" onclick="doTask('recast',50,'https://farcaster.xyz/castforge/0x3955ed79')">Recast</button></div>
     </div>
+    <div class="section-title" style="margin-top:16px">Game Tasks</div>
+    <div class="task-card">
+      <div class="task-info"><div class="task-name">Play Token Rush</div><div class="task-desc">Catch 5+ coins in a single game</div></div>
+      <div class="task-right"><div class="task-pts">+75 pts</div><button class="task-btn" id="task-tokenrush" onclick="doTask('tokenrush',75)">Play</button></div>
+    </div>
+    <div class="task-card">
+      <div class="task-info"><div class="task-name">Spin the wheel</div><div class="task-desc">Use a free spin</div></div>
+      <div class="task-right"><div class="task-pts">+20 pts</div><button class="task-btn" id="task-firstspin" onclick="doTask('firstspin',20)">Spin</button></div>
+    </div>
+    <div class="section-title" style="margin-top:16px">Game Tasks</div>
+    <div class="task-card">
+      <div class="task-info"><div class="task-name">Play Token Rush once</div><div class="task-desc">Complete 1 game of Token Rush</div></div>
+      <div class="task-right"><div class="task-pts">+50 pts</div><button class="task-btn" id="task-tokenrush1" onclick="doTask('tokenrush1',50)">Play</button></div>
+    </div>
+    <div class="task-card">
+      <div class="task-info"><div class="task-name">Catch 20 coins</div><div class="task-desc">Catch 20+ coins in a single game</div></div>
+      <div class="task-right"><div class="task-pts">+80 pts</div><button class="task-btn" id="task-tokenrush2" onclick="doTask('tokenrush2',80)">Play</button></div>
+    </div>
+    <div class="task-card">
+      <div class="task-info"><div class="task-name">Spin the wheel 3 times</div><div class="task-desc">Use 3 free spins</div></div>
+      <div class="task-right"><div class="task-pts">+60 pts</div><button class="task-btn" id="task-spin3" onclick="doTask('spin3',60)">Spin</button></div>
+    </div>
+
     <div class="section-title" style="margin-top:16px">Invite Tasks</div>
     <div class="task-card">
       <div class="task-info"><div class="task-name">Invite 1 friend</div><div class="task-desc">Earn 25% bonus from their spins</div></div>
@@ -418,10 +665,39 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
 
   <!-- Invite -->
   <div class="screen" id="s-invite">
+    <!-- Forge Gate Animation Overlay -->
+    <div id="forge-gate" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0a0a;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;">
+      <canvas id="gateCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;"></canvas>
+      <div id="gate-text" style="position:relative;z-index:2;text-align:center;">
+        <div style="font-size:52px;animation:hammerPulse 0.3s ease-in-out infinite alternate;display:inline-block;">⚒</div>
+        <div style="font-size:22px;font-weight:700;color:#E85D04;margin-top:12px;letter-spacing:2px;">THE FORGE</div>
+        <div style="font-size:13px;color:#888;margin-top:6px;letter-spacing:4px;">ENTERING...</div>
+      </div>
+    </div>
+    <style>
+      @keyframes hammerPulse {
+        0% { transform: rotate(-25deg) scale(1); filter: drop-shadow(0 0 8px #E85D04); }
+        100% { transform: rotate(15deg) scale(1.2) translateY(5px); filter: drop-shadow(0 0 20px #F48C06); }
+      }
+      .milestone-card { background:#1a0d00; border-radius:12px; padding:14px; margin-bottom:10px; border:0.5px solid #3a1a00; display:flex; align-items:center; gap:12px; position:relative; overflow:hidden; }
+      .milestone-card.achieved { border-color:#E85D04; }
+      .milestone-card.locked { opacity:0.6; }
+      .milestone-icon { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+      .milestone-bar { height:4px; background:#2a1400; border-radius:4px; margin-top:8px; overflow:hidden; }
+      .milestone-fill { height:100%; border-radius:4px; background:linear-gradient(90deg,#C04B00,#E85D04); transition:width 0.8s ease; }
+      .mystery-shine { animation:mysteryGlow 2s ease-in-out infinite alternate; }
+      @keyframes mysteryGlow {
+        0% { box-shadow:0 0 8px #7c3aed; }
+        100% { box-shadow:0 0 20px #7c3aed, 0 0 40px #4c1d95; }
+      }
+    </style>
+
+    <!-- Invite Link -->
     <div class="invite-header">
       <div class="invite-title">Invite Friends ⚒</div>
-      <div class="invite-sub">Earn 25% bonus from every friend you invite</div>
+      <div class="invite-sub">Earn rewards for every successful invite</div>
     </div>
+
     <div class="invite-link-box">
       <div class="invite-link-label">Your invite link</div>
       <div class="invite-link-row">
@@ -433,14 +709,69 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
       <button class="share-btn share-fc" onclick="shareOnFarcaster()">Share on Farcaster</button>
       <button class="share-btn share-x" onclick="shareOnX()">Share on X</button>
     </div>
-    <div class="invite-stats">
+
+    <!-- Stats -->
+    <div class="invite-stats" style="margin-bottom:16px;">
       <div class="invite-stat"><div class="invite-stat-label">Invited Friends</div><div class="invite-stat-val" id="invited-count">0</div></div>
       <div class="invite-stat"><div class="invite-stat-label">Bonus Earned</div><div class="invite-stat-val" id="invite-bonus">0 pts</div></div>
     </div>
-    <div style="margin-top:16px;">
-      <div style="font-size:15px;font-weight:600;color:#E85D04;margin-bottom:10px;">Your Invites ⚒</div>
-      <div id="invited-list"><div style="text-align:center;color:#5a3008;font-size:13px;padding:12px;">Loading...</div></div>
+
+    <!-- Milestone Rewards -->
+    <div style="font-size:15px;font-weight:700;color:#E85D04;margin-bottom:12px;">🏆 Referral Milestones</div>
+
+    <!-- 1 referral -->
+    <div class="milestone-card" id="ms-1">
+      <div class="milestone-icon" style="background:#1e2a1e;">🎯</div>
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:700;color:#ffd090;">First Referral</div>
+        <div style="font-size:11px;color:#7a5a30;margin-bottom:6px;">Invite 1 friend → +75 Points</div>
+        <div class="milestone-bar"><div class="milestone-fill" id="ms-fill-1" style="width:0%"></div></div>
+        <div style="font-size:10px;color:#5a3a10;margin-top:3px;"><span id="ms-prog-1">0</span>/1 invited</div>
+      </div>
+      <div id="ms-btn-1" style="font-size:11px;font-weight:700;padding:6px 12px;border-radius:8px;background:#2a4a2a;color:#7a5a30;flex-shrink:0;">Locked</div>
     </div>
+
+    <!-- 15 referrals -->
+    <div class="milestone-card" id="ms-15">
+      <div class="milestone-icon" style="background:#2a1e00;">⚒</div>
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:700;color:#ffd090;">Forge Master</div>
+        <div style="font-size:11px;color:#7a5a30;margin-bottom:6px;">Invite 15 friends → 500 $FORGE</div>
+        <div class="milestone-bar"><div class="milestone-fill" id="ms-fill-15" style="width:0%"></div></div>
+        <div style="font-size:10px;color:#5a3a10;margin-top:3px;"><span id="ms-prog-15">0</span>/15 invited</div>
+      </div>
+      <div id="ms-btn-15" style="font-size:11px;font-weight:700;padding:6px 12px;border-radius:8px;background:#2a4a2a;color:#7a5a30;flex-shrink:0;">Locked</div>
+    </div>
+
+    <!-- 30 referrals -->
+    <div class="milestone-card" id="ms-30">
+      <div class="milestone-icon" style="background:#2a1500;">🔥</div>
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:700;color:#ffd090;">Fire Forger</div>
+        <div style="font-size:11px;color:#7a5a30;margin-bottom:6px;">Invite 30 friends → 1,000 $FORGE</div>
+        <div class="milestone-bar"><div class="milestone-fill" id="ms-fill-30" style="width:0%"></div></div>
+        <div style="font-size:10px;color:#5a3a10;margin-top:3px;"><span id="ms-prog-30">0</span>/30 invited</div>
+      </div>
+      <div id="ms-btn-30" style="font-size:11px;font-weight:700;padding:6px 12px;border-radius:8px;background:#2a4a2a;color:#7a5a30;flex-shrink:0;">Locked</div>
+    </div>
+
+    <!-- 50 referrals - Mystery Box -->
+    <div class="milestone-card mystery-shine" id="ms-50" style="border-color:#7c3aed;">
+      <div class="milestone-icon" style="background:#1e0a2a;">🎁</div>
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:700;color:#d4aaff;">Mystery Box</div>
+        <div style="font-size:11px;color:#7a5a30;margin-bottom:6px;">Invite 50 friends → Random Mega Reward!</div>
+        <div style="font-size:10px;color:#7c3aed;margin-bottom:6px;">🪙 $FORGE • 🎰 $DEGEN • ⭐ Up to 1k pts</div>
+        <div class="milestone-bar" style="background:#2a1440;"><div class="milestone-fill" id="ms-fill-50" style="width:0%;background:linear-gradient(90deg,#7c3aed,#a855f7);"></div></div>
+        <div style="font-size:10px;color:#5a3a10;margin-top:3px;"><span id="ms-prog-50">0</span>/50 invited</div>
+      </div>
+      <div id="ms-btn-50" style="font-size:11px;font-weight:700;padding:6px 12px;border-radius:8px;background:#2a1440;color:#7c3aed;flex-shrink:0;">Locked</div>
+    </div>
+
+    <!-- Your Invites List -->
+    <div style="font-size:15px;font-weight:700;color:#E85D04;margin-top:16px;margin-bottom:10px;">Your Invites ⚒</div>
+    <div id="invited-list"><div style="text-align:center;color:#5a3a10;font-size:13px;padding:12px;">Loading...</div></div>
+
   </div>
 
   <!-- Leaders -->
@@ -450,30 +781,97 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
   </div>
 </div>
 
-<div class="bottom-nav">
-  <button class="nav-btn active" onclick="switchTab('profile')">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-    <span>Profile</span>
+
+<div id="main-nav" style="background:#1a1208;border-top:1px solid #3a1a00;display:flex;position:fixed;bottom:0;left:0;right:0;max-width:430px;margin:0 auto;z-index:100;padding:8px 4px 12px;">
+  <button id="nav-games" onclick="switchTab('games')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:none;cursor:pointer;">
+    <div id="ni-games" style="width:46px;height:46px;border-radius:14px;background:#2a4a2a;display:flex;align-items:center;justify-content:center;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12h.01"/><path d="M7 12h.01"/><path d="M17 12h.01"/><path d="M12 8v8"/></svg>
+    </div>
+    <span id="nl-games" style="font-size:10px;font-weight:700;color:#aaa;">Games</span>
   </button>
-  <button class="nav-btn" onclick="switchTab('pool')">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 3"/></svg>
-    <span>Pool</span>
+  <button id="nav-profile" onclick="switchTab('profile')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:none;cursor:pointer;">
+    <div id="ni-profile" style="width:46px;height:46px;border-radius:14px;background:#2a4a2a;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(232,93,4,0.5);">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5L3 6V3h3l11.5 11.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/><path d="M19 21l2-2"/></svg>
+    </div>
+    <span id="nl-profile" style="font-size:10px;font-weight:700;color:#E85D04;">Profile</span>
   </button>
-  <button class="nav-btn" onclick="switchTab('tasks')">
-    <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-    <span>Tasks</span>
+  <button id="nav-pool" onclick="switchTab('pool')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:none;cursor:pointer;">
+    <div id="ni-pool" style="width:46px;height:46px;border-radius:14px;background:#2a4a2a;display:flex;align-items:center;justify-content:center;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+    </div>
+    <span id="nl-pool" style="font-size:10px;font-weight:700;color:#aaa;">Pool</span>
   </button>
-  <button class="nav-btn" onclick="switchTab('invite')">
-    <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-    <span>Invite</span>
+  <button id="nav-tasks" onclick="switchTab('tasks')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:none;cursor:pointer;">
+    <div id="ni-tasks" style="width:46px;height:46px;border-radius:14px;background:#2a4a2a;display:flex;align-items:center;justify-content:center;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+    </div>
+    <span id="nl-tasks" style="font-size:10px;font-weight:700;color:#aaa;">Tasks</span>
   </button>
-  <button class="nav-btn" onclick="switchTab('leaders')">
-    <svg viewBox="0 0 24 24"><path d="M8 21h8M12 21v-4M17 4l2 4h-4"/><path d="M7 4L5 8H9"/><path d="M12 3v5"/><path d="M5 8c0 5 3 8 7 8s7-3 7-8"/></svg>
-    <span>Leaders</span>
+  <button id="nav-invite" onclick="switchTab('invite')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:none;cursor:pointer;">
+    <div id="ni-invite" style="width:46px;height:46px;border-radius:14px;background:#2a4a2a;display:flex;align-items:center;justify-content:center;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+    </div>
+    <span id="nl-invite" style="font-size:10px;font-weight:700;color:#aaa;">Invite</span>
+  </button>
+  <button id="nav-leaders" onclick="switchTab('leaders')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:none;cursor:pointer;">
+    <div id="ni-leaders" style="width:46px;height:46px;border-radius:14px;background:#2a4a2a;display:flex;align-items:center;justify-content:center;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 21v-4"/><path d="M7 4L5 8H9"/><path d="M17 4l2 4h-4"/><path d="M12 3v5"/><path d="M5 8c0 5 3 8 7 8s7-3 7-8"/></svg>
+    </div>
+    <span id="nl-leaders" style="font-size:10px;font-weight:700;color:#aaa;">Leaders</span>
   </button>
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- Wallet Modal -->
+<div id="wallet-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:9000;background:rgba(0,0,0,0.7);" onclick="closeWallet(event)">
+  <div style="position:absolute;bottom:0;left:0;right:0;background:#110800;border-radius:20px 20px 0 0;padding:20px 16px 36px;border-top:1px solid #3a1a00;">
+    <div style="text-align:center;margin-bottom:16px;">
+      <div style="width:40px;height:4px;background:#3a1a00;border-radius:4px;margin:0 auto 16px;"></div>
+      <div style="font-size:18px;font-weight:700;color:#ffd090;margin-bottom:8px;">⚒ My Wallet</div>
+      <div style="display:inline-flex;align-items:center;gap:6px;background:#1a0d00;border:0.5px solid #3a1a00;border-radius:20px;padding:6px 14px;">
+        <div id="wallet-connected-badge" style="display:none;align-items:center;gap:4px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#2ecc71;"></div>
+          <span style="font-size:11px;color:#2ecc71;font-weight:600;">Connected</span>
+          <span style="color:#3a1a00;">|</span>
+        </div>
+        <span style="font-size:12px;color:#F48C06;font-family:monospace;" id="wallet-addr-short">Loading...</span>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;">
+      <div style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:12px;padding:14px;text-align:center;">
+        <div style="font-size:11px;color:#7a5a30;margin-bottom:4px;">$FORGE Tokens</div>
+        <div style="font-size:24px;font-weight:700;color:#E85D04;" id="w-tokens">0</div>
+      </div>
+      <div style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:12px;padding:14px;text-align:center;">
+        <div style="font-size:11px;color:#7a5a30;margin-bottom:4px;">Points</div>
+        <div style="font-size:24px;font-weight:700;color:#F48C06;" id="w-points">0</div>
+      </div>
+      <div style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:12px;padding:14px;text-align:center;cursor:pointer;" onclick="closeWallet();switchTab('spin');">
+        <div style="font-size:11px;color:#7a5a30;margin-bottom:4px;">Free Spins</div>
+        <div style="font-size:24px;font-weight:700;color:#2ecc71;" id="w-freespins">0</div>
+        <div style="font-size:9px;color:#2ecc71;margin-top:2px;">Tap to Spin →</div>
+      </div>
+      <div style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:12px;padding:14px;text-align:center;">
+        <div style="font-size:11px;color:#7a5a30;margin-bottom:4px;">Total Spins</div>
+        <div style="font-size:24px;font-weight:700;color:#ffd090;" id="w-totalspins">0</div>
+      </div>
+    </div>
+
+    <div style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:12px;padding:14px;margin-bottom:12px;">
+      <div style="font-size:11px;color:#7a5a30;margin-bottom:8px;">Rank</div>
+      <div style="font-size:16px;font-weight:700;color:#ffd090;" id="w-rank">Apprentice Forger</div>
+    </div>
+
+    <div style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:12px;padding:14px;margin-bottom:16px;">
+      <div style="font-size:11px;color:#7a5a30;margin-bottom:8px;">Referral Bonus Tokens</div>
+      <div style="font-size:20px;font-weight:700;color:#E85D04;" id="w-refbonus">0 $FORGE</div>
+    </div>
+
+    <button onclick="closeWallet()" style="width:100%;background:#E85D04;color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;">Close</button>
+  </div>
+</div>
 
 <script>
 const SUPABASE_URL = 'https://qjpzgkvgmztqpotfital.supabase.co';
@@ -970,7 +1368,15 @@ function updateStats() {
   if (!currentUser) return;
   document.getElementById('stat-points').textContent = currentUser.points || 0;
   document.getElementById('stat-tokens').textContent = currentUser.tokens || 0;
-  document.getElementById('stat-spins').textContent = currentUser.total_spins || 0;
+  const fs = currentUser.free_spins || 0;
+  const fsEl = document.getElementById('stat-freespins');
+  if (fsEl) fsEl.textContent = fs;
+  ['freeSpinCount','spinFreeCount'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = fs;
+  });
+  const spinBtn = document.getElementById('spinBtn');
+  if (spinBtn) spinBtn.disabled = fs <= 0;
   document.getElementById('pool-tokens').textContent = currentUser.tokens || 0;
   document.getElementById('pool-points').textContent = currentUser.points || 0;
   document.getElementById('claimTokenBtn').disabled = (currentUser.tokens || 0) === 0;
@@ -1048,15 +1454,37 @@ function showToast(msg) {
 }
 
 function switchTab(name) {
-  const map = { profile:'s-profile', pool:'s-pool', tasks:'s-tasks', invite:'s-invite', leaders:'s-leaders' };
+  const map = { games:'s-games', profile:'s-profile', pool:'s-pool', tasks:'s-tasks', invite:'s-invite', leaders:'s-leaders', spin:'s-spin', tokenrush:'s-tokenrush' };
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(map[name]).classList.add('active');
-  const idx = ['profile','pool','tasks','invite','leaders'].indexOf(name);
-  document.querySelectorAll('.nav-btn')[idx].classList.add('active');
+  const screen = document.getElementById(map[name]);
+  if (screen) screen.classList.add('active');
+  const TAB_COLORS = {games:'#E85D04',profile:'#F48C06',pool:'#d4a017',tasks:'#2ecc71',invite:'#7c3aed',leaders:'#e74c3c'};
+  ['games','profile','pool','tasks','invite','leaders'].forEach(t => {
+    const ni = document.getElementById('ni-' + t);
+    const nl = document.getElementById('nl-' + t);
+    if (!ni || !nl) return;
+    if (t === name) {
+      ni.style.background = TAB_COLORS[t];
+      ni.style.transform = 'scale(1.12)';
+      ni.style.boxShadow = '0 4px 14px rgba(0,0,0,0.3)';
+      nl.style.color = TAB_COLORS[t];
+    } else {
+      ni.style.background = '#2a4a2a';
+      ni.style.transform = 'scale(1)';
+      ni.style.boxShadow = 'none';
+      nl.style.color = '#7a5a30';
+    }
+  });
   if (name === 'leaders') loadLeaderboard();
+  if (name === 'profile') { setTimeout(loadForgePrice, 200); }
   if (name === 'pool') { updateStats(); updateReferralRewards(); loadFcfsStatus(); }
-  if (name === 'invite' && window.__userFid) loadInvitedUsers(window.__userFid);
+  if (name === 'invite' && window.__userFid) {
+    loadInvitedUsers(window.__userFid);
+    loadMilestones(window.__userFid);
+  }
+
+  if (name === 'spin') { drawWheel(0); }
 
   // Door animation on non-profile tabs, hammer strike on profile
   setTimeout(() => {
@@ -1075,6 +1503,170 @@ function switchTab(name) {
   }, 50);
 }
 
+
+async function loadMilestones(fid) {
+  const { count } = await db.from('invites').select('*', { count:'exact' }).eq('inviter_fid', fid);
+  const total = count || 0;
+
+  // Get claimed milestones
+  const { data: userData } = await db.from('users').select('claimed_milestones, mystery_box_reward').eq('fid', fid).single();
+  const claimed = userData?.claimed_milestones || [];
+  const mysteryReward = userData?.mystery_box_reward || null;
+
+  const milestones = [
+    { id: 1,  target: 1,  reward: '75 pts',        type: 'points',  amount: 75 },
+    { id: 15, target: 15, reward: '500 $FORGE',     type: 'token',   amount: 500 },
+    { id: 30, target: 30, reward: '1,000 $FORGE',   type: 'token',   amount: 1000 },
+    { id: 50, target: 50, reward: 'Mystery Box 🎁', type: 'mystery', amount: 0 },
+  ];
+
+  milestones.forEach(m => {
+    const pct = Math.min((total / m.target) * 100, 100);
+    const achieved = total >= m.target;
+    const isClaimed = claimed.includes(m.id);
+    const card = document.getElementById('ms-' + m.id);
+    const fill = document.getElementById('ms-fill-' + m.id);
+    const prog = document.getElementById('ms-prog-' + m.id);
+    const btn = document.getElementById('ms-btn-' + m.id);
+    if (!card || !fill || !prog || !btn) return;
+
+    if (prog) prog.textContent = Math.min(total, m.target);
+    if (fill) fill.style.width = pct + '%';
+
+    if (isClaimed) {
+      card.classList.add('achieved');
+      btn.textContent = '✓ Claimed';
+      btn.style.background = '#1a3a1a';
+      btn.style.color = '#2ecc71';
+      btn.onclick = null;
+    } else if (achieved) {
+      card.classList.add('achieved');
+      btn.textContent = 'Claim!';
+      btn.style.background = m.id === 50 ? '#7c3aed' : '#E85D04';
+      btn.style.color = '#fff';
+      btn.style.cursor = 'pointer';
+      btn.onclick = () => claimMilestone(m, claimed);
+    } else {
+      card.classList.add('locked');
+      btn.textContent = 'Locked';
+    }
+  });
+
+  // Show mystery box reward in profile if earned
+  if (mysteryReward) {
+    updateProfileMysteryBox(mysteryReward);
+  }
+}
+
+async function claimMilestone(milestone, alreadyClaimed) {
+  if (!userFid) return;
+  const btn = document.getElementById('ms-btn-' + milestone.id);
+  if (btn) { btn.textContent = 'Claiming...'; btn.style.opacity = '0.6'; }
+
+  let reward = { type: milestone.type, amount: milestone.amount, label: milestone.reward };
+
+  // Mystery box logic
+  if (milestone.type === 'mystery') {
+    const roll = Math.random();
+    if (roll < 0.35)      reward = { type: 'token',  amount: 1000, label: '1,000 $FORGE 🔥' };
+    else if (roll < 0.55) reward = { type: 'token',  amount: 500,  label: '500 $FORGE ⚒' };
+    else if (roll < 0.70) reward = { type: 'degen',  amount: 100,  label: '100 $DEGEN 🎩' };
+    else if (roll < 0.85) reward = { type: 'points', amount: 1000, label: '1,000 Points ⭐' };
+    else if (roll < 0.95) reward = { type: 'points', amount: 500,  label: '500 Points ✨' };
+    else                  reward = { type: 'token',  amount: 2000, label: '2,000 $FORGE 💎 JACKPOT!' };
+  }
+
+  // Update DB
+  const newClaimed = [...alreadyClaimed, milestone.id];
+  const updates = { claimed_milestones: newClaimed };
+  if (reward.type === 'points') updates.points = (currentUser.points || 0) + reward.amount;
+  if (reward.type === 'token')  updates.tokens = (currentUser.tokens || 0) + reward.amount;
+  if (milestone.type === 'mystery') updates.mystery_box_reward = reward.label;
+
+  await db.from('users').update(updates).eq('fid', userFid);
+  currentUser = { ...currentUser, ...updates };
+  updateStats();
+
+  // Show result
+  showMysteryResult(reward);
+  loadMilestones(userFid);
+}
+
+function showMysteryResult(reward) {
+  const overlay = document.getElementById('door-overlay');
+  const canvas = document.getElementById('doorCanvas');
+  if (!overlay || !canvas) { showToast('🎉 ' + reward.label + ' claimed!'); return; }
+
+  overlay.style.display = 'block';
+  overlay.style.opacity = '1';
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let frame = 0;
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = 'rgba(5,2,0,0.92)';
+    ctx.fillRect(0, 0, W, H);
+
+    // Confetti
+    for (let i = 0; i < 30; i++) {
+      const x = (Math.sin(frame*0.05 + i*2.3) * 0.5 + 0.5) * W;
+      const y = ((frame*1.5 + i*40) % H);
+      ctx.fillStyle = ['#E85D04','#FFD460','#7c3aed','#2ecc71','#F48C06'][i%5];
+      ctx.fillRect(x, y, 6, 6);
+    }
+
+    // Box
+    const bw = Math.min(W*0.75, 280), bh = 180;
+    const bx = (W-bw)/2, by = (H-bh)/2 - 30;
+    ctx.fillStyle = '#1a0d00';
+    ctx.strokeStyle = '#7c3aed';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(bx, by, bw, bh, 16);
+    ctx.fill(); ctx.stroke();
+
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#d4aaff';
+    ctx.font = `bold ${Math.min(W*0.055,20)}px sans-serif`;
+    ctx.fillText('🎁 Mystery Box Opened!', W/2, by+36);
+
+    ctx.fillStyle = '#ffd090';
+    ctx.font = `bold ${Math.min(W*0.065,24)}px sans-serif`;
+    ctx.fillText(reward.label, W/2, by+80);
+
+    ctx.fillStyle = '#7a5a30';
+    ctx.font = `${Math.min(W*0.035,13)}px sans-serif`;
+    ctx.fillText('Reward saved to your profile', W/2, by+110);
+
+    ctx.fillStyle = '#E85D04';
+    ctx.font = `${Math.min(W*0.033,12)}px sans-serif`;
+    ctx.fillText('Tap anywhere to close', W/2, by+145);
+
+    frame++;
+    if (frame < 180) requestAnimationFrame(draw);
+    else {
+      overlay.style.transition = 'opacity 0.5s';
+      overlay.style.opacity = '0';
+      setTimeout(() => { overlay.style.display='none'; overlay.style.opacity='1'; }, 500);
+    }
+  }
+  draw();
+  overlay.onclick = () => {
+    overlay.style.display = 'none';
+    overlay.onclick = null;
+  };
+}
+
+function updateProfileMysteryBox(rewardLabel) {
+  const el = document.getElementById('profile-mystery-reward');
+  if (el) {
+    el.textContent = rewardLabel;
+    el.parentElement.style.display = 'block';
+  }
+}
 
 async function loadInvitedUsers(fid) {
   const { data } = await db.from('invites')
@@ -1148,11 +1740,17 @@ async function init() {
             pfp_url: user.pfpUrl,
             invited_by: invitedBy || null,
             fcfs_eligible: isFcfsEligible,
-            join_order: (fcfsCount || 0) + 1
+            join_order: (fcfsCount || 0) + 1,
+            free_spins: 5
           }).select().single();
           dbUser = newUser;
           if (invitedBy) {
             await db.from('invites').insert({ inviter_fid: invitedBy, invitee_fid: userFid });
+            // Give inviter 1 extra free spin
+            const { data: inviter } = await db.from('users').select('free_spins').eq('fid', invitedBy).single();
+            if (inviter) {
+              await db.from('users').update({ free_spins: (inviter.free_spins || 0) + 1 }).eq('fid', invitedBy);
+            }
           }
         }
 
@@ -1169,6 +1767,12 @@ async function init() {
           document.getElementById('profile-avatar').innerHTML = '<img src="' + user.pfpUrl + '"/>';
         }
         document.getElementById('profile-name').textContent = user.displayName || user.username || 'Forger';
+    const unEl = document.getElementById('profile-username');
+    const fidEl = document.getElementById('profile-fid');
+    const joinEl = document.getElementById('profile-joined');
+    if (unEl) unEl.textContent = '@' + (user.username || '—');
+    if (fidEl) fidEl.textContent = user.fid || '—';
+    if (joinEl) joinEl.textContent = new Date(dbUser.created_at).toLocaleDateString() || '—';
         document.getElementById('profile-handle').textContent = '@' + (user.username || 'forger');
         const inviteUrl = 'https://farcaster.xyz/miniapps/7ZcAcVmacXA9/castforge-arena-?ref=' + userFid;
     document.getElementById('invite-url').textContent = inviteUrl;
@@ -1639,7 +2243,216 @@ function initLavaBackground() {
   draw();
 }
 
-window.addEventListener('load', () => { init(); initLavaBackground(); });
+function openGameScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  if (name === 'hub') {
+    document.getElementById('s-games').classList.add('active');
+  } else if (name === 'spin') {
+    document.getElementById('s-spin-game').classList.add('active');
+    drawWheel(0);
+  } else if (name === 'tokenrush') {
+    document.getElementById('s-tokenrush').classList.add('active');
+    document.getElementById('tr-lobby').style.display = 'block';
+    document.getElementById('tr-game').style.display = 'none';
+    document.getElementById('tr-result').style.display = 'none';
+  }
+}
+
+// Token Rush Game
+let trGameActive = false;
+let trTimer = 30;
+let trCoins = 0;
+let trInterval = null;
+let trAnimFrame = null;
+let trCoinsArr = [];
+let trPlayerX = 0;
+
+function startTokenRush() {
+  switchTab('tokenrush');
+  const pay = document.getElementById('tr-pay-screen');
+  const game = document.getElementById('tr-game-screen');
+  const result = document.getElementById('tr-result-screen');
+  if (pay) pay.style.display = 'block';
+  if (game) game.style.display = 'none';
+  if (result) result.style.display = 'none';
+}
+
+async function payAndStartRush() {
+  const sdk = (window.miniapp && window.miniapp.sdk) || window.FrameSDK;
+  if (!sdk) { showToast('SDK not found'); return; }
+
+  try {
+    let ethPriceUsd = 3000;
+    try {
+      const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+      const data = await res.json();
+      ethPriceUsd = data.ethereum.usd;
+    } catch(e) {}
+    const feeWei = BigInt(Math.floor(0.05 / ethPriceUsd * 1e18));
+    const result = await sdk.wallet.sendTransaction({
+      chainId: 'eip155:8453',
+      calls: [{ to: CONTRACT, value: '0x' + feeWei.toString(16), data: '0x' }]
+    });
+    const txHash = result.hash || result.transactionHash || ('tr_' + Date.now());
+    await db.from('claim_history').insert({ fid: userFid, claim_type: 'tokenrush_entry', amount: 0, tx_hash: txHash });
+    beginTokenRush();
+  } catch(e) {
+    showToast('Payment failed: ' + (e.message || 'Try again'));
+  }
+}
+
+function beginTokenRush() {
+  document.getElementById('tr-pay-screen').style.display = 'none';
+  document.getElementById('tr-game-screen').style.display = 'block';
+  document.getElementById('tr-result-screen').style.display = 'none';
+
+  const canvas = document.getElementById('trCanvas');
+  const W = canvas.width = canvas.offsetWidth;
+  const H = canvas.height = 420;
+  const ctx = canvas.getContext('2d');
+
+  trCoins = 0; trTimer = 30; trGameActive = true;
+  trCoinsArr = [];
+  trPlayerX = W / 2;
+
+  document.getElementById('tr-coins').textContent = '0';
+  document.getElementById('tr-timer').textContent = '30';
+  document.getElementById('tr-score').textContent = '0';
+
+  // Touch/click controls
+  canvas.ontouchmove = (e) => {
+    e.preventDefault();
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = W / rect.width;
+    trPlayerX = (e.touches[0].clientX - rect.left) * scaleX;
+  };
+  canvas.onmousemove = (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = W / rect.width;
+    trPlayerX = (e.clientX - rect.left) * scaleX;
+  };
+
+  // Spawn coins
+  const spawnInterval = setInterval(() => {
+    if (!trGameActive) { clearInterval(spawnInterval); return; }
+    const types = [
+      { emoji: '🪙', pts: 10, speed: 2.5, size: 28 },
+      { emoji: '💰', pts: 25, speed: 3.5, size: 24 },
+      { emoji: '⚡', pts: 5, speed: 4.5, size: 20 },
+      { emoji: '💎', pts: 50, speed: 2, size: 26 },
+    ];
+    const t = types[Math.floor(Math.random() * types.length)];
+    trCoinsArr.push({ x: Math.random()*(W-40)+20, y: -30, ...t, collected: false });
+  }, 800);
+
+  // Timer countdown
+  trInterval = setInterval(() => {
+    if (!trGameActive) { clearInterval(trInterval); return; }
+    trTimer--;
+    document.getElementById('tr-timer').textContent = trTimer;
+    if (trTimer <= 0) { clearInterval(trInterval); clearInterval(spawnInterval); endTokenRush(); }
+  }, 1000);
+
+  const BASKET_W = 70, BASKET_H = 20;
+
+  function gameLoop() {
+    if (!trGameActive) return;
+    ctx.clearRect(0, 0, W, H);
+
+    // Background
+    ctx.fillStyle = '#0a0500';
+    ctx.fillRect(0, 0, W, H);
+
+    // Grid lines
+    ctx.strokeStyle = '#1a0d00';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < W; i += 40) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,H); ctx.stroke(); }
+    for (let i = 0; i < H; i += 40) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(W,i); ctx.stroke(); }
+
+    // Move and draw coins
+    let score = 0;
+    trCoinsArr.forEach(c => {
+      if (c.collected) return;
+      c.y += c.speed;
+
+      // Collision with basket
+      const bx = Math.max(BASKET_W/2, Math.min(W - BASKET_W/2, trPlayerX));
+      if (c.y + c.size/2 > H - 50 && c.y < H - 30 &&
+          c.x > bx - BASKET_W/2 - 10 && c.x < bx + BASKET_W/2 + 10) {
+        c.collected = true;
+        trCoins++;
+        score += c.pts;
+        document.getElementById('tr-coins').textContent = trCoins;
+        document.getElementById('tr-score').textContent = parseInt(document.getElementById('tr-score').textContent) + c.pts;
+      }
+
+      if (!c.collected) {
+        ctx.font = `${c.size}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(c.emoji, c.x, c.y);
+      }
+    });
+
+    // Remove off-screen coins
+    trCoinsArr = trCoinsArr.filter(c => c.y < H + 40);
+
+    // Draw basket
+    const bx = Math.max(BASKET_W/2, Math.min(W - BASKET_W/2, trPlayerX));
+    ctx.fillStyle = '#E85D04';
+    ctx.beginPath();
+    ctx.roundRect(bx - BASKET_W/2, H - 50, BASKET_W, BASKET_H, 6);
+    ctx.fill();
+    ctx.fillStyle = '#F48C06';
+    ctx.fillRect(bx - BASKET_W/2, H - 50, BASKET_W, 4);
+
+    // Timer bar
+    const pct = trTimer / 30;
+    ctx.fillStyle = '#1a0d00';
+    ctx.fillRect(10, H - 20, W - 20, 8);
+    ctx.fillStyle = pct > 0.5 ? '#2ecc71' : pct > 0.25 ? '#F48C06' : '#e74c3c';
+    ctx.fillRect(10, H - 20, (W - 20) * pct, 8);
+
+    trAnimFrame = requestAnimationFrame(gameLoop);
+  }
+  gameLoop();
+}
+
+async function endTokenRush() {
+  trGameActive = false;
+  if (trAnimFrame) cancelAnimationFrame(trAnimFrame);
+
+  const scoreEl = document.getElementById('tr-score');
+  const totalPts = parseInt(scoreEl ? scoreEl.textContent : '0') || 0;
+  let reward = 0;
+  if (trCoins >= 20) reward = 200;
+  else if (trCoins >= 10) reward = 100;
+  else if (trCoins >= 5) reward = 50;
+
+  document.getElementById('tr-game-screen').style.display = 'none';
+  document.getElementById('tr-result-screen').style.display = 'block';
+  document.getElementById('tr-result-emoji').textContent = trCoins >= 20 ? '🏆' : trCoins >= 10 ? '🥇' : trCoins >= 5 ? '🎉' : '😔';
+  document.getElementById('tr-result-title').textContent = trCoins >= 5 ? 'Great job!' : 'Keep trying!';
+  document.getElementById('tr-result-msg').textContent = `You caught ${trCoins} coins (${totalPts} score)`;
+  document.getElementById('tr-result-pts').textContent = reward;
+
+  if (reward > 0 && userFid) {
+    const { data: u } = await db.from('users').select('points,total_spins').eq('fid', userFid).single();
+    await db.from('users').update({ points: (u.points||0) + reward }).eq('fid', userFid);
+    await db.from('spin_history').insert({ fid: userFid, reward_type: 'tokenrush', reward_amount: reward, tx_hash: 'tr_' + Date.now() });
+    currentUser.points = (currentUser.points||0) + reward;
+    updateStats();
+    showToast('🪙 +' + reward + ' points earned!');
+  }
+}
+
+function resetTokenRush() {
+  document.getElementById('tr-pay-screen').style.display = 'block';
+  document.getElementById('tr-game-screen').style.display = 'none';
+  document.getElementById('tr-result-screen').style.display = 'none';
+}
+
+window.addEventListener('load', () => { init(); initLavaBackground(); setTimeout(() => { drawWheel(0); const ni = document.getElementById('ni-games'); const nl = document.getElementById('nl-games'); if (ni) { ni.style.background='#E85D04'; ni.style.transform='scale(1.12)'; ni.style.boxShadow='0 4px 14px rgba(0,0,0,0.3)'; } if (nl) nl.style.color='#E85D04'; }, 300); });
 </script>
 </body>
 </html>
