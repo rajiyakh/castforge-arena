@@ -290,7 +290,7 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
 </head>
 <body>
 
-<div class="topbar" id="main-topbar" style="visibility:hidden;position:absolute;top:-999px;">
+<div class="topbar">
   <div class="topbar-icon">⚒</div>
   <span class="topbar-title">CastForge Arena</span>
   <div style="flex:1;"></div>
@@ -301,20 +301,6 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
 </div>
 
 <canvas id="lavaCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;"></canvas>
-
-<!-- INTRO SCREEN -->
-<div id="intro-screen" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;background:#050200;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;">
-  <canvas id="introCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;"></canvas>
-  <div style="position:relative;z-index:2;text-align:center;padding:0 24px;">
-    <div id="intro-hammer" style="font-size:72px;display:inline-block;margin-bottom:16px;">⚒</div>
-    <div style="font-size:28px;font-weight:700;color:#ffd090;letter-spacing:2px;margin-bottom:6px;">CastForge Arena</div>
-    <div style="font-size:13px;color:#7a5a30;letter-spacing:3px;margin-bottom:40px;">FORGE YOUR LEGACY</div>
-    <button id="enter-btn" onclick="enterArena()" style="background:linear-gradient(135deg,#C04B00,#E85D04,#F48C06);border:none;border-radius:50px;padding:16px 40px;font-size:16px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:1px;box-shadow:0 0 30px rgba(232,93,4,0.6);display:flex;align-items:center;gap:10px;margin:0 auto;">
-      <span>⚒</span> Enter The Arena
-    </button>
-  </div>
-</div>
-
 <div class="content" style="position:relative;z-index:1;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;min-height:0;padding-bottom:80px;">
   <!-- Shared Door Animation Overlay -->
   <div id="door-overlay" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;pointer-events:all;display:none;background:#050200;">
@@ -324,7 +310,7 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
   <!-- Profile -->
   <!-- Games Lobby -->
   <!-- Games Hub -->
-  <div class="screen" id="s-games">
+  <div class="screen active" id="s-games">
     <div style="padding:8px 0 14px;text-align:center;">
       <div style="font-size:18px;font-weight:700;color:#ffd090;margin-bottom:4px;">⚒ Games Arena</div>
       <div style="font-size:12px;color:#7a5a30;">Pick a game to earn rewards</div>
@@ -419,7 +405,7 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
     </div>
   </div>
 
-  <div class="screen active" id="s-profile">
+  <div class="screen" id="s-profile">
     <div class="loading" id="profile-loading">Loading...</div>
     <div id="profile-content" style="display:none">
       <div class="profile-avatar" id="profile-avatar">⚒</div>
@@ -521,20 +507,6 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
   </div>
 
 <canvas id="lavaCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;"></canvas>
-
-<!-- INTRO SCREEN -->
-<div id="intro-screen" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;background:#050200;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;">
-  <canvas id="introCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;"></canvas>
-  <div style="position:relative;z-index:2;text-align:center;padding:0 24px;">
-    <div id="intro-hammer" style="font-size:72px;display:inline-block;margin-bottom:16px;">⚒</div>
-    <div style="font-size:28px;font-weight:700;color:#ffd090;letter-spacing:2px;margin-bottom:6px;">CastForge Arena</div>
-    <div style="font-size:13px;color:#7a5a30;letter-spacing:3px;margin-bottom:40px;">FORGE YOUR LEGACY</div>
-    <button id="enter-btn" onclick="enterArena()" style="background:linear-gradient(135deg,#C04B00,#E85D04,#F48C06);border:none;border-radius:50px;padding:16px 40px;font-size:16px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:1px;box-shadow:0 0 30px rgba(232,93,4,0.6);display:flex;align-items:center;gap:10px;margin:0 auto;">
-      <span>⚒</span> Enter The Arena
-    </button>
-  </div>
-</div>
-
 <div class="content" style="position:relative;z-index:1;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;min-height:0;padding-bottom:80px;">
   <!-- Shared Door Animation Overlay -->
   <div id="door-overlay" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;pointer-events:all;display:none;background:#050200;">
@@ -693,7 +665,20 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
 
   <!-- Invite -->
   <div class="screen" id="s-invite">
+    <!-- Forge Gate Animation Overlay -->
+    <div id="forge-gate" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0a0a;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;">
+      <canvas id="gateCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;"></canvas>
+      <div id="gate-text" style="position:relative;z-index:2;text-align:center;">
+        <div style="font-size:52px;animation:hammerPulse 0.3s ease-in-out infinite alternate;display:inline-block;">⚒</div>
+        <div style="font-size:22px;font-weight:700;color:#E85D04;margin-top:12px;letter-spacing:2px;">THE FORGE</div>
+        <div style="font-size:13px;color:#888;margin-top:6px;letter-spacing:4px;">ENTERING...</div>
+      </div>
+    </div>
     <style>
+      @keyframes hammerPulse {
+        0% { transform: rotate(-25deg) scale(1); filter: drop-shadow(0 0 8px #E85D04); }
+        100% { transform: rotate(15deg) scale(1.2) translateY(5px); filter: drop-shadow(0 0 20px #F48C06); }
+      }
       .milestone-card { background:#1a0d00; border-radius:12px; padding:14px; margin-bottom:10px; border:0.5px solid #3a1a00; display:flex; align-items:center; gap:12px; position:relative; overflow:hidden; }
       .milestone-card.achieved { border-color:#E85D04; }
       .milestone-card.locked { opacity:0.6; }
@@ -797,7 +782,7 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
 </div>
 
 
-<div id="main-nav" style="visibility:hidden;" style="background:#1a1208;border-top:1px solid #3a1a00;display:flex;position:fixed;bottom:0;left:0;right:0;max-width:430px;margin:0 auto;z-index:100;padding:8px 4px 12px;">
+<div id="main-nav" style="background:#1a1208;border-top:1px solid #3a1a00;display:flex;position:fixed;bottom:0;left:0;right:0;max-width:430px;margin:0 auto;z-index:100;padding:8px 4px 12px;">
   <button id="nav-games" onclick="switchTab('games')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:none;cursor:pointer;">
     <div id="ni-games" style="width:46px;height:46px;border-radius:14px;background:#2a4a2a;display:flex;align-items:center;justify-content:center;">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12h.01"/><path d="M7 12h.01"/><path d="M17 12h.01"/><path d="M12 8v8"/></svg>
@@ -1494,11 +1479,9 @@ function switchTab(name) {
   if (name === 'leaders') loadLeaderboard();
   if (name === 'profile') { setTimeout(loadForgePrice, 200); }
   if (name === 'pool') { updateStats(); updateReferralRewards(); loadFcfsStatus(); }
-  if (name === 'invite') {
-    if (window.__userFid) {
-      setTimeout(() => { loadInvitedUsers(window.__userFid).catch(()=>{}); }, 100);
-      setTimeout(() => { loadMilestones(window.__userFid).catch(()=>{}); }, 200);
-    }
+  if (name === 'invite' && window.__userFid) {
+    loadInvitedUsers(window.__userFid);
+    loadMilestones(window.__userFid);
   }
 
   if (name === 'spin') { drawWheel(0); }
@@ -1522,7 +1505,6 @@ function switchTab(name) {
 
 
 async function loadMilestones(fid) {
-  try {
   const { count } = await db.from('invites').select('*', { count:'exact' }).eq('inviter_fid', fid);
   const total = count || 0;
 
@@ -1574,7 +1556,6 @@ async function loadMilestones(fid) {
   if (mysteryReward) {
     updateProfileMysteryBox(mysteryReward);
   }
-  } catch(e) { console.log('milestone err', e); }
 }
 
 async function claimMilestone(milestone, alreadyClaimed) {
@@ -1596,7 +1577,7 @@ async function claimMilestone(milestone, alreadyClaimed) {
   }
 
   // Update DB
-  const newClaimed = [...(alreadyClaimed || []), milestone.id];
+  const newClaimed = [...alreadyClaimed, milestone.id];
   const updates = { claimed_milestones: newClaimed };
   if (reward.type === 'points') updates.points = (currentUser.points || 0) + reward.amount;
   if (reward.type === 'token')  updates.tokens = (currentUser.tokens || 0) + reward.amount;
@@ -1688,7 +1669,6 @@ function updateProfileMysteryBox(rewardLabel) {
 }
 
 async function loadInvitedUsers(fid) {
-  try {
   const { data } = await db.from('invites')
     .select('invitee_fid, created_at')
     .eq('inviter_fid', fid)
@@ -1725,7 +1705,6 @@ async function loadInvitedUsers(fid) {
       + '<div style="font-size:12px;color:#E85D04;">+25% bonus</div>'
       + '</div>';
   }).join('');
-  } catch(e) { console.log('invited err', e); }
 }
 
 async function init() {
@@ -2473,84 +2452,7 @@ function resetTokenRush() {
   document.getElementById('tr-result-screen').style.display = 'none';
 }
 
-function initIntro() {
-  const canvas = document.getElementById('introCanvas');
-  const W = canvas.width = window.innerWidth;
-  const H = canvas.height = window.innerHeight;
-  const ctx = canvas.getContext('2d');
-
-  // Ember particles
-  const embers = Array.from({length:40}, () => ({
-    x: Math.random()*W, y: H+Math.random()*H,
-    vy: -(0.4+Math.random()*1), vx: (Math.random()-0.5)*0.5,
-    r: 0.8+Math.random()*2.5, life: Math.random(),
-    maxLife: 0.5+Math.random()*0.5,
-    color: ['#FF6600','#FF4400','#FFD460','#FF8800','#E85D04'][Math.floor(Math.random()*5)]
-  }));
-
-  // Hammer animation
-  const hammer = document.getElementById('intro-hammer');
-  let hammerFrame = 0;
-  let hammerInterval = setInterval(() => {
-    hammerFrame++;
-    const strike = Math.sin(hammerFrame * 0.15);
-    const rot = strike * 25;
-    const scale = 1 + Math.abs(strike) * 0.15;
-    const ty = Math.abs(strike) * 8;
-    if (hammer) hammer.style.transform = `rotate(${rot}deg) scale(${scale}) translateY(${ty}px)`;
-    // Glow pulse
-    const glow = Math.abs(strike);
-    if (hammer) hammer.style.filter = `drop-shadow(0 0 ${8+glow*20}px #E85D04)`;
-  }, 40);
-
-
-
-  // Draw background
-  function drawIntro() {
-    ctx.clearRect(0,0,W,H);
-    embers.forEach(e => {
-      e.y += e.vy; e.x += e.vx + Math.sin(e.life*8)*0.3; e.life += 0.006;
-      if (e.y < -10 || e.life > e.maxLife) {
-        e.x=Math.random()*W; e.y=H+10; e.life=0;
-        e.vy=-(0.4+Math.random()*1); e.vx=(Math.random()-0.5)*0.5;
-      }
-      const a = Math.sin(e.life/e.maxLife*Math.PI)*0.7;
-      ctx.beginPath(); ctx.arc(e.x,e.y,e.r,0,Math.PI*2);
-      ctx.fillStyle=e.color; ctx.globalAlpha=a; ctx.fill(); ctx.globalAlpha=1;
-    });
-    requestAnimationFrame(drawIntro);
-  }
-  drawIntro();
-
-  window.__hammerInterval = hammerInterval;
-}
-
-function enterArena() {
-  // Hide intro immediately
-  const intro = document.getElementById('intro-screen');
-  if (intro) intro.style.display = 'none';
-  
-  // Show topbar and nav
-  const topbar = document.getElementById('main-topbar');
-  const nav = document.getElementById('main-nav');
-  if (topbar) { topbar.style.visibility='visible'; topbar.style.position='sticky'; topbar.style.top='0'; }
-  if (nav) { nav.style.visibility='visible'; }
-  
-  // Stop hammer animation
-  if (window.__hammerInterval) clearInterval(window.__hammerInterval);
-  
-  // Set profile nav active
-  const ni = document.getElementById('ni-profile');
-  const nl = document.getElementById('nl-profile');
-  if (ni) { ni.style.background='#F48C06'; ni.style.transform='scale(1.12)'; }
-  if (nl) nl.style.color='#F48C06';
-}
-
-window.addEventListener('load', () => {
-  initIntro();
-  initLavaBackground();
-  init();
-});
+window.addEventListener('load', () => { init(); initLavaBackground(); setTimeout(() => { drawWheel(0); const ni = document.getElementById('ni-games'); const nl = document.getElementById('nl-games'); if (ni) { ni.style.background='#E85D04'; ni.style.transform='scale(1.12)'; ni.style.boxShadow='0 4px 14px rgba(0,0,0,0.3)'; } if (nl) nl.style.color='#E85D04'; }, 300); });
 </script>
 </body>
 </html>
