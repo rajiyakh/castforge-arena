@@ -697,7 +697,7 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
         <div class="fcfs-title">New User Airdrop</div>
         <span class="fcfs-badge" id="fcfs-badge">LIVE</span>
       </div>
-      <div style="font-size:13px;color:#ffd090;margin-bottom:8px;line-height:1.6;">First <span style="color:#E85D04;font-weight:700;">5,000 users</span> get 1,000 $FORGE free!<br><span style="font-size:11px;color:#7a5a30;">Open the app to be eligible. Pay 10¢ ETH to claim.</span></div>
+      <div style="font-size:13px;color:#ffd090;margin-bottom:8px;line-height:1.6;">First <span style="color:#E85D04;font-weight:700;">5,000 users</span> get 1,000 $FORGE free!<br><span style="font-size:11px;color:#7a5a30;">Open the app to be eligible. First come, first served!</span></div>
       <div class="hammer-bar-wrap">
         <div class="hammer-track">
           <div class="hammer-fill" id="wave-fill" style="width:0%"></div>
@@ -706,8 +706,8 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
         </div>
         <div class="hammer-label"><span>0</span><span id="fcfs-pct">slots filled</span><span id="fcfs-joined">0 / 5,000</span></div>
       </div>
-      <div id="fcfs-reward-info" style="font-size:12px;color:#c07830;margin-top:10px;text-align:center;display:none;"></div>
-      <button class="fcfs-claim-btn" id="fcfsClaim" onclick="doFcfsClaim()" style="display:none;">🔥 Claim 1,000 $FORGE — 10¢ ETH</button>
+      <div id="fcfs-reward-info" style="font-size:12px;color:#F48C06;margin-top:10px;text-align:center;display:none;"></div>
+      <button class="fcfs-claim-btn" id="fcfsClaim" onclick="doFcfsClaim()" style="width:100%;background:linear-gradient(90deg,#E85D04,#F48C06);color:#fff;border:none;border-radius:10px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;margin-top:12px;display:none;">🔥 Claim 1,000 $FORGE</button>
     </div>
     <div class="pool-row">
       <div class="pool-mini"><div class="pool-mini-label">FCFS</div><div class="pool-mini-val">5,000</div></div>
@@ -819,7 +819,7 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
     <div style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:12px;padding:14px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;">
       <div>
         <div style="font-size:11px;color:#7a5a30;margin-bottom:4px;">Price per box</div>
-        <div style="font-size:18px;font-weight:700;color:#ffd090;">0.00025 ETH</div>
+        <div style="font-size:18px;font-weight:700;color:#ffd090;">$0.50 ETH</div>
       </div>
       <div style="text-align:right;">
         <div style="font-size:11px;color:#7a5a30;margin-bottom:4px;">Possible reward</div>
@@ -839,7 +839,7 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
     <!-- My boxes count -->
     <div style="text-align:center;margin-bottom:12px;font-size:12px;color:#7a5a30;">My boxes opened: <span id="og-my-count" style="color:#F48C06;font-weight:700;">0</span></div>
 
-    <button class="og-open-btn" id="og-open-btn" onclick="openMysteryBox()">📦 Open Box — 0.00025 ETH</button>
+    <button class="og-open-btn" id="og-open-btn" onclick="openMysteryBox()">📦 Open Box — $0.50 ETH</button>
     <div style="font-size:10px;color:#3a2000;text-align:center;margin-top:6px;">Fee goes to CastForge contract on Base</div>
   </div>
 
@@ -1136,7 +1136,7 @@ function switchTab(name){
   if(name==='og'){setTimeout(loadOgMysteryBox,100);}
   if(name==='games'){setTimeout(loadLotteryNavBadge,300);}
   if(name==='profile'){setTimeout(loadForgePrice,200);}
-  if(name==='pool'){updateStats();updateReferralRewards();loadFcfsStatus();}
+  if(name==='pool'){updateStats();updateReferralRewards();setTimeout(()=>{if(userFid)loadFcfsStatus();},300);}
   if(name==='invite'&&window.__userFid){setTimeout(()=>{loadInvitedUsers(window.__userFid).catch(()=>{});loadMilestones(window.__userFid).catch(()=>{});},100);}
   if(name==='spin'){setTimeout(()=>drawWheel(0),100);}
   // Only hammer animation for profile tab
@@ -1170,43 +1170,57 @@ function openGameScreen(name){
 }
 
 async function loadFcfsStatus(){
-  if(!userFid)return;
+  if(!userFid){
+    // No user - still show button, will fail gracefully on click
+    const claimBtn=document.getElementById('fcfsClaim');
+    const rewardInfo=document.getElementById('fcfs-reward-info');
+    if(claimBtn){claimBtn.style.display='block';}
+    if(rewardInfo){rewardInfo.style.display='block';rewardInfo.textContent='Connect wallet to claim';rewardInfo.style.color='#7a5a30';}
+    return;
+  }
 
-  // Total eligible count vs 5000 cap
-  const{count:totalEligible}=await db.from('users').select('*',{count:'exact'}).eq('fcfs_eligible',true);
-  const eligible=totalEligible||0;
+  try {
+    // Total claimed count
+    const{count:totalClaimed}=await db.from('users').select('*',{count:'exact'}).eq('fcfs_claimed',true);
+    const claimed=totalClaimed||0;
+    const pct=Math.min((claimed/5000)*100,100).toFixed(1);
 
-  // Animate hammer bar - X/5000
-  const pct=Math.min((eligible/5000)*100,100).toFixed(1);
-  const fillEl=document.getElementById('wave-fill');
-  const joinedEl=document.getElementById('fcfs-joined');
-  if(fillEl)fillEl.style.width=Math.min(parseFloat(pct),100)+'%';
-  if(joinedEl)joinedEl.textContent=eligible.toLocaleString()+' / 5,000';
+    const fillEl=document.getElementById('wave-fill');
+    const joinedEl=document.getElementById('fcfs-joined');
+    if(fillEl)fillEl.style.width=Math.min(parseFloat(pct),100)+'%';
+    if(joinedEl)joinedEl.textContent=claimed.toLocaleString()+' / 5,000';
 
-  // Close if full
-  const badge=document.getElementById('fcfs-badge');
-  if(eligible>=5000&&badge){badge.textContent='CLOSED';badge.style.background='#555';}
+    const badge=document.getElementById('fcfs-badge');
+    if(claimed>=5000&&badge){badge.textContent='CLOSED';badge.style.background='#555';}
 
-  const hammerLeft=Math.max(2,Math.min(parseFloat(pct),98));
-  const hi=document.getElementById('hammer-icon'),sb=document.getElementById('spark-burst');
-  if(hi)hi.style.left=hammerLeft+'%';
-  if(sb)sb.style.left=hammerLeft+'%';
-  const sparks=['✦','⚡','🔥','✸','★'];
-  setInterval(()=>{const el=document.getElementById('spark-burst');if(el)el.textContent=sparks[Math.floor(Math.random()*sparks.length)];},400);
+    const hammerLeft=Math.max(2,Math.min(parseFloat(pct),98));
+    const hi=document.getElementById('hammer-icon'),sb=document.getElementById('spark-burst');
+    if(hi)hi.style.left=hammerLeft+'%';
+    if(sb)sb.style.left=hammerLeft+'%';
+    setInterval(()=>{const sparks=['✦','⚡','🔥','✸','★'];const el=document.getElementById('spark-burst');if(el)el.textContent=sparks[Math.floor(Math.random()*sparks.length)];},400);
 
-  // Check current user status
-  const{data:userData}=await db.from('users').select('fcfs_claimed').eq('fid',userFid).single();
-  const claimBtn=document.getElementById('fcfsClaim');
-  const rewardInfo=document.getElementById('fcfs-reward-info');
-  if(!userData)return;
+    // Check user claim status
+    const{data:userData}=await db.from('users').select('fcfs_claimed').eq('fid',userFid).single();
+    const claimBtn=document.getElementById('fcfsClaim');
+    const rewardInfo=document.getElementById('fcfs-reward-info');
 
-  if(!userData.fcfs_claimed){
-    // All new users eligible
+    if(userData?.fcfs_claimed){
+      if(claimBtn){claimBtn.style.display='block';claimBtn.disabled=true;claimBtn.textContent='✓ Already Claimed';}
+      if(rewardInfo){rewardInfo.style.display='block';rewardInfo.textContent='✅ You claimed your 1,000 $FORGE!';rewardInfo.style.color='#4ade80';}
+    } else if(claimed>=5000){
+      if(claimBtn)claimBtn.style.display='none';
+      if(rewardInfo){rewardInfo.style.display='block';rewardInfo.textContent='❌ All 5,000 slots claimed!';rewardInfo.style.color='#888';}
+    } else {
+      if(claimBtn){claimBtn.style.display='block';claimBtn.disabled=false;claimBtn.textContent='🔥 Claim 1,000 $FORGE';}
+      if(rewardInfo){rewardInfo.style.display='block';rewardInfo.textContent='🎉 You are eligible! Claim your 1,000 $FORGE';rewardInfo.style.color='#F48C06';}
+    }
+  } catch(e) {
+    console.log('fcfs err', e);
+    // Show button anyway
+    const claimBtn=document.getElementById('fcfsClaim');
+    const rewardInfo=document.getElementById('fcfs-reward-info');
     if(claimBtn){claimBtn.style.display='block';claimBtn.disabled=false;}
     if(rewardInfo){rewardInfo.style.display='block';rewardInfo.textContent='🎉 You are eligible! Claim your 1,000 $FORGE';rewardInfo.style.color='#F48C06';}
-  } else {
-    if(claimBtn){claimBtn.style.display='block';claimBtn.disabled=true;claimBtn.textContent='✓ Already Claimed';}
-    if(rewardInfo){rewardInfo.style.display='block';rewardInfo.textContent='✅ You claimed your 1,000 $FORGE!';rewardInfo.style.color='#4ade80';}
   }
 }
 
@@ -2340,23 +2354,29 @@ let lotteryTimerInterval = null;
 
 async function loadLottery() {
   // Get current active lottery
-  let { data: lottery } = await db.from('lottery_rounds')
-    .select('*')
-    .eq('status', 'active')
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .single();
+  let lottery = null;
+  try {
+    const { data } = await db.from('lottery_rounds')
+      .select('*')
+      .eq('status', 'active')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+    lottery = data;
+  } catch(e) { lottery = null; }
 
   // No active lottery → create one
   if (!lottery) {
-    const { data: newLot } = await db.from('lottery_rounds').insert({
-      status: 'active',
-      pool_eth: 0,
-      entry_count: 0,
-      created_at: new Date().toISOString(),
-      draw_at: new Date(Date.now() + 24*60*60*1000).toISOString()
-    }).select().single();
-    lottery = newLot;
+    try {
+      const { data: newLot } = await db.from('lottery_rounds').insert({
+        status: 'active',
+        pool_eth: 0,
+        entry_count: 0,
+        created_at: new Date().toISOString(),
+        draw_at: new Date(Date.now() + 24*60*60*1000).toISOString()
+      }).select().single();
+      lottery = newLot;
+    } catch(e) {}
   }
 
   if (!lottery) return;
@@ -2708,7 +2728,7 @@ function drawForgeDonut() {
 
 // ── OG Mystery Box ─────────────────────────────────────
 const OG_TOTAL = 666;
-const OG_PRICE_ETH = 0.00025;
+const OG_PRICE_ETH = 0.50;
 
 const OG_RARITIES = [
   { name:'Common',  emoji:'⚪', color:'#aaa',    amount:2500,  weight:90 },
@@ -2773,7 +2793,7 @@ async function openMysteryBox() {
     const { count } = await db.from('og_boxes').select('*', { count: 'exact' });
     if ((count || 0) >= OG_TOTAL) throw new Error('All 666 boxes are minted!');
 
-    // Pay 0.00025 ETH
+    // Pay $0.50 ETH
     let ethPrice = 3000;
     try { const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'); const d = await r.json(); ethPrice = d.ethereum.usd; } catch(e) {}
     const wei = BigInt(Math.floor(OG_PRICE_ETH / ethPrice * 1e18));
@@ -2830,7 +2850,7 @@ async function openMysteryBox() {
 
   } catch(e) {
     showToast('Error: ' + (e.message || 'Failed'));
-    if (btn) { btn.disabled = false; btn.textContent = '📦 Open Box — 0.00025 ETH'; }
+    if (btn) { btn.disabled = false; btn.textContent = '📦 Open Box — $0.50 ETH'; }
   }
 }
 
