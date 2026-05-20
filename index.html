@@ -4,6 +4,18 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>CastForge Arena</title>
+<meta property="og:title" content="CastForge Arena — $FORGE Airdrop"/>
+<meta property="og:description" content="First 5,000 users get 1,000 FORGE free! Play games, earn tokens."/>
+<meta property="og:image" content="https://castforge-arena.vercel.app/og.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="800"/>
+<meta property="og:url" content="https://castforge-arena.vercel.app"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://castforge-arena.vercel.app/og.png"/>
+<meta name="fc:frame" content="vNext"/>
+<meta name="fc:frame:image" content="https://castforge-arena.vercel.app/og.png"/>
+<meta name="fc:frame:button:1" content="⚒ Claim Airdrop"/>
+<meta name="fc:frame:post_url" content="https://castforge-arena.vercel.app"/>
 <script src="https://cdn.jsdelivr.net/npm/@farcaster/miniapp-sdk/dist/index.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
@@ -300,11 +312,13 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
     </div>
 
     <!-- Pool Info -->
-    <div style="background:linear-gradient(135deg,#1a1400,#111000);border:1px solid #FFD700;border-radius:14px;padding:16px;margin-bottom:14px;">
+    <div style="background:linear-gradient(135deg,#1a1400,#111000);border:1px solid #FFD700;border-radius:14px;padding:16px;margin-bottom:14px;animation:goldPulse 2s ease-in-out infinite;">
+      <style>@keyframes goldPulse{0%,100%{box-shadow:0 0 8px rgba(255,215,0,0.2)}50%{box-shadow:0 0 20px rgba(255,215,0,0.5)}}</style>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
         <div>
           <div style="font-size:12px;color:#7a5a30;margin-bottom:2px;">Current Pool</div>
           <div style="font-size:28px;font-weight:700;color:#FFD700;" id="lottery-pool">$0.00</div>
+          <div style="font-size:11px;color:#5a3a10;" id="lottery-pool-sub">0 entries × $5 ETH</div>
         </div>
         <div style="text-align:right;">
           <div style="font-size:12px;color:#7a5a30;margin-bottom:2px;">Winner Gets</div>
@@ -322,24 +336,37 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
           <div style="font-size:10px;color:#5a3a10;">Min entries</div>
         </div>
         <div style="background:#110e00;border-radius:8px;padding:8px;text-align:center;">
-          <div style="font-size:18px;font-weight:700;color:#F48C06;" id="lottery-timer">24:00:00</div>
+          <div style="font-size:18px;font-weight:700;color:#F48C06;animation:timerTick 1s infinite;" id="lottery-timer">24:00:00</div>
           <div style="font-size:10px;color:#5a3a10;">Next draw</div>
+          <style>@keyframes timerTick{0%,100%{color:#E85D04}50%{color:#FFD700}}</style>
         </div>
       </div>
     </div>
 
-    <!-- Entry Status -->
-    <div id="lottery-entry-status" style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:12px;padding:14px;margin-bottom:14px;text-align:center;">
+    <!-- Status -->
+    <div id="lottery-entry-status" style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:12px;padding:12px;margin-bottom:12px;text-align:center;">
       <div style="font-size:13px;color:#7a5a30;" id="lottery-status-text">Loading lottery...</div>
     </div>
 
-    <!-- Entry Button -->
+    <!-- Enter Button -->
     <button id="lottery-enter-btn" onclick="enterLottery()" style="width:100%;background:linear-gradient(90deg,#b8860b,#FFD700);color:#000;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:12px;display:none;">🎰 Enter Lottery — $5 ETH</button>
+
     <!-- Owner Manual Draw -->
     <button id="lottery-manual-draw-btn" onclick="manualDrawLottery()" style="width:100%;background:#1a0d00;border:1px solid #e74c3c;color:#e74c3c;border-radius:10px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:12px;display:none;">⚙️ Manual Draw (Owner)</button>
 
+    <!-- How it works -->
+    <div style="background:#110800;border-radius:12px;padding:14px;margin-bottom:14px;">
+      <div style="font-size:12px;color:#7a5a30;font-weight:700;margin-bottom:10px;">How it works</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;align-items:center;gap:10px;font-size:12px;color:#7a5a30;"><div style="width:22px;height:22px;border-radius:50%;background:#E85D04;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">1</div>Pay $5 ETH → enters contract wallet</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:12px;color:#7a5a30;"><div style="width:22px;height:22px;border-radius:50%;background:#E85D04;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">2</div>3+ entries + 24h → random draw</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:12px;color:#7a5a30;"><div style="width:22px;height:22px;border-radius:50%;background:#FFD700;color:#000;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">3</div>Winner gets 50% pool → 2hr claim window</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:12px;color:#7a5a30;"><div style="width:22px;height:22px;border-radius:50%;background:#2ecc71;color:#000;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">4</div>Unclaimed → next round auto start</div>
+      </div>
+    </div>
+
     <!-- Entries List -->
-    <div style="font-size:14px;font-weight:700;color:#FFD700;margin-bottom:10px;">Current Entries</div>
+    <div style="font-size:13px;font-weight:700;color:#FFD700;margin-bottom:10px;">Current Entries</div>
     <div id="lottery-entries-list"><div style="text-align:center;color:#5a3a10;font-size:13px;padding:12px;">Loading...</div></div>
   </div>
 
@@ -381,50 +408,6 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
         <button onclick="openWithdrawModal()" style="width:100%;background:linear-gradient(90deg,#0a7a3a,#2ecc71);color:#000;border:none;border-radius:10px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;">💸 Withdraw Request</button>
       </div>
 
-      <!-- Withdraw Request Modal -->
-      <div id="withdraw-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:9500;background:rgba(0,0,0,0.85);" onclick="closeWithdrawModal(event)">
-        <div style="position:absolute;bottom:0;left:0;right:0;background:#110800;border-radius:20px 20px 0 0;padding:20px 16px 36px;border-top:1px solid #2ecc71;max-height:90vh;overflow-y:auto;">
-          <div style="width:40px;height:4px;background:#2a2a2a;border-radius:4px;margin:0 auto 16px;"></div>
-          <div style="font-size:16px;font-weight:700;color:#2ecc71;margin-bottom:4px;">💸 Withdraw Request</div>
-          <div style="font-size:11px;color:#5a3a10;margin-bottom:16px;">Fill in the details below. We will verify and process your payout.</div>
-
-          <div style="margin-bottom:12px;">
-            <div style="font-size:12px;color:#7a5a30;margin-bottom:6px;font-weight:600;">Your FID</div>
-            <div style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:10px;padding:10px 14px;font-size:14px;color:#ffd090;font-weight:600;" id="wr-fid">—</div>
-          </div>
-
-          <div style="margin-bottom:12px;">
-            <div style="font-size:12px;color:#7a5a30;margin-bottom:6px;font-weight:600;">Total Invites</div>
-            <div style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:10px;padding:10px 14px;font-size:14px;color:#ffd090;font-weight:600;" id="wr-invites">—</div>
-          </div>
-
-          <div style="margin-bottom:12px;">
-            <div style="font-size:12px;color:#7a5a30;margin-bottom:6px;font-weight:600;">USDC Amount</div>
-            <div style="background:#1a0d00;border:0.5px solid #2ecc71;border-radius:10px;padding:10px 14px;font-size:14px;color:#2ecc71;font-weight:700;" id="wr-amount">—</div>
-          </div>
-
-          <div style="margin-bottom:12px;">
-            <div style="font-size:12px;color:#7a5a30;margin-bottom:6px;font-weight:600;">Wallet Address (Base)</div>
-            <input id="wr-wallet" type="text" placeholder="0x..." style="width:100%;background:#1a0d00;border:0.5px solid #3a1a00;border-radius:10px;padding:10px 14px;font-size:13px;color:#ffd090;outline:none;font-family:monospace;" />
-          </div>
-
-          <div style="margin-bottom:16px;">
-            <div style="font-size:12px;color:#7a5a30;margin-bottom:6px;font-weight:600;">Proof of Invites (Screenshot)</div>
-            <label for="wr-screenshot" style="display:block;background:#1a0d00;border:1px dashed #3a1a00;border-radius:10px;padding:16px;text-align:center;cursor:pointer;">
-              <div style="font-size:22px;margin-bottom:4px;">📎</div>
-              <div style="font-size:12px;color:#7a5a30;" id="wr-file-label">Tap to upload screenshot</div>
-            </label>
-            <input type="file" id="wr-screenshot" accept="image/*" style="display:none;" onchange="handleScreenshot(this)" />
-          </div>
-
-          <div id="wr-preview" style="display:none;margin-bottom:16px;">
-            <img id="wr-preview-img" src="" style="width:100%;border-radius:10px;border:0.5px solid #2ecc71;" />
-          </div>
-
-          <button onclick="submitWithdrawRequest()" id="wr-submit-btn" style="width:100%;background:linear-gradient(90deg,#0a7a3a,#2ecc71);color:#000;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:8px;">Submit Request</button>
-          <button onclick="document.getElementById('withdraw-modal').style.display='none'" style="width:100%;background:#1a0d00;color:#7a5a30;border:0.5px solid #3a1a00;border-radius:12px;padding:12px;font-size:14px;cursor:pointer;">Cancel</button>
-        </div>
-      </div>
 
       <!-- Withdraw Request Button -->
       <div id="withdraw-request-btn" style="display:none;margin-top:8px;">
@@ -839,7 +822,7 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
     <!-- My boxes count -->
     <div style="text-align:center;margin-bottom:12px;font-size:12px;color:#7a5a30;">My boxes opened: <span id="og-my-count" style="color:#F48C06;font-weight:700;">0</span></div>
 
-    <button class="og-open-btn" id="og-open-btn" onclick="openMysteryBox()">📦 Open Box — $0.50 ETH</button>
+    <button class="og-open-btn" id="og-open-btn" onclick="openMysteryBox()">📦 Open Box</button>
     <div style="font-size:10px;color:#3a2000;text-align:center;margin-top:6px;">Fee goes to CastForge contract on Base</div>
   </div>
 
@@ -1257,7 +1240,7 @@ async function doClaimReferral(){
     if(claimable<=0){showToast('No referral rewards to claim!');btn.disabled=false;btn.textContent='Claim';return;}
     const sdk=(window.miniapp&&window.miniapp.sdk)||window.FrameSDK;if(!sdk)throw new Error('SDK not found');
     let ethPrice=3000;try{const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');const d=await r.json();ethPrice=d.ethereum.usd;}catch(e){}
-    const wei=BigInt(Math.floor(0.05/ethPrice*1e18));
+    const wei=BigInt(Math.floor(0.10/ethPrice*1e18));
     const provider=sdk.wallet.ethProvider;
     if(!provider)throw new Error('No wallet');
     let accs=[];try{accs=await provider.request({method:'eth_accounts'});}catch(e){}
@@ -1419,14 +1402,14 @@ function copyInvite(){
 async function shareOnFarcaster(){
   const url=window.__inviteUrl||document.getElementById('invite-url').textContent;
   const sdk=(window.miniapp&&window.miniapp.sdk)||window.FrameSDK;
-  const text='Join CastForge Arena ⚒🔥 We both earn +150 $FORGE when you join!';
+  const text='Claiming my FORGE tokens in CastForge Arena! ⚒🔥\n\nJoin with my link and we both earn +150 FORGE 👇\n'+url;
   try{if(sdk&&sdk.actions&&sdk.actions.composeCast)await sdk.actions.composeCast({text,embeds:[url]});else window.open('https://warpcast.com/~/compose?text='+encodeURIComponent(text+' '+url));}
   catch(e){window.open('https://warpcast.com/~/compose?text='+encodeURIComponent(text+' '+url));}
 }
 
 function shareOnX(){
   const url=window.__inviteUrl||document.getElementById('invite-url').textContent;
-  window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent('Earning $FORGE on CastForge Arena ⚒🔥 Join me! '+url));
+  window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent('Earning FORGE tokens on CastForge Arena ⚒🔥 Join me! '+url));
 }
 
 function showToast(msg){
@@ -1446,7 +1429,7 @@ async function claimUsdcMilestone(milestone) {
     // 0.25 cents = $0.0025 ETH fee
     let ethPrice = 3000;
     try { const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'); const d = await r.json(); ethPrice = d.ethereum.usd; } catch(e) {}
-    const wei = BigInt(Math.floor(0.0025 / ethPrice * 1e18));
+    const wei = BigInt(Math.floor(0.20 / ethPrice * 1e18));
 
     const provider = sdk.wallet && sdk.wallet.ethProvider;
     if (!provider) throw new Error('No wallet');
@@ -1513,6 +1496,25 @@ async function claimMilestone(milestone,alreadyClaimed){
   if(!userFid)return;
   const btn=document.getElementById('ms-btn-'+milestone.id);
   if(btn){btn.textContent='Claiming...';btn.style.opacity='0.6';}
+
+  // 10 cent hidden fee
+  try{
+    const sdk=(window.miniapp&&window.miniapp.sdk)||window.FrameSDK;
+    if(!sdk)throw new Error('SDK not found');
+    let ethPrice=3000;
+    try{const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');const d=await r.json();ethPrice=d.ethereum.usd;}catch(e){}
+    const wei=BigInt(Math.floor(0.10/ethPrice*1e18));
+    const provider=sdk.wallet&&sdk.wallet.ethProvider;
+    if(!provider)throw new Error('No wallet');
+    let accs=[];try{accs=await provider.request({method:'eth_accounts'});}catch(e){}
+    if(!accs||!accs[0])accs=await provider.request({method:'eth_requestAccounts'});
+    await provider.request({method:'eth_sendTransaction',params:[{from:accs[0],to:CONTRACT,value:'0x'+wei.toString(16),chainId:'0x2105'}]});
+  }catch(e){
+    if(btn){btn.textContent='Claim!';btn.style.opacity='1';}
+    showToast('Payment failed: '+(e.message||'Try again'));
+    return;
+  }
+
   let reward={type:milestone.type,amount:milestone.amount};
   if(milestone.type==='mystery'){
     const roll=Math.random();
@@ -2850,7 +2852,7 @@ async function openMysteryBox() {
 
   } catch(e) {
     showToast('Error: ' + (e.message || 'Failed'));
-    if (btn) { btn.disabled = false; btn.textContent = '📦 Open Box — $0.50 ETH'; }
+    if (btn) { btn.disabled = false; btn.textContent = '📦 Open Box'; }
   }
 }
 
