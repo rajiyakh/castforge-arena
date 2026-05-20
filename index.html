@@ -1212,8 +1212,8 @@ async function doFcfsClaim(){
   const btn=document.getElementById('fcfsClaim');btn.disabled=true;btn.textContent='Processing...';
   try{
     const sdk=(window.miniapp&&window.miniapp.sdk)||window.FrameSDK;if(!sdk)throw new Error('SDK not found');
-    const{data:userData}=await db.from('users').select('fcfs_eligible,fcfs_claimed').eq('fid',userFid).single();
-    if(!userData||!userData.fcfs_eligible)throw new Error('Not eligible');
+    const{data:userData}=await db.from('users').select('fcfs_claimed').eq('fid',userFid).single();
+
     if(userData.fcfs_claimed)throw new Error('Already claimed');
     let ethPrice=3000;try{const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');const d=await r.json();ethPrice=d.ethereum.usd;}catch(e){}
     const wei=BigInt(Math.floor(0.05/ethPrice*1e18));
@@ -2436,6 +2436,8 @@ async function loadLottery() {
   const btn = document.getElementById('lottery-enter-btn');
   const statusEl = document.getElementById('lottery-entry-status');
   const statusText = document.getElementById('lottery-status-text');
+  // Always show enter button if not drawn
+  if(btn && lottery.status === 'active') btn.style.display = 'block';
 
   if (myEntry) {
     statusText.innerHTML = '<span style="color:#2ecc71;font-weight:700;">✅ You are entered!</span><br><span style="color:#5a3a10;font-size:11px;">Good luck! Draw when 3+ entries & 24h passed.</span>';
