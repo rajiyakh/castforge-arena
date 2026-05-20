@@ -9,7 +9,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:430px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;}
-.topbar{background:#0d0600;padding:14px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #3a1a00;position:sticky;top:0;z-index:10;}
+.topbar{display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10;}
 .topbar-icon{width:32px;height:32px;background:#E85D04;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;}
 .topbar-title{font-size:16px;font-weight:600;color:#ffd090;}
 .content{flex:1;padding:16px;overflow-y:auto;position:relative;z-index:1;padding-bottom:90px;}
@@ -110,17 +110,45 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#E85D04;color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:9998;opacity:0;transition:opacity 0.3s;pointer-events:none;}
 .toast.show{opacity:1;}
 @keyframes coinSpin{0%{transform:rotate(-10deg) scale(1);}100%{transform:rotate(10deg) scale(1.15);}}
+@keyframes ogNavGlow{0%{box-shadow:0 0 8px rgba(232,93,4,0.4);}100%{box-shadow:0 0 18px rgba(232,93,4,0.8),0 0 30px rgba(255,215,0,0.3);}}
 </style>
 </head>
 <body>
 
-<div class="topbar" id="main-topbar">
-  <div class="topbar-icon">⚒</div>
-  <span class="topbar-title">CastForge Arena</span>
-  <div style="flex:1;"></div>
-  <button onclick="openWallet()" style="background:#1a0d00;border:1px solid #3a1a00;border-radius:20px;padding:6px 14px;color:#F48C06;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F48C06" stroke-width="2" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 12h.01"/></svg>
-    My Wallet
+<div id="main-topbar" style="background:linear-gradient(90deg,#1a0500,#0d0300);border-bottom:2px solid #E85D04;padding:10px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10;overflow:hidden;">
+  <style>
+    @keyframes tbShimmer{0%{left:-100%}100%{left:200%}}
+    @keyframes tbSpark1{0%,100%{opacity:0.3;transform:translateY(0) scale(0.8)}50%{opacity:1;transform:translateY(-5px) scale(1.2)}}
+    @keyframes tbSpark2{0%,100%{opacity:0.5;transform:translateY(0)}50%{opacity:0.1;transform:translateY(-7px)}}
+    @keyframes tbLive{0%,100%{opacity:0.5}50%{opacity:1}}
+    .tb-spark{position:absolute;border-radius:50%;pointer-events:none;}
+  </style>
+  <!-- Fire shimmer sweep -->
+  <div style="position:absolute;top:0;left:-100%;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,100,0,0.07),transparent);animation:tbShimmer 2.5s linear infinite;pointer-events:none;"></div>
+
+  <!-- Icon + sparks -->
+  <div style="position:relative;flex-shrink:0;">
+    <div style="width:38px;height:38px;background:linear-gradient(135deg,#8B2500,#E85D04);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;position:relative;z-index:1;">⚒</div>
+    <div class="tb-spark" style="width:3px;height:3px;background:#FF6600;top:-3px;left:5px;animation:tbSpark1 1.2s ease-in-out infinite;animation-delay:0s;"></div>
+    <div class="tb-spark" style="width:2px;height:2px;background:#FFD460;top:-4px;left:18px;animation:tbSpark2 0.9s ease-in-out infinite;animation-delay:0.3s;"></div>
+    <div class="tb-spark" style="width:4px;height:4px;background:#E85D04;top:-2px;left:28px;animation:tbSpark1 1.5s ease-in-out infinite;animation-delay:0.6s;"></div>
+    <div class="tb-spark" style="width:2px;height:2px;background:#F48C06;top:-5px;left:12px;animation:tbSpark2 1.1s ease-in-out infinite;animation-delay:0.9s;"></div>
+    <div class="tb-spark" style="width:3px;height:3px;background:#FF6600;top:-3px;left:32px;animation:tbSpark1 1.3s ease-in-out infinite;animation-delay:0.4s;"></div>
+  </div>
+
+  <!-- Title + Live badge -->
+  <div style="flex:1;">
+    <div style="font-size:16px;font-weight:800;color:#ffd090;letter-spacing:0.5px;line-height:1.1;">CastForge <span style="color:#E85D04;">Arena</span></div>
+    <div style="display:flex;align-items:center;gap:4px;margin-top:3px;">
+      <div style="width:5px;height:5px;border-radius:50%;background:#2ecc71;animation:tbLive 1.5s ease-in-out infinite;"></div>
+      <span style="font-size:9px;color:#2ecc71;font-weight:700;letter-spacing:1px;">LIVE ON BASE</span>
+    </div>
+  </div>
+
+  <!-- Wallet button -->
+  <button onclick="openWallet()" style="background:linear-gradient(90deg,#8B2500,#E85D04);color:#fff;border:none;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;position:relative;overflow:hidden;white-space:nowrap;flex-shrink:0;">
+    <div style="position:absolute;top:0;left:-100%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.25),transparent);animation:tbShimmer 1.8s linear infinite;pointer-events:none;"></div>
+    ⚒ Wallet
   </button>
 </div>
 
@@ -137,17 +165,18 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
       <div style="font-size:18px;font-weight:700;color:#ffd090;margin-bottom:4px;">⚒ Games Arena</div>
       <div style="font-size:12px;color:#7a5a30;">Pick a game to earn rewards</div>
     </div>
-    <div onclick="switchTab('spin')" style="background:#1a0d00;border:1px solid #E85D04;border-radius:14px;padding:16px;margin-bottom:12px;cursor:pointer;display:flex;align-items:center;gap:14px;">
-      <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#C04B00,#E85D04);display:flex;align-items:center;justify-content:center;font-size:26px;">🎡</div>
+    <div onclick="openGameScreen('lottery')" style="background:#1a0d00;border:1px solid #FFD700;border-radius:14px;padding:16px;margin-bottom:12px;cursor:pointer;display:flex;align-items:center;gap:14px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:0;right:0;bottom:0;width:40%;background:linear-gradient(90deg,transparent,rgba(255,215,0,0.06));pointer-events:none;"></div>
+      <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#b8860b,#FFD700);display:flex;align-items:center;justify-content:center;font-size:26px;">🎰</div>
       <div style="flex:1;">
-        <div style="font-size:15px;font-weight:700;color:#ffd090;margin-bottom:3px;">Spin to Forge</div>
-        <div style="font-size:11px;color:#7a5a30;margin-bottom:6px;">Spin the wheel, win $FORGE & points</div>
+        <div style="font-size:15px;font-weight:700;color:#ffd090;margin-bottom:3px;">Forge Lottery</div>
+        <div style="font-size:11px;color:#7a5a30;margin-bottom:6px;">Enter for $5 ETH — win big every 24hrs!</div>
         <div style="display:flex;gap:6px;">
-          <span style="background:#2a1500;border:0.5px solid #E85D04;border-radius:20px;padding:2px 8px;font-size:10px;color:#E85D04;">FREE spins</span>
-          <span style="background:#2a1500;border:0.5px solid #F48C06;border-radius:20px;padding:2px 8px;font-size:10px;color:#F48C06;">500 $FORGE max</span>
+          <span style="background:#1a1400;border:0.5px solid #FFD700;border-radius:20px;padding:2px 8px;font-size:10px;color:#FFD700;" id="lottery-nav-badge">Loading...</span>
+          <span style="background:#1a1400;border:0.5px solid #2ecc71;border-radius:20px;padding:2px 8px;font-size:10px;color:#2ecc71;">⚡ Mega Win Chance</span>
         </div>
       </div>
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E85D04" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
     </div>
     <div onclick="openGameScreen('tokenrush')" style="background:#1a0d00;border:1px solid #d4a017;border-radius:14px;padding:16px;margin-bottom:12px;cursor:pointer;display:flex;align-items:center;gap:14px;">
       <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#8B6914,#d4a017);display:flex;align-items:center;justify-content:center;">
@@ -168,6 +197,14 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
         <span style="background:#1a0a2a;border:0.5px solid #7c3aed;border-radius:20px;padding:2px 8px;font-size:10px;color:#a78bfa;">Win up to 150 pts</span>
       </div>
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+    </div>
+    <div onclick="openGameScreen('tokenomics')" style="background:#1a0d00;border:1px solid #E85D04;border-radius:50px;padding:10px 16px;margin-bottom:12px;cursor:pointer;display:flex;align-items:center;gap:12px;">
+      <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#8B2500,#E85D04);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">⚒</div>
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:700;color:#ffd090;">About $FORGE Token</div>
+        <div style="font-size:10px;color:#7a5a30;">ICO Price: $0.0011 • 5B Supply</div>
+      </div>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E85D04" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
     </div>
     <div style="text-align:center;font-size:11px;color:#5a3a10;margin-top:4px;">More games coming soon ⚒</div>
   </div>
@@ -245,6 +282,67 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
     </div>
   </div>
 
+  <!-- Lottery -->
+  <div class="screen" id="s-lottery">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+      <button onclick="switchTab('games')" style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:8px;padding:6px 12px;color:#F48C06;font-size:12px;cursor:pointer;">← Back</button>
+      <div style="font-size:15px;font-weight:700;color:#ffd090;">🎰 Forge Lottery</div>
+    </div>
+
+    <!-- Winner Announcement -->
+    <div id="lottery-winner-box" style="display:none;background:linear-gradient(135deg,#1a1400,#2a2000);border:2px solid #FFD700;border-radius:14px;padding:16px;margin-bottom:14px;text-align:center;">
+      <div style="font-size:28px;margin-bottom:6px;">🏆</div>
+      <div style="font-size:13px;color:#FFD700;font-weight:700;margin-bottom:4px;">Winner Selected!</div>
+      <div style="font-size:14px;color:#ffd090;font-weight:600;" id="lottery-winner-name">—</div>
+      <div style="font-size:11px;color:#7a5a30;margin-top:4px;">Claim window closes in:</div>
+      <div style="font-size:28px;font-weight:700;color:#E85D04;margin:6px 0;" id="lottery-countdown">2:00:00</div>
+      <button id="lottery-claim-btn" style="display:none;width:100%;background:linear-gradient(90deg,#b8860b,#FFD700);color:#000;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;" onclick="claimLotteryWin()">🏆 Claim Win (0.20$ fee)</button>
+    </div>
+
+    <!-- Pool Info -->
+    <div style="background:linear-gradient(135deg,#1a1400,#111000);border:1px solid #FFD700;border-radius:14px;padding:16px;margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div>
+          <div style="font-size:12px;color:#7a5a30;margin-bottom:2px;">Current Pool</div>
+          <div style="font-size:28px;font-weight:700;color:#FFD700;" id="lottery-pool">$0.00</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:12px;color:#7a5a30;margin-bottom:2px;">Winner Gets</div>
+          <div style="font-size:22px;font-weight:700;color:#2ecc71;" id="lottery-prize">$0.00</div>
+          <div style="font-size:10px;color:#5a3a10;">50% of pool</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+        <div style="background:#110e00;border-radius:8px;padding:8px;text-align:center;">
+          <div style="font-size:18px;font-weight:700;color:#ffd090;" id="lottery-entries">0</div>
+          <div style="font-size:10px;color:#5a3a10;">Entries</div>
+        </div>
+        <div style="background:#110e00;border-radius:8px;padding:8px;text-align:center;">
+          <div style="font-size:18px;font-weight:700;color:#E85D04;">3</div>
+          <div style="font-size:10px;color:#5a3a10;">Min entries</div>
+        </div>
+        <div style="background:#110e00;border-radius:8px;padding:8px;text-align:center;">
+          <div style="font-size:18px;font-weight:700;color:#F48C06;" id="lottery-timer">24:00:00</div>
+          <div style="font-size:10px;color:#5a3a10;">Next draw</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Entry Status -->
+    <div id="lottery-entry-status" style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:12px;padding:14px;margin-bottom:14px;text-align:center;">
+      <div style="font-size:13px;color:#7a5a30;" id="lottery-status-text">Loading lottery...</div>
+    </div>
+
+    <!-- Entry Button -->
+    <button id="lottery-enter-btn" onclick="enterLottery()" style="width:100%;background:linear-gradient(90deg,#b8860b,#FFD700);color:#000;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:12px;display:none;">🎰 Enter Lottery — $5 ETH</button>
+    <!-- Owner Manual Draw -->
+    <button id="lottery-manual-draw-btn" onclick="manualDrawLottery()" style="width:100%;background:#1a0d00;border:1px solid #e74c3c;color:#e74c3c;border-radius:10px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:12px;display:none;">⚙️ Manual Draw (Owner)</button>
+
+    <!-- Entries List -->
+    <div style="font-size:14px;font-weight:700;color:#FFD700;margin-bottom:10px;">Current Entries</div>
+    <div id="lottery-entries-list"><div style="text-align:center;color:#5a3a10;font-size:13px;padding:12px;">Loading...</div></div>
+  </div>
+
   <!-- Profile -->
   <div class="screen active" id="s-profile">
     <div class="loading" id="profile-loading">Loading...</div>
@@ -269,6 +367,127 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
         <span style="font-size:13px;color:#c07830;">Rank</span>
         <span class="rank-val" id="profile-rank">Apprentice Forger</span>
       </div>
+      <!-- USDC Reward Box -->
+      <div id="usdc-reward-section" style="display:none;background:linear-gradient(135deg,#0a2a1a,#051a0a);border:1px solid #2ecc71;border-radius:12px;padding:14px;margin-top:12px;">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
+          <span style="font-size:12px;font-weight:700;color:#2ecc71;">💵 USDC Reward Claimed</span>
+          <span style="background:#0a3a1a;border:0.5px solid #2ecc71;border-radius:20px;padding:1px 7px;font-size:9px;color:#2ecc71;margin-left:auto;">PENDING</span>
+        </div>
+        <div style="font-size:22px;font-weight:700;color:#ffd090;margin-bottom:8px;" id="profile-usdc-reward">—</div>
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;">
+          <div style="width:6px;height:6px;border-radius:50%;background:#2ecc71;"></div>
+          <span style="font-size:10px;color:#2ecc71;">Claim Soon — payout via @castforge ✨</span>
+        </div>
+        <button onclick="openWithdrawModal()" style="width:100%;background:linear-gradient(90deg,#0a7a3a,#2ecc71);color:#000;border:none;border-radius:10px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;">💸 Withdraw Request</button>
+      </div>
+
+      <!-- Withdraw Request Modal -->
+      <div id="withdraw-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:9500;background:rgba(0,0,0,0.85);" onclick="closeWithdrawModal(event)">
+        <div style="position:absolute;bottom:0;left:0;right:0;background:#110800;border-radius:20px 20px 0 0;padding:20px 16px 36px;border-top:1px solid #2ecc71;max-height:90vh;overflow-y:auto;">
+          <div style="width:40px;height:4px;background:#2a2a2a;border-radius:4px;margin:0 auto 16px;"></div>
+          <div style="font-size:16px;font-weight:700;color:#2ecc71;margin-bottom:4px;">💸 Withdraw Request</div>
+          <div style="font-size:11px;color:#5a3a10;margin-bottom:16px;">Fill in the details below. We will verify and process your payout.</div>
+
+          <div style="margin-bottom:12px;">
+            <div style="font-size:12px;color:#7a5a30;margin-bottom:6px;font-weight:600;">Your FID</div>
+            <div style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:10px;padding:10px 14px;font-size:14px;color:#ffd090;font-weight:600;" id="wr-fid">—</div>
+          </div>
+
+          <div style="margin-bottom:12px;">
+            <div style="font-size:12px;color:#7a5a30;margin-bottom:6px;font-weight:600;">Total Invites</div>
+            <div style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:10px;padding:10px 14px;font-size:14px;color:#ffd090;font-weight:600;" id="wr-invites">—</div>
+          </div>
+
+          <div style="margin-bottom:12px;">
+            <div style="font-size:12px;color:#7a5a30;margin-bottom:6px;font-weight:600;">USDC Amount</div>
+            <div style="background:#1a0d00;border:0.5px solid #2ecc71;border-radius:10px;padding:10px 14px;font-size:14px;color:#2ecc71;font-weight:700;" id="wr-amount">—</div>
+          </div>
+
+          <div style="margin-bottom:12px;">
+            <div style="font-size:12px;color:#7a5a30;margin-bottom:6px;font-weight:600;">Wallet Address (Base)</div>
+            <input id="wr-wallet" type="text" placeholder="0x..." style="width:100%;background:#1a0d00;border:0.5px solid #3a1a00;border-radius:10px;padding:10px 14px;font-size:13px;color:#ffd090;outline:none;font-family:monospace;" />
+          </div>
+
+          <div style="margin-bottom:16px;">
+            <div style="font-size:12px;color:#7a5a30;margin-bottom:6px;font-weight:600;">Proof of Invites (Screenshot)</div>
+            <label for="wr-screenshot" style="display:block;background:#1a0d00;border:1px dashed #3a1a00;border-radius:10px;padding:16px;text-align:center;cursor:pointer;">
+              <div style="font-size:22px;margin-bottom:4px;">📎</div>
+              <div style="font-size:12px;color:#7a5a30;" id="wr-file-label">Tap to upload screenshot</div>
+            </label>
+            <input type="file" id="wr-screenshot" accept="image/*" style="display:none;" onchange="handleScreenshot(this)" />
+          </div>
+
+          <div id="wr-preview" style="display:none;margin-bottom:16px;">
+            <img id="wr-preview-img" src="" style="width:100%;border-radius:10px;border:0.5px solid #2ecc71;" />
+          </div>
+
+          <button onclick="submitWithdrawRequest()" id="wr-submit-btn" style="width:100%;background:linear-gradient(90deg,#0a7a3a,#2ecc71);color:#000;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:8px;">Submit Request</button>
+          <button onclick="document.getElementById('withdraw-modal').style.display='none'" style="width:100%;background:#1a0d00;color:#7a5a30;border:0.5px solid #3a1a00;border-radius:12px;padding:12px;font-size:14px;cursor:pointer;">Cancel</button>
+        </div>
+      </div>
+
+      <!-- Withdraw Request Button -->
+      <div id="withdraw-request-btn" style="display:none;margin-top:8px;">
+        <button onclick="openWithdrawModal()" style="width:100%;background:#0a2a1a;border:1px solid #2ecc71;border-radius:10px;padding:12px;font-size:14px;font-weight:700;color:#2ecc71;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+          💸 Withdraw Request
+        </button>
+      </div>
+
+      <!-- Withdraw Modal -->
+      <div id="withdraw-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:9500;background:rgba(0,0,0,0.85);overflow-y:auto;" onclick="closeWithdrawModal(event)">
+        <div style="background:#110800;border-radius:20px 20px 0 0;padding:20px 16px 40px;border-top:1px solid #3a1a00;position:absolute;bottom:0;left:0;right:0;">
+          <div style="width:40px;height:4px;background:#3a1a00;border-radius:4px;margin:0 auto 16px;"></div>
+          <div style="font-size:16px;font-weight:700;color:#ffd090;margin-bottom:4px;text-align:center;">💸 Withdraw Request</div>
+          <div style="font-size:12px;color:#7a5a30;margin-bottom:20px;text-align:center;">Fill the form — we'll verify and process your USDC</div>
+
+          <!-- FID -->
+          <div style="margin-bottom:14px;">
+            <div style="font-size:12px;color:#7a5a30;margin-bottom:6px;font-weight:600;">Your Farcaster FID</div>
+            <input id="wr-fid" type="text" readonly style="width:100%;background:#1a0d00;border:0.5px solid #3a1a00;border-radius:10px;padding:12px 14px;font-size:14px;color:#ffd090;outline:none;" placeholder="Auto-filled..."/>
+          </div>
+
+          <!-- Total Invites -->
+          <div style="margin-bottom:14px;">
+            <div style="font-size:12px;color:#7a5a30;margin-bottom:6px;font-weight:600;">Total Invites</div>
+            <input id="wr-invites" type="text" readonly style="width:100%;background:#1a0d00;border:0.5px solid #3a1a00;border-radius:10px;padding:12px 14px;font-size:14px;color:#ffd090;outline:none;" placeholder="Auto-filled..."/>
+          </div>
+
+          <!-- USDC Amount -->
+          <div style="margin-bottom:14px;">
+            <div style="font-size:12px;color:#7a5a30;margin-bottom:6px;font-weight:600;">Claimed USDC Reward</div>
+            <input id="wr-usdc" type="text" readonly style="width:100%;background:#1a0d00;border:0.5px solid #3a1a00;border-radius:10px;padding:12px 14px;font-size:14px;color:#2ecc71;font-weight:700;outline:none;" placeholder="Auto-filled..."/>
+          </div>
+
+          <!-- Wallet Address -->
+          <div style="margin-bottom:14px;">
+            <div style="font-size:12px;color:#7a5a30;margin-bottom:6px;font-weight:600;">Your Wallet Address (Base)</div>
+            <input id="wr-wallet" type="text" style="width:100%;background:#1a0d00;border:0.5px solid #E85D04;border-radius:10px;padding:12px 14px;font-size:13px;color:#ffd090;outline:none;" placeholder="0x... paste your Base wallet"/>
+          </div>
+
+          <!-- Screenshot Upload -->
+          <div style="margin-bottom:20px;">
+            <div style="font-size:12px;color:#7a5a30;margin-bottom:6px;font-weight:600;">Proof of Invite (Screenshot)</div>
+            <label for="wr-ss" style="display:block;background:#1a0d00;border:1px dashed #3a1a00;border-radius:10px;padding:20px;text-align:center;cursor:pointer;">
+              <div id="wr-ss-label" style="font-size:13px;color:#7a5a30;">📸 Tap to upload screenshot</div>
+              <div style="font-size:11px;color:#5a3a10;margin-top:4px;">JPG, PNG — max 5MB</div>
+              <input id="wr-ss" type="file" accept="image/*" style="display:none;" onchange="handleSSUpload(this)"/>
+            </label>
+            <div id="wr-ss-preview" style="display:none;margin-top:8px;text-align:center;">
+              <img id="wr-ss-img" style="max-width:100%;border-radius:8px;max-height:120px;object-fit:cover;"/>
+              <div style="font-size:11px;color:#2ecc71;margin-top:4px;">✓ Screenshot selected</div>
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <button onclick="submitWithdrawRequest()" id="wr-submit-btn" style="width:100%;background:linear-gradient(90deg,#0a7a3a,#2ecc71);color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px;">
+            Submit Request
+          </button>
+          <button onclick="document.getElementById('withdraw-modal').style.display='none';" style="width:100%;background:#1a0d00;border:0.5px solid #3a1a00;color:#7a5a30;border-radius:12px;padding:12px;font-size:14px;cursor:pointer;">
+            Cancel
+          </button>
+        </div>
+      </div>
+
       <div id="mystery-box-section" style="display:none;background:linear-gradient(135deg,#1e0a2a,#2a0a3a);border:1px solid #7c3aed;border-radius:12px;padding:14px;margin-top:12px;">
         <div style="font-size:12px;color:#a855f7;font-weight:700;margin-bottom:4px;">🎁 Mystery Box Reward</div>
         <div style="font-size:16px;font-weight:700;color:#d4aaff;" id="profile-mystery-reward">—</div>
@@ -302,6 +521,114 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
         <div style="display:flex;align-items:center;justify-content:space-between;">
           <div style="display:flex;align-items:center;gap:6px;"><div style="width:6px;height:6px;border-radius:50%;background:#0052FF;"></div><span style="font-size:11px;color:#7a5a30;">Base Network</span></div>
           <div style="background:#0052FF22;border:0.5px solid #0052FF55;border-radius:20px;padding:3px 10px;"><span style="font-size:10px;color:#4d8eff;font-weight:600;">BASE</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tokenomics -->
+  <div class="screen" id="s-tokenomics">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+      <button onclick="switchTab('games')" style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:8px;padding:6px 12px;color:#F48C06;font-size:12px;cursor:pointer;">← Back</button>
+      <div style="font-size:15px;font-weight:700;color:#ffd090;">⚒ $FORGE Token</div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:16px;">
+      <div style="font-size:20px;font-weight:700;color:#E85D04;letter-spacing:1px;">Tokenomics</div>
+      <div style="font-size:12px;color:#7a5a30;margin-top:4px;">Total Supply: 5,000,000,000 $FORGE</div>
+      <div style="display:flex;justify-content:center;gap:8px;margin-top:8px;">
+        <span style="background:#1a0d00;border:0.5px solid #0052FF;border-radius:20px;padding:3px 10px;font-size:10px;color:#4d8eff;font-weight:600;">Base Network</span>
+        <span style="background:#1a0d00;border:0.5px solid #E85D04;border-radius:20px;padding:3px 10px;font-size:10px;color:#E85D04;font-weight:600;">ERC-20</span>
+        <span style="background:#1a0d00;border:0.5px solid #2ecc71;border-radius:20px;padding:3px 10px;font-size:10px;color:#2ecc71;font-weight:600;">ICO: $0.0011</span>
+      </div>
+    </div>
+
+    <!-- Donut Chart -->
+    <div style="background:#110800;border-radius:14px;padding:16px;margin-bottom:14px;display:flex;align-items:center;justify-content:center;">
+      <canvas id="forge-donut" width="220" height="220"></canvas>
+    </div>
+
+    <!-- Allocation Cards -->
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+
+      <div style="background:#1a0d00;border-radius:10px;padding:12px 14px;border:0.5px solid #E85D04;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:12px;height:12px;border-radius:50%;background:#E85D04;flex-shrink:0;"></div>
+            <span style="font-size:14px;font-weight:700;color:#ffd090;">Community & Rewards</span>
+          </div>
+          <span style="font-size:14px;font-weight:700;color:#E85D04;">40%</span>
+        </div>
+        <div style="height:4px;background:#2a1400;border-radius:4px;margin-bottom:8px;overflow:hidden;"><div style="width:40%;height:100%;background:#E85D04;border-radius:4px;"></div></div>
+        <div style="padding-left:20px;display:flex;flex-direction:column;gap:4px;">
+          <div style="display:flex;justify-content:space-between;font-size:12px;">
+            <span style="color:#7a5a30;">Airdrop & Referrals</span>
+            <span style="color:#F48C06;font-weight:600;">25% — 1.25B</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;">
+            <span style="color:#7a5a30;">Game Rewards</span>
+            <span style="color:#F48C06;font-weight:600;">15% — 750M</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#1a0d00;border-radius:10px;padding:12px 14px;border:0.5px solid #2ecc71;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:12px;height:12px;border-radius:50%;background:#2ecc71;flex-shrink:0;"></div>
+            <span style="font-size:14px;font-weight:700;color:#ffd090;">Liquidity & DEX</span>
+          </div>
+          <span style="font-size:14px;font-weight:700;color:#2ecc71;">30%</span>
+        </div>
+        <div style="height:4px;background:#0a2a1a;border-radius:4px;margin-bottom:6px;overflow:hidden;"><div style="width:30%;height:100%;background:#2ecc71;border-radius:4px;"></div></div>
+        <div style="font-size:11px;color:#5a3a10;">1,500,000,000 $FORGE — DEX listing & LP</div>
+      </div>
+
+      <div style="background:#1a0d00;border-radius:10px;padding:12px 14px;border:0.5px solid #3b82f6;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:12px;height:12px;border-radius:50%;background:#3b82f6;flex-shrink:0;"></div>
+            <span style="font-size:14px;font-weight:700;color:#ffd090;">Team & Advisors</span>
+          </div>
+          <span style="font-size:14px;font-weight:700;color:#3b82f6;">20%</span>
+        </div>
+        <div style="height:4px;background:#0a1a2a;border-radius:4px;margin-bottom:6px;overflow:hidden;"><div style="width:20%;height:100%;background:#3b82f6;border-radius:4px;"></div></div>
+        <div style="font-size:11px;color:#5a3a10;">1,000,000,000 $FORGE — 12 month vesting</div>
+      </div>
+
+      <div style="background:#1a0d00;border-radius:10px;padding:12px 14px;border:0.5px solid #a855f7;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:12px;height:12px;border-radius:50%;background:#a855f7;flex-shrink:0;"></div>
+            <span style="font-size:14px;font-weight:700;color:#ffd090;">Reserve</span>
+          </div>
+          <span style="font-size:14px;font-weight:700;color:#a855f7;">10%</span>
+        </div>
+        <div style="height:4px;background:#1a0a2a;border-radius:4px;margin-bottom:6px;overflow:hidden;"><div style="width:10%;height:100%;background:#a855f7;border-radius:4px;"></div></div>
+        <div style="font-size:11px;color:#5a3a10;">500,000,000 $FORGE — Future development</div>
+      </div>
+
+    </div>
+
+    <!-- Contract Info -->
+    <div style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:12px;padding:14px;">
+      <div style="font-size:12px;color:#7a5a30;margin-bottom:10px;font-weight:600;">Contract Info</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;justify-content:space-between;font-size:12px;">
+          <span style="color:#7a5a30;">Contract</span>
+          <span style="color:#ffd090;font-family:monospace;font-size:11px;">0x987D...361D</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;">
+          <span style="color:#7a5a30;">Network</span>
+          <span style="color:#4d8eff;">Base Mainnet</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;">
+          <span style="color:#7a5a30;">Decimals</span>
+          <span style="color:#ffd090;">18</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;">
+          <span style="color:#7a5a30;">ICO Price</span>
+          <span style="color:#2ecc71;font-weight:700;">$0.0011</span>
         </div>
       </div>
     </div>
@@ -365,19 +692,22 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
   <!-- Pool -->
   <div class="screen" id="s-pool">
     <div class="pool-total"><div class="pool-label">Total Pool</div><div class="pool-amount">10,000,000</div><div class="pool-token">$FORGE</div></div>
-    <div class="fcfs-box">
-      <div style="display:flex;align-items:center;margin-bottom:6px;"><div class="fcfs-title">FCFS Airdrop</div><span class="fcfs-badge" id="fcfs-badge">LIVE</span></div>
-      <div class="fcfs-count"><span id="fcfs-joined">0</span> / 5,000 <span style="font-size:14px;color:#7a4a10;">joined</span></div>
+    <div class="fcfs-box" style="border-color:#E85D04;">
+      <div style="display:flex;align-items:center;margin-bottom:6px;">
+        <div class="fcfs-title">New User Airdrop</div>
+        <span class="fcfs-badge" id="fcfs-badge">LIVE</span>
+      </div>
+      <div style="font-size:13px;color:#ffd090;margin-bottom:8px;line-height:1.6;">First <span style="color:#E85D04;font-weight:700;">5,000 users</span> get 1,000 $FORGE free!<br><span style="font-size:11px;color:#7a5a30;">Open the app to be eligible. Pay 10¢ ETH to claim.</span></div>
       <div class="hammer-bar-wrap">
         <div class="hammer-track">
           <div class="hammer-fill" id="wave-fill" style="width:0%"></div>
           <div class="hammer-icon" id="hammer-icon" style="left:0%">⚒</div>
           <div class="spark-burst" id="spark-burst" style="left:0%">✦</div>
         </div>
-        <div class="hammer-label"><span>0</span><span id="fcfs-pct">0% filled</span><span>5,000</span></div>
+        <div class="hammer-label"><span>0</span><span id="fcfs-pct">slots filled</span><span id="fcfs-joined">0 / 5,000</span></div>
       </div>
       <div id="fcfs-reward-info" style="font-size:12px;color:#c07830;margin-top:10px;text-align:center;display:none;"></div>
-      <button class="fcfs-claim-btn" id="fcfsClaim" onclick="doFcfsClaim()">🔥 Claim 1,000 $FORGE</button>
+      <button class="fcfs-claim-btn" id="fcfsClaim" onclick="doFcfsClaim()" style="display:none;">🔥 Claim 1,000 $FORGE — 10¢ ETH</button>
     </div>
     <div class="pool-row">
       <div class="pool-mini"><div class="pool-mini-label">FCFS</div><div class="pool-mini-val">5,000</div></div>
@@ -394,13 +724,123 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
     </div>
     <div class="claim-box" style="border-color:#7c3aed;">
       <div class="claim-title" style="color:#a78bfa;">Referral Rewards 🎁</div>
-      <div style="font-size:12px;color:#7a4a10;margin-bottom:10px;">75 $FORGE per successful invite</div>
+      <div style="font-size:12px;color:#7a4a10;margin-bottom:10px;">150 $FORGE per successful invite</div>
       <div class="claim-row">
         <div><div class="claim-val" id="referral-pending">0</div><div style="font-size:11px;color:#5a3008;">$FORGE pending</div></div>
         <button class="claim-btn" id="claimRefBtn" onclick="doClaimReferral()" disabled style="background:#7c3aed;">Claim</button>
       </div>
       <div style="font-size:11px;color:#5a3008;margin-top:6px;">Total invites: <span id="referral-invite-count" style="color:#a78bfa;">0</span></div>
     </div>
+  </div>
+
+  <!-- OG Mystery Box -->
+  <div class="screen" id="s-og">
+    <style>
+      @keyframes boxFloat{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-8px) rotate(1deg)}}
+      @keyframes ogSparkRise{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-50px) scale(0.2)}}
+      @keyframes greenPulse{0%,100%{opacity:0.6}50%{opacity:1}}
+      @keyframes rarityPulse{0%,100%{border-color:#E85D04;box-shadow:0 0 6px rgba(232,93,4,0.3)}50%{border-color:#FFD700;box-shadow:0 0 14px rgba(255,215,0,0.5)}}
+      .og-spark{position:absolute;border-radius:50%;animation:ogSparkRise 1.2s ease-out infinite;}
+      .og-rarity{background:#1a0d00;border-radius:10px;padding:10px 6px;text-align:center;border:1px solid #2a1400;transition:border-color 0.2s;}
+      .og-open-btn{width:100%;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;color:#000;background:#E85D04;position:relative;overflow:hidden;}
+      .og-open-btn::before{content:'';position:absolute;top:-2px;left:-100%;width:50%;height:calc(100%+4px);background:linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent);animation:btnSpark 1.5s linear infinite;}
+      .og-open-btn:disabled{opacity:0.5;cursor:not-allowed;}
+      @keyframes greenCount{0%{text-shadow:0 0 8px #2ecc71}50%{text-shadow:0 0 20px #2ecc71,0 0 40px #2ecc71}100%{text-shadow:0 0 8px #2ecc71}}
+      .green-spark-text{animation:greenCount 1.5s ease-in-out infinite;color:#2ecc71;}
+    </style>
+
+    <div style="text-align:center;margin-bottom:18px;position:relative;padding-top:8px;">
+      <div style="position:relative;display:inline-block;margin-bottom:12px;">
+        <div id="og-box-icon" style="width:90px;height:90px;border-radius:20px;background:#1a0d00;border:2px solid #E85D04;display:flex;align-items:center;justify-content:center;font-size:44px;margin:0 auto;animation:boxFloat 3s ease-in-out infinite;position:relative;">📦</div>
+        <div class="og-spark" style="background:#E85D04;width:5px;height:5px;left:8px;top:25px;animation-delay:0s;"></div>
+        <div class="og-spark" style="background:#FFD700;width:4px;height:4px;left:72px;top:15px;animation-delay:0.3s;"></div>
+        <div class="og-spark" style="background:#F48C06;width:6px;height:6px;left:38px;top:5px;animation-delay:0.6s;"></div>
+        <div class="og-spark" style="background:#ff6600;width:4px;height:4px;left:12px;top:55px;animation-delay:0.9s;"></div>
+        <div class="og-spark" style="background:#FFD700;width:5px;height:5px;left:68px;top:50px;animation-delay:0.2s;"></div>
+        <div class="og-spark" style="background:#2ecc71;width:4px;height:4px;left:50px;top:65px;animation-delay:0.7s;"></div>
+        <div class="og-spark" style="background:#E85D04;width:3px;height:3px;left:25px;top:70px;animation-delay:1.1s;"></div>
+      </div>
+      <div style="font-size:20px;font-weight:700;color:#ffd090;margin-bottom:4px;">$FORGE Mystery Box</div>
+      <div style="font-size:11px;color:#7a5a30;line-height:1.6;">Win $FORGE per box — rarity determines reward<br>Limited to <span style="color:#E85D04;font-weight:700;">666 total</span></div>
+    </div>
+
+    <!-- Rarity Tiers -->
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:14px;">
+      <div class="og-rarity">
+        <div style="width:18px;height:18px;border-radius:50%;background:#888;margin:0 auto 4px;"></div>
+        <div style="font-size:10px;font-weight:700;color:#aaa;">Common</div>
+        <div style="font-size:9px;color:#5a3a10;">2.5k</div>
+      </div>
+      <div class="og-rarity" style="border-color:#3b82f6;">
+        <div style="width:18px;height:18px;border-radius:50%;background:#3b82f6;margin:0 auto 4px;"></div>
+        <div style="font-size:10px;font-weight:700;color:#3b82f6;">Rare</div>
+        <div style="font-size:9px;color:#5a3a10;">5k</div>
+      </div>
+      <div class="og-rarity" style="border-color:#a855f7;">
+        <div style="width:18px;height:18px;border-radius:50%;background:#a855f7;margin:0 auto 4px;"></div>
+        <div style="font-size:10px;font-weight:700;color:#a855f7;">Epic</div>
+        <div style="font-size:9px;color:#5a3a10;">10k</div>
+      </div>
+      <div class="og-rarity" style="border-color:#FFD700;">
+        <div style="width:18px;height:18px;border-radius:50%;background:#FFD700;margin:0 auto 4px;"></div>
+        <div style="font-size:10px;font-weight:700;color:#FFD700;">Legend</div>
+        <div style="font-size:9px;color:#5a3a10;">15k</div>
+      </div>
+      <div class="og-rarity" style="border-color:#E85D04;animation:rarityPulse 2s ease-in-out infinite;">
+        <div style="width:18px;height:18px;border-radius:50%;background:#E85D04;margin:0 auto 4px;"></div>
+        <div style="font-size:10px;font-weight:700;color:#E85D04;">Mythic</div>
+        <div style="font-size:9px;color:#5a3a10;">35k</div>
+      </div>
+    </div>
+
+    <!-- Minted Progress -->
+    <div style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:12px;padding:14px;margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div>
+          <div style="font-size:11px;color:#7a5a30;margin-bottom:2px;">Minted</div>
+          <div class="green-spark-text" style="font-size:22px;font-weight:700;" id="og-minted">—</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:11px;color:#7a5a30;margin-bottom:2px;">Left</div>
+          <div style="font-size:22px;font-weight:700;color:#E85D04;" id="og-left">—</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:11px;color:#7a5a30;margin-bottom:2px;">Total</div>
+          <div style="font-size:22px;font-weight:700;color:#ffd090;">666</div>
+        </div>
+      </div>
+      <div style="height:6px;background:#2a1400;border-radius:4px;overflow:hidden;">
+        <div id="og-progress-bar" style="height:100%;background:#2ecc71;border-radius:4px;width:0%;transition:width 1s ease;"></div>
+      </div>
+      <div style="font-size:10px;color:#5a3a10;margin-top:4px;text-align:right;" id="og-pct">0% minted</div>
+    </div>
+
+    <!-- Price & Reward -->
+    <div style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:12px;padding:14px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-size:11px;color:#7a5a30;margin-bottom:4px;">Price per box</div>
+        <div style="font-size:18px;font-weight:700;color:#ffd090;">0.00025 ETH</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:11px;color:#7a5a30;margin-bottom:4px;">Possible reward</div>
+        <div style="font-size:14px;font-weight:700;color:#E85D04;">2,500 – 35,000</div>
+        <div style="font-size:10px;color:#F48C06;">$FORGE tokens</div>
+      </div>
+    </div>
+
+    <!-- Result box -->
+    <div id="og-result" style="display:none;background:#1a0d00;border:1px solid #E85D04;border-radius:12px;padding:16px;margin-bottom:14px;text-align:center;">
+      <div style="font-size:32px;margin-bottom:6px;" id="og-result-emoji">🎁</div>
+      <div style="font-size:12px;color:#7a5a30;margin-bottom:4px;" id="og-result-rarity">—</div>
+      <div style="font-size:26px;font-weight:700;color:#E85D04;margin-bottom:4px;" id="og-result-amount">—</div>
+      <div style="font-size:12px;color:#2ecc71;">Added to your $FORGE balance!</div>
+    </div>
+
+    <!-- My boxes count -->
+    <div style="text-align:center;margin-bottom:12px;font-size:12px;color:#7a5a30;">My boxes opened: <span id="og-my-count" style="color:#F48C06;font-weight:700;">0</span></div>
+
+    <button class="og-open-btn" id="og-open-btn" onclick="openMysteryBox()">📦 Open Box — 0.00025 ETH</button>
+    <div style="font-size:10px;color:#3a2000;text-align:center;margin-top:6px;">Fee goes to CastForge contract on Base</div>
   </div>
 
   <!-- Tasks -->
@@ -442,9 +882,23 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
       <div class="invite-stat"><div class="invite-stat-label">Bonus Earned</div><div class="invite-stat-val" id="invite-bonus">0 pts</div></div>
     </div>
     <div style="font-size:15px;font-weight:700;color:#E85D04;margin-bottom:12px;">🏆 Referral Milestones</div>
-    <div class="milestone-card" id="ms-1"><div class="milestone-icon" style="background:#1e2a1e;">🎯</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;color:#ffd090;">First Referral</div><div style="font-size:11px;color:#7a5a30;margin-bottom:6px;">Invite 1 friend → +75 Points</div><div class="milestone-bar"><div class="milestone-fill" id="ms-fill-1" style="width:0%"></div></div><div style="font-size:10px;color:#5a3a10;margin-top:3px;"><span id="ms-prog-1">0</span>/1 invited</div></div><div id="ms-btn-1" style="font-size:11px;font-weight:700;padding:6px 12px;border-radius:8px;background:#2a4a2a;color:#7a5a30;flex-shrink:0;">Locked</div></div>
+    <div class="milestone-card" id="ms-1"><div class="milestone-icon" style="background:#1e2a1e;">🎯</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;color:#ffd090;">First Referral</div><div style="font-size:11px;color:#7a5a30;margin-bottom:6px;">Invite 1 friend → +150 $FORGE</div><div class="milestone-bar"><div class="milestone-fill" id="ms-fill-1" style="width:0%"></div></div><div style="font-size:10px;color:#5a3a10;margin-top:3px;"><span id="ms-prog-1">0</span>/1 invited</div></div><div id="ms-btn-1" style="font-size:11px;font-weight:700;padding:6px 12px;border-radius:8px;background:#2a4a2a;color:#7a5a30;flex-shrink:0;">Locked</div></div>
     <div class="milestone-card" id="ms-15"><div class="milestone-icon" style="background:#2a1e00;">⚒</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;color:#ffd090;">Forge Master</div><div style="font-size:11px;color:#7a5a30;margin-bottom:6px;">Invite 15 friends → 500 $FORGE</div><div class="milestone-bar"><div class="milestone-fill" id="ms-fill-15" style="width:0%"></div></div><div style="font-size:10px;color:#5a3a10;margin-top:3px;"><span id="ms-prog-15">0</span>/15 invited</div></div><div id="ms-btn-15" style="font-size:11px;font-weight:700;padding:6px 12px;border-radius:8px;background:#2a4a2a;color:#7a5a30;flex-shrink:0;">Locked</div></div>
     <div class="milestone-card" id="ms-30"><div class="milestone-icon" style="background:#2a1500;">🔥</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;color:#ffd090;">Fire Forger</div><div style="font-size:11px;color:#7a5a30;margin-bottom:6px;">Invite 30 friends → 1,000 $FORGE</div><div class="milestone-bar"><div class="milestone-fill" id="ms-fill-30" style="width:0%"></div></div><div style="font-size:10px;color:#5a3a10;margin-top:3px;"><span id="ms-prog-30">0</span>/30 invited</div></div><div id="ms-btn-30" style="font-size:11px;font-weight:700;padding:6px 12px;border-radius:8px;background:#2a4a2a;color:#7a5a30;flex-shrink:0;">Locked</div></div>
+    <!-- KOL USDC Rewards -->
+    <div style="font-size:14px;font-weight:700;margin-top:16px;margin-bottom:6px;display:flex;align-items:center;gap:8px;"><span style="color:#2ecc71;">💵 KOL Rewards</span><span style="background:#0a2a1a;border:0.5px solid #2ecc71;border-radius:20px;padding:2px 8px;font-size:10px;color:#2ecc71;font-weight:700;">USDC</span></div>
+    <div style="font-size:11px;color:#5a3a10;margin-bottom:10px;">Earn real USDC for referring friends — claim with small fee.</div>
+
+    <div class="milestone-card" id="ms-u100" style="border-color:#2ecc71;"><div class="milestone-icon" style="background:#0a2a1a;">🌱</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;color:#ffd090;">Starter</div><div style="font-size:11px;color:#7a5a30;margin-bottom:6px;">100 referrals → <span style="color:#2ecc71;font-weight:700;">0.5 USDC</span></div><div class="milestone-bar" style="background:#0a2a1a;"><div class="milestone-fill" id="ms-fill-u100" style="width:0%;background:linear-gradient(90deg,#0a7a3a,#2ecc71);"></div></div><div style="font-size:10px;color:#5a3a10;margin-top:3px;"><span id="ms-prog-u100">0</span>/100 invited</div></div><div id="ms-btn-u100" style="font-size:11px;font-weight:700;padding:6px 10px;border-radius:8px;background:#0a2a1a;color:#2ecc71;flex-shrink:0;cursor:pointer;">Locked</div></div>
+
+    <div class="milestone-card" id="ms-u499" style="border-color:#00bcd4;"><div class="milestone-icon" style="background:#0a1a2a;">🔥</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;color:#ffd090;">Influencer</div><div style="font-size:11px;color:#7a5a30;margin-bottom:6px;">499 referrals → <span style="color:#00bcd4;font-weight:700;">2 USDC</span></div><div class="milestone-bar" style="background:#0a1a2a;"><div class="milestone-fill" id="ms-fill-u499" style="width:0%;background:linear-gradient(90deg,#006080,#00bcd4);"></div></div><div style="font-size:10px;color:#5a3a10;margin-top:3px;"><span id="ms-prog-u499">0</span>/499 invited</div></div><div id="ms-btn-u499" style="font-size:11px;font-weight:700;padding:6px 10px;border-radius:8px;background:#0a1a2a;color:#00bcd4;flex-shrink:0;cursor:pointer;">Locked</div></div>
+
+    <div class="milestone-card" id="ms-u750" style="border-color:#F48C06;"><div class="milestone-icon" style="background:#1a0d00;">⚡</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;color:#ffd090;">Power Forger</div><div style="font-size:11px;color:#7a5a30;margin-bottom:6px;">750 referrals → <span style="color:#F48C06;font-weight:700;">5 USDC</span></div><div class="milestone-bar" style="background:#1a0d00;"><div class="milestone-fill" id="ms-fill-u750" style="width:0%;background:linear-gradient(90deg,#C04B00,#F48C06);"></div></div><div style="font-size:10px;color:#5a3a10;margin-top:3px;"><span id="ms-prog-u750">0</span>/750 invited</div></div><div id="ms-btn-u750" style="font-size:11px;font-weight:700;padding:6px 10px;border-radius:8px;background:#1a0d00;color:#F48C06;flex-shrink:0;cursor:pointer;">Locked</div></div>
+
+    <div class="milestone-card" id="ms-u1500" style="border-color:#E85D04;"><div class="milestone-icon" style="background:#1a0500;">💰</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;color:#ffd090;">KOL Master</div><div style="font-size:11px;color:#7a5a30;margin-bottom:6px;">1,500 referrals → <span style="color:#E85D04;font-weight:700;">10 USDC</span></div><div class="milestone-bar" style="background:#1a0500;"><div class="milestone-fill" id="ms-fill-u1500" style="width:0%;background:linear-gradient(90deg,#8B2500,#E85D04);"></div></div><div style="font-size:10px;color:#5a3a10;margin-top:3px;"><span id="ms-prog-u1500">0</span>/1,500 invited</div></div><div id="ms-btn-u1500" style="font-size:11px;font-weight:700;padding:6px 10px;border-radius:8px;background:#1a0500;color:#E85D04;flex-shrink:0;cursor:pointer;">Locked</div></div>
+
+    <div class="milestone-card mystery-shine" id="ms-u3000" style="border-color:#FFD700;"><div class="milestone-icon" style="background:#1a1400;">👑</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;color:#FFD700;">Legend Forger</div><div style="font-size:11px;color:#7a5a30;margin-bottom:6px;">3,000 referrals → <span style="color:#FFD700;font-weight:700;">25 USDC</span></div><div class="milestone-bar" style="background:#1a1400;"><div class="milestone-fill" id="ms-fill-u3000" style="width:0%;background:linear-gradient(90deg,#b8860b,#FFD700);"></div></div><div style="font-size:10px;color:#5a3a10;margin-top:3px;"><span id="ms-prog-u3000">0</span>/3,000 invited</div></div><div id="ms-btn-u3000" style="font-size:11px;font-weight:700;padding:6px 10px;border-radius:8px;background:#1a1400;color:#FFD700;flex-shrink:0;cursor:pointer;">Locked</div></div>
+
     <div class="milestone-card mystery-shine" id="ms-50" style="border-color:#7c3aed;"><div class="milestone-icon" style="background:#1e0a2a;">🎁</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;color:#d4aaff;">Mystery Box</div><div style="font-size:11px;color:#7a5a30;margin-bottom:6px;">Invite 50 friends → Random Mega Reward!</div><div style="font-size:10px;color:#7c3aed;margin-bottom:6px;">🪙 $FORGE • 🎰 $DEGEN • ⭐ Up to 1k pts</div><div class="milestone-bar" style="background:#2a1440;"><div class="milestone-fill" id="ms-fill-50" style="width:0%;background:linear-gradient(90deg,#7c3aed,#a855f7);"></div></div><div style="font-size:10px;color:#5a3a10;margin-top:3px;"><span id="ms-prog-50">0</span>/50 invited</div></div><div id="ms-btn-50" style="font-size:11px;font-weight:700;padding:6px 12px;border-radius:8px;background:#2a1440;color:#7c3aed;flex-shrink:0;">Locked</div></div>
     <div style="font-size:15px;font-weight:700;color:#E85D04;margin-top:16px;margin-bottom:10px;">Your Invites ⚒</div>
     <div id="invited-list"><div style="text-align:center;color:#5a3a10;font-size:13px;padding:12px;">Loading...</div></div>
@@ -469,6 +923,11 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
   <button id="nav-pool" onclick="switchTab('pool')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:none;cursor:pointer;">
     <div id="ni-pool" style="width:46px;height:46px;border-radius:14px;background:#2a4a2a;display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
     <span id="nl-pool" style="font-size:10px;font-weight:700;color:#7a5a30;">Pool</span>
+  </button>
+  <button id="nav-og" onclick="switchTab('og')" style="flex:1.4;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;cursor:pointer;position:relative;">
+    <div style="position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:#E85D04;color:#000;font-size:8px;font-weight:700;padding:1px 6px;border-radius:10px;letter-spacing:0.5px;white-space:nowrap;z-index:10;">LIMITED</div>
+    <div id="ni-og" style="width:54px;height:54px;border-radius:16px;background:linear-gradient(135deg,#c0006a,#E85D04) !important;display:flex;align-items:center;justify-content:center;font-size:24px;animation:ogNavGlow 2s ease-in-out infinite alternate;">📦</div>
+    <span id="nl-og" style="font-size:10px;font-weight:700;color:#E85D04;">OG</span>
   </button>
   <button id="nav-tasks" onclick="switchTab('tasks')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:none;cursor:pointer;">
     <div id="ni-tasks" style="width:46px;height:46px;border-radius:14px;background:#2a4a2a;display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
@@ -505,6 +964,7 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
     </div>
     <div style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:12px;padding:14px;margin-bottom:12px;"><div style="font-size:11px;color:#7a5a30;margin-bottom:8px;">Rank</div><div style="font-size:16px;font-weight:700;color:#ffd090;" id="w-rank">Apprentice Forger</div></div>
     <div style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:12px;padding:14px;margin-bottom:16px;"><div style="font-size:11px;color:#7a5a30;margin-bottom:8px;">Referral Bonus Tokens</div><div style="font-size:20px;font-weight:700;color:#E85D04;" id="w-refbonus">0 $FORGE</div></div>
+    <div id="wallet-connect-section" style="margin-bottom:16px;"></div>
     <button onclick="closeWallet()" style="width:100%;background:#E85D04;color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;">Close</button>
   </div>
 </div>
@@ -513,6 +973,7 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
 const SUPABASE_URL='https://qjpzgkvgmztqpotfital.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqcHpna3ZnbXp0cXBvdGZpdGFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxMTYxODIsImV4cCI6MjA5NDY5MjE4Mn0.cmt5X1v4gRKFlsF_gNMFSGVnxGr_06qjMctBpqa8NrQ';
 const CONTRACT='0x896E862D7629510141915308f07B1C32bb890590';
+const FORGE_TOKEN='0x987D6851288e6F4798FDc7191b31b7b9513D361D';
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let currentUser=null,userFid=null,isSpinning=false,currentAngle=0;
 
@@ -651,30 +1112,41 @@ function getRank(pts){
 }
 
 function switchTab(name){
-  const map={games:'s-games',profile:'s-profile',pool:'s-pool',tasks:'s-tasks',invite:'s-invite',leaders:'s-leaders',spin:'s-spin',tokenrush:'s-tokenrush',quiz:'s-quiz'};
+  const map={games:'s-games',profile:'s-profile',pool:'s-pool',tasks:'s-tasks',og:'s-og',invite:'s-invite',leaders:'s-leaders',spin:'s-spin',tokenrush:'s-tokenrush',quiz:'s-quiz',lottery:'s-lottery',tokenomics:'s-tokenomics'};
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   const screen=document.getElementById(map[name]);
   if(screen)screen.classList.add('active');
-  const COLORS={games:'#E85D04',profile:'#F48C06',pool:'#d4a017',tasks:'#2ecc71',invite:'#7c3aed',leaders:'#e74c3c'};
-  ['games','profile','pool','tasks','invite','leaders'].forEach(t=>{
+  const COLORS={games:'#E85D04',profile:'#F48C06',pool:'#d4a017',og:'#E85D04',tasks:'#2ecc71',invite:'#7c3aed',leaders:'#e74c3c'};
+  ['games','profile','pool','og','tasks','invite','leaders'].forEach(t=>{
     const ni=document.getElementById('ni-'+t),nl=document.getElementById('nl-'+t);
     if(!ni||!nl)return;
+    // OG tab always stays pinkish-orange, never resets
+    if(t==='og'){
+      ni.style.background='linear-gradient(135deg,#c0006a,#E85D04)';
+      ni.style.transform=name==='og'?'scale(1.12)':'scale(1)';
+      ni.style.boxShadow=name==='og'?'0 4px 14px rgba(232,93,4,0.5)':'none';
+      nl.style.color='#E85D04';
+      return;
+    }
     if(t===name){ni.style.background=COLORS[t]||'#E85D04';ni.style.transform='scale(1.12)';ni.style.boxShadow='0 4px 14px rgba(0,0,0,0.3)';nl.style.color=COLORS[t]||'#E85D04';}
     else{ni.style.background='#2a4a2a';ni.style.transform='scale(1)';ni.style.boxShadow='none';nl.style.color='#7a5a30';}
   });
   if(name==='leaders')loadLeaderboard();
+  if(name==='tasks'){setTimeout(loadCompletedTasks,100);}
+  if(name==='og'){setTimeout(loadOgMysteryBox,100);}
+  if(name==='games'){setTimeout(loadLotteryNavBadge,300);}
   if(name==='profile'){setTimeout(loadForgePrice,200);}
   if(name==='pool'){updateStats();updateReferralRewards();loadFcfsStatus();}
   if(name==='invite'&&window.__userFid){setTimeout(()=>{loadInvitedUsers(window.__userFid).catch(()=>{});loadMilestones(window.__userFid).catch(()=>{});},100);}
   if(name==='spin'){setTimeout(()=>drawWheel(0),100);}
-  const mainTabs=['games','profile','pool','tasks','invite','leaders'];
-  if(mainTabs.includes(name)){
+  // Only hammer animation for profile tab
+  if(name==='profile'){
     setTimeout(()=>{
       const ov=document.getElementById('door-overlay'),dc=document.getElementById('doorCanvas');
       if(!ov||!dc)return;
       ov.style.display='block';ov.style.opacity='1';
       dc.width=window.innerWidth;dc.height=window.innerHeight;
-      if(name==='profile')runHammerStrike();else runDoorAnimation();
+      runHammerStrike();
     },50);
   }
 }
@@ -688,28 +1160,54 @@ function openGameScreen(name){
   } else if(name==='quiz'){
     switchTab('quiz');
     resetQuiz();
+  } else if(name==='lottery'){
+    switchTab('lottery');
+    loadLottery();
+  } else if(name==='tokenomics'){
+    switchTab('tokenomics');
+    setTimeout(drawForgeDonut, 100);
   }
 }
 
 async function loadFcfsStatus(){
   if(!userFid)return;
-  const{count:totalJoined}=await db.from('users').select('*',{count:'exact'}).eq('fcfs_eligible',true);
-  const joined=totalJoined||0,pct=Math.min((joined/5000)*100,100).toFixed(1);
-  document.getElementById('fcfs-joined').textContent=joined.toLocaleString();
-  document.getElementById('wave-fill').style.width=pct+'%';
-  document.getElementById('fcfs-pct').textContent=pct+'% filled';
+
+  // Total eligible count vs 5000 cap
+  const{count:totalEligible}=await db.from('users').select('*',{count:'exact'}).eq('fcfs_eligible',true);
+  const eligible=totalEligible||0;
+
+  // Animate hammer bar - X/5000
+  const pct=Math.min((eligible/5000)*100,100).toFixed(1);
+  const fillEl=document.getElementById('wave-fill');
+  const joinedEl=document.getElementById('fcfs-joined');
+  if(fillEl)fillEl.style.width=Math.min(parseFloat(pct),100)+'%';
+  if(joinedEl)joinedEl.textContent=eligible.toLocaleString()+' / 5,000';
+
+  // Close if full
+  const badge=document.getElementById('fcfs-badge');
+  if(eligible>=5000&&badge){badge.textContent='CLOSED';badge.style.background='#555';}
+
   const hammerLeft=Math.max(2,Math.min(parseFloat(pct),98));
-  document.getElementById('hammer-icon').style.left=hammerLeft+'%';
-  document.getElementById('spark-burst').style.left=hammerLeft+'%';
+  const hi=document.getElementById('hammer-icon'),sb=document.getElementById('spark-burst');
+  if(hi)hi.style.left=hammerLeft+'%';
+  if(sb)sb.style.left=hammerLeft+'%';
   const sparks=['✦','⚡','🔥','✸','★'];
   setInterval(()=>{const el=document.getElementById('spark-burst');if(el)el.textContent=sparks[Math.floor(Math.random()*sparks.length)];},400);
-  if(joined>=5000){document.getElementById('fcfs-badge').textContent='CLOSED';document.getElementById('fcfs-badge').style.background='#555';}
-  const{data:userData}=await db.from('users').select('fcfs_eligible,fcfs_claimed').eq('fid',userFid).single();
-  const claimBtn=document.getElementById('fcfsClaim'),rewardInfo=document.getElementById('fcfs-reward-info');
+
+  // Check current user status
+  const{data:userData}=await db.from('users').select('fcfs_claimed').eq('fid',userFid).single();
+  const claimBtn=document.getElementById('fcfsClaim');
+  const rewardInfo=document.getElementById('fcfs-reward-info');
   if(!userData)return;
-  if(userData.fcfs_eligible&&!userData.fcfs_claimed){claimBtn.style.display='block';claimBtn.disabled=false;rewardInfo.style.display='block';rewardInfo.textContent='🎉 You are eligible! Claim your 1,000 $FORGE';rewardInfo.style.color='#F48C06';}
-  else if(userData.fcfs_eligible&&userData.fcfs_claimed){claimBtn.style.display='block';claimBtn.disabled=true;claimBtn.textContent='✓ Already Claimed';rewardInfo.style.display='block';rewardInfo.textContent='✅ You claimed your 1,000 $FORGE!';rewardInfo.style.color='#4ade80';}
-  else{rewardInfo.style.display='block';rewardInfo.textContent='Join as a new user to be eligible for FCFS airdrop';rewardInfo.style.color='#666';}
+
+  if(!userData.fcfs_claimed){
+    // All new users eligible
+    if(claimBtn){claimBtn.style.display='block';claimBtn.disabled=false;}
+    if(rewardInfo){rewardInfo.style.display='block';rewardInfo.textContent='🎉 You are eligible! Claim your 1,000 $FORGE';rewardInfo.style.color='#F48C06';}
+  } else {
+    if(claimBtn){claimBtn.style.display='block';claimBtn.disabled=true;claimBtn.textContent='✓ Already Claimed';}
+    if(rewardInfo){rewardInfo.style.display='block';rewardInfo.textContent='✅ You claimed your 1,000 $FORGE!';rewardInfo.style.color='#4ade80';}
+  }
 }
 
 async function doFcfsClaim(){
@@ -741,7 +1239,7 @@ async function doClaimReferral(){
     const{count}=await db.from('invites').select('*',{count:'exact'}).eq('inviter_fid',userFid);
     const{data:ud}=await db.from('users').select('referral_tokens_claimed').eq('fid',userFid).single();
     const claimed=ud?(ud.referral_tokens_claimed||0):0;
-    const totalEarned=(count||0)*75,claimable=totalEarned-claimed;
+    const totalEarned=(count||0)*150,claimable=totalEarned-claimed;
     if(claimable<=0){showToast('No referral rewards to claim!');btn.disabled=false;btn.textContent='Claim';return;}
     const sdk=(window.miniapp&&window.miniapp.sdk)||window.FrameSDK;if(!sdk)throw new Error('SDK not found');
     let ethPrice=3000;try{const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');const d=await r.json();ethPrice=d.ethereum.usd;}catch(e){}
@@ -763,7 +1261,7 @@ async function updateReferralRewards(){
   const{count}=await db.from('invites').select('*',{count:'exact'}).eq('inviter_fid',userFid);
   const{data:ud}=await db.from('users').select('referral_tokens_claimed').eq('fid',userFid).single();
   const claimed=ud?(ud.referral_tokens_claimed||0):0;
-  const totalEarned=(count||0)*75,claimable=totalEarned-claimed;
+  const totalEarned=(count||0)*150,claimable=totalEarned-claimed;
   document.getElementById('referral-pending').textContent=claimable;
   document.getElementById('referral-invite-count').textContent=count||0;
   document.getElementById('claimRefBtn').disabled=claimable<=0;
@@ -774,36 +1272,53 @@ async function doClaim(type){
   try{
     const sdk=(window.miniapp&&window.miniapp.sdk)||window.FrameSDK;
     if(!sdk)throw new Error('SDK not found');
+
+    // Get ETH price
     let ethPrice=3000;
     try{const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');const d=await r.json();ethPrice=d.ethereum.usd;}catch(e){}
-    const wei=BigInt(Math.floor(0.05/ethPrice*1e18));
-    // Try sendTransaction first (newer SDK), fallback to ethProvider
-    try{
-      if(sdk.wallet&&sdk.wallet.sendTransaction){
-        await sdk.wallet.sendTransaction({chainId:'eip155:8453',calls:[{to:CONTRACT,value:'0x'+wei.toString(16),data:'0x'}]});
-      } else {
-        const provider=sdk.wallet.ethProvider;
-        if(!provider)throw new Error('No wallet');
-        let accs=[];
-        try{accs=await provider.request({method:'eth_accounts'});}catch(e){}
-        if(!accs||!accs[0])accs=await provider.request({method:'eth_requestAccounts'});
-        await provider.request({method:'eth_sendTransaction',params:[{from:accs[0],to:CONTRACT,value:'0x'+wei.toString(16),chainId:'0x2105'}]});
-      }
-    }catch(txErr){
-      // If sendTransaction fails, try ethProvider
+
+    if(type==='token'){
+      // $FORGE token claim → call FORGE_TOKEN contract claim() with 10 cent fee
+      const amount=currentUser.tokens||0;
+      if(amount<=0){showToast('No $FORGE to claim!');return;}
+
+      const claimFeeWei=BigInt(Math.floor(0.10/ethPrice*1e18));
+
+      // Encode claim() function selector: 0x4e71d92d
+      const claimData='0x4e71d92d';
+
       const provider=sdk.wallet&&sdk.wallet.ethProvider;
-      if(!provider)throw txErr;
+      if(!provider)throw new Error('No wallet');
       let accs=[];
       try{accs=await provider.request({method:'eth_accounts'});}catch(e){}
       if(!accs||!accs[0])accs=await provider.request({method:'eth_requestAccounts'});
-      await provider.request({method:'eth_sendTransaction',params:[{from:accs[0],to:CONTRACT,value:'0x'+wei.toString(16),chainId:'0x2105'}]});
+
+      const txHash=await provider.request({
+        method:'eth_sendTransaction',
+        params:[{from:accs[0],to:FORGE_TOKEN,value:'0x'+claimFeeWei.toString(16),data:claimData,chainId:'0x2105'}]
+      });
+
+      // Update DB
+      await db.from('claim_history').insert({fid:userFid,claim_type:'forge_token',amount,tx_hash:txHash,wallet_address:accs[0]});
+      await db.from('users').update({tokens:0}).eq('fid',userFid);
+      currentUser.tokens=0;updateStats();
+      showToast('🎉 $FORGE tokens claimed onchain!');
+
+    } else {
+      // Points claim → $0.05 fee to arena contract
+      const wei=BigInt(Math.floor(0.05/ethPrice*1e18));
+      const provider=sdk.wallet&&sdk.wallet.ethProvider;
+      if(!provider)throw new Error('No wallet');
+      let accs=[];
+      try{accs=await provider.request({method:'eth_accounts'});}catch(e){}
+      if(!accs||!accs[0])accs=await provider.request({method:'eth_requestAccounts'});
+      const txHash=await provider.request({method:'eth_sendTransaction',params:[{from:accs[0],to:CONTRACT,value:'0x'+wei.toString(16),chainId:'0x2105'}]});
+      const amount=currentUser.points||0;
+      await db.from('claim_history').insert({fid:userFid,claim_type:'points',amount,tx_hash:txHash});
+      await db.from('users').update({points:0}).eq('fid',userFid);
+      currentUser.points=0;updateStats();
+      showToast('✅ Points claimed!');
     }
-    const field=type==='token'?'tokens':'points';
-    const amount=currentUser[field]||0;
-    const txHash='claim_'+Date.now();
-    await db.from('claim_history').insert({fid:userFid,claim_type:type,amount,tx_hash:txHash});
-    await db.from('users').update({[field]:0}).eq('fid',userFid);
-    currentUser[field]=0;updateStats();showToast('✅ Claimed! Check your wallet.');
   }catch(e){showToast('Error: '+(e.message||'Claim failed'));}
 }
 
@@ -825,6 +1340,12 @@ async function completeGameTask(taskName, pts) {
   if (!userFid) return;
   const btn = document.getElementById('task-' + taskName);
   if (!btn || btn.classList.contains('done')) return;
+  // DB check - prevent double reward
+  const{data:chk}=await db.from('users').select('completed_tasks').eq('fid',userFid).single();
+  if(chk?.completed_tasks?.includes(taskName)){
+    btn.classList.add('done');btn.textContent='✓ Done';btn.onclick=null;
+    window.__pendingGameTask=null;return;
+  }
   const { data: user } = await db.from('users').select('tokens, completed_tasks').eq('fid', userFid).single();
   const newTokens = (user.tokens || 0) + pts;
   const completed = user.completed_tasks || [];
@@ -843,6 +1364,11 @@ async function doTask(taskName,pts,url){
   if(!userFid)return;
   const btn=document.getElementById('task-'+taskName);
   if(!btn||btn.classList.contains('done'))return;
+  // Double check DB to prevent double claim
+  const{data:chk}=await db.from('users').select('completed_tasks').eq('fid',userFid).single();
+  if(chk?.completed_tasks?.includes(taskName)){
+    btn.classList.add('done');btn.textContent='✓ Done';btn.onclick=null;return;
+  }
   if(url){try{const sdk=(window.miniapp&&window.miniapp.sdk)||window.FrameSDK;if(sdk&&sdk.actions&&sdk.actions.openUrl)await sdk.actions.openUrl(url);else window.open(url,'_blank');}catch(e){window.open(url,'_blank');}}
   const{data:user}=await db.from('users').select('points,completed_tasks').eq('fid',userFid).single();
   const newPts=(user.points||0)+pts;
@@ -879,7 +1405,7 @@ function copyInvite(){
 async function shareOnFarcaster(){
   const url=window.__inviteUrl||document.getElementById('invite-url').textContent;
   const sdk=(window.miniapp&&window.miniapp.sdk)||window.FrameSDK;
-  const text='Join me on CastForge Arena ⚒🔥 Spin to earn $FORGE tokens!';
+  const text='Join CastForge Arena ⚒🔥 We both earn +150 $FORGE when you join!';
   try{if(sdk&&sdk.actions&&sdk.actions.composeCast)await sdk.actions.composeCast({text,embeds:[url]});else window.open('https://warpcast.com/~/compose?text='+encodeURIComponent(text+' '+url));}
   catch(e){window.open('https://warpcast.com/~/compose?text='+encodeURIComponent(text+' '+url));}
 }
@@ -894,6 +1420,56 @@ function showToast(msg){
   setTimeout(()=>t.classList.remove('show'),3000);
 }
 
+async function claimUsdcMilestone(milestone) {
+  if (!userFid) return;
+  const btn = document.getElementById('ms-btn-' + milestone.id);
+  if (btn) { btn.textContent = 'Processing...'; btn.style.opacity = '0.6'; }
+
+  try {
+    const sdk = (window.miniapp && window.miniapp.sdk) || window.FrameSDK;
+    if (!sdk) throw new Error('SDK not found');
+
+    // 0.25 cents = $0.0025 ETH fee
+    let ethPrice = 3000;
+    try { const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'); const d = await r.json(); ethPrice = d.ethereum.usd; } catch(e) {}
+    const wei = BigInt(Math.floor(0.0025 / ethPrice * 1e18));
+
+    const provider = sdk.wallet && sdk.wallet.ethProvider;
+    if (!provider) throw new Error('No wallet');
+    let accs = []; try { accs = await provider.request({ method: 'eth_accounts' }); } catch(e) {}
+    if (!accs || !accs[0]) accs = await provider.request({ method: 'eth_requestAccounts' });
+    await provider.request({ method: 'eth_sendTransaction', params: [{ from: accs[0], to: CONTRACT, value: '0x' + wei.toString(16), chainId: '0x2105' }] });
+
+    // Save claimed
+    const { data: ud } = await db.from('users').select('claimed_milestones, usdc_rewards').eq('fid', userFid).single();
+    const claimed = ud?.claimed_milestones || [];
+    const usdcRewards = ud?.usdc_rewards || [];
+    claimed.push('usdc_' + milestone.id);
+    usdcRewards.push(milestone.usdc);
+    await db.from('users').update({ claimed_milestones: claimed, usdc_rewards: usdcRewards }).eq('fid', userFid);
+
+    // Show in profile
+    updateProfileUsdcReward(usdcRewards);
+    loadMilestones(userFid);
+    showToast('✅ ' + milestone.usdc + ' reward claimed! Payout soon.');
+
+  } catch(e) {
+    showToast('Error: ' + (e.message || 'Claim failed'));
+    if (btn) { btn.textContent = 'Claim ' + milestone.usdc; btn.style.opacity = '1'; }
+  }
+}
+
+function updateProfileUsdcReward(rewards) {
+  const section = document.getElementById('usdc-reward-section');
+  const label = document.getElementById('profile-usdc-reward');
+  const wBtn = document.getElementById('withdraw-request-btn');
+  if (!section || !label || !rewards || rewards.length === 0) return;
+  section.style.display = 'block';
+  label.textContent = rewards.join(' + ');
+  if (wBtn) wBtn.style.display = 'block';
+  if (currentUser) currentUser.usdc_rewards = rewards;
+}
+
 async function loadMilestones(fid){
   try{
     const{count}=await db.from('invites').select('*',{count:'exact'}).eq('inviter_fid',fid);
@@ -901,7 +1477,7 @@ async function loadMilestones(fid){
     const{data:ud}=await db.from('users').select('claimed_milestones,mystery_box_reward').eq('fid',fid).single();
     const claimed=ud?.claimed_milestones||[];
     const milestones=[
-      {id:1,target:1,type:'points',amount:75},
+      {id:1,target:1,type:'token',amount:150},
       {id:15,target:15,type:'token',amount:500},
       {id:30,target:30,type:'token',amount:1000},
       {id:50,target:50,type:'mystery',amount:0},
@@ -942,6 +1518,217 @@ async function claimMilestone(milestone,alreadyClaimed){
   currentUser={...currentUser,...updates};updateStats();
   showToast('🎉 '+(reward.label||'Reward')+'  claimed!');
   loadMilestones(userFid);
+}
+
+function openWithdrawModal() {
+  const modal = document.getElementById('withdraw-modal');
+  if (!modal) return;
+  modal.style.display = 'block';
+
+  // Auto-fill FID
+  const fidEl = document.getElementById('wr-fid');
+  if (fidEl && userFid) fidEl.value = userFid;
+
+  // Auto-fill invites
+  if (userFid) {
+    db.from('invites').select('*', { count: 'exact' }).eq('inviter_fid', userFid).then(({ count }) => {
+      const el = document.getElementById('wr-invites');
+      if (el) el.value = (count || 0) + ' invites';
+    });
+  }
+
+  // Auto-fill USDC
+  if (currentUser && currentUser.usdc_rewards && currentUser.usdc_rewards.length > 0) {
+    const el = document.getElementById('wr-usdc');
+    if (el) el.value = currentUser.usdc_rewards.join(' + ');
+  }
+
+  // Auto-fill wallet from Farcaster context
+  try {
+    const sdk = (window.miniapp && window.miniapp.sdk) || window.FrameSDK;
+    if (sdk) {
+      sdk.context.then(ctx => {
+        const addr = ctx?.user?.verifiedAddresses?.ethAddresses?.[0] || ctx?.user?.custodyAddress;
+        if (addr) {
+          const el = document.getElementById('wr-wallet');
+          if (el && !el.value) el.value = addr;
+        }
+      });
+    }
+  } catch(e) {}
+}
+
+function closeWithdrawModal(e) {
+  if (e && e.target !== document.getElementById('withdraw-modal')) return;
+  document.getElementById('withdraw-modal').style.display = 'none';
+}
+
+function handleSSUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { showToast('File too large! Max 5MB'); return; }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const preview = document.getElementById('wr-ss-preview');
+    const img = document.getElementById('wr-ss-img');
+    const label = document.getElementById('wr-ss-label');
+    if (img) img.src = e.target.result;
+    if (preview) preview.style.display = 'block';
+    if (label) label.textContent = '✓ ' + file.name;
+  };
+  reader.readAsDataURL(file);
+}
+
+async function submitWithdrawRequest() {
+  const fid = document.getElementById('wr-fid')?.value;
+  const invites = document.getElementById('wr-invites')?.value;
+  const usdc = document.getElementById('wr-usdc')?.value;
+  const wallet = document.getElementById('wr-wallet')?.value?.trim();
+  const ssFile = document.getElementById('wr-ss')?.files[0];
+
+  if (!wallet || wallet.length < 10) { showToast('Please enter your wallet address!'); return; }
+  if (!ssFile) { showToast('Please upload proof screenshot!'); return; }
+
+  const btn = document.getElementById('wr-submit-btn');
+  if (btn) { btn.textContent = 'Submitting...'; btn.disabled = true; }
+
+  try {
+    // Convert image to base64 for storage
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const imgData = e.target.result;
+
+      // Save request to Supabase
+      await db.from('claim_history').insert({
+        fid: userFid,
+        claim_type: 'usdc_withdraw_request',
+        amount: 0,
+        tx_hash: 'wr_' + Date.now(),
+        wallet_address: wallet,
+        notes: JSON.stringify({
+          fid, invites, usdc, wallet,
+          screenshot: imgData.substring(0, 500) + '...', // truncate for DB
+          submitted_at: new Date().toISOString()
+        })
+      });
+
+      document.getElementById('withdraw-modal').style.display = 'none';
+      if (btn) { btn.textContent = 'Submit Request'; btn.disabled = false; }
+      showToast("Request submitted! Processing within 48hrs.");
+    };
+    reader.readAsDataURL(ssFile);
+
+  } catch(e) {
+    showToast('Error: ' + (e.message || 'Submit failed'));
+    if (btn) { btn.textContent = 'Submit Request'; btn.disabled = false; }
+  }
+}
+
+function openWithdrawModal() {
+  const modal = document.getElementById('withdraw-modal');
+  if (!modal) return;
+  modal.style.display = 'block';
+
+  // Pre-fill FID
+  const fidEl = document.getElementById('wr-fid');
+  if (fidEl) fidEl.textContent = userFid || '—';
+
+  // Pre-fill invite count
+  if (userFid) {
+    db.from('invites').select('*', { count: 'exact' }).eq('inviter_fid', userFid).then(({ count }) => {
+      const el = document.getElementById('wr-invites');
+      if (el) el.textContent = (count || 0) + ' invites';
+    });
+  }
+
+  // Pre-fill USDC amount
+  const usdcEl = document.getElementById('profile-usdc-reward');
+  const amountEl = document.getElementById('wr-amount');
+  if (amountEl && usdcEl) amountEl.textContent = usdcEl.textContent || '—';
+
+  // Pre-fill wallet
+  try {
+    const sdk = (window.miniapp && window.miniapp.sdk) || window.FrameSDK;
+    if (sdk) {
+      sdk.context.then(ctx => {
+        const addr = ctx?.user?.verifiedAddresses?.ethAddresses?.[0] || ctx?.user?.custodyAddress;
+        const walletInput = document.getElementById('wr-wallet');
+        if (addr && walletInput) walletInput.value = addr;
+      }).catch(() => {});
+    }
+  } catch(e) {}
+}
+
+function closeWithdrawModal(e) {
+  if (e && e.target !== document.getElementById('withdraw-modal')) return;
+  document.getElementById('withdraw-modal').style.display = 'none';
+}
+
+function handleScreenshot(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const label = document.getElementById('wr-file-label');
+  const preview = document.getElementById('wr-preview');
+  const previewImg = document.getElementById('wr-preview-img');
+  if (label) label.textContent = '✅ ' + file.name;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    if (previewImg) previewImg.src = e.target.result;
+    if (preview) preview.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function submitWithdrawRequest() {
+  const btn = document.getElementById('wr-submit-btn');
+  const wallet = document.getElementById('wr-wallet')?.value?.trim();
+  const screenshot = document.getElementById('wr-screenshot')?.files[0];
+  const fid = userFid;
+  const invites = document.getElementById('wr-invites')?.textContent || '—';
+  const amount = document.getElementById('wr-amount')?.textContent || '—';
+
+  if (!wallet || wallet.length < 10) { showToast('Please enter your wallet address!'); return; }
+  if (!screenshot) { showToast('Please upload proof screenshot!'); return; }
+
+  if (btn) { btn.textContent = 'Submitting...'; btn.style.opacity = '0.7'; btn.disabled = true; }
+
+  try {
+    // Convert image to base64
+    const base64 = await new Promise((res, rej) => {
+      const reader = new FileReader();
+      reader.onload = e => res(e.target.result);
+      reader.onerror = rej;
+      reader.readAsDataURL(screenshot);
+    });
+
+    // Save to Supabase
+    const { error } = await db.from('withdraw_requests').insert({
+      fid: fid,
+      wallet_address: wallet,
+      invite_count: invites,
+      usdc_amount: amount,
+      screenshot_base64: base64.substring(0, 500000), // limit size
+      status: 'pending',
+      created_at: new Date().toISOString()
+    });
+
+    if (error) throw new Error(error.message);
+
+    document.getElementById('withdraw-modal').style.display = 'none';
+    showToast('Withdraw request submitted! Processing within 48hrs.');
+
+  } catch(e) {
+    showToast('Error: ' + (e.message || 'Submit failed'));
+    if (btn) { btn.textContent = 'Submit Request'; btn.style.opacity = '1'; btn.disabled = false; }
+  }
+}
+
+async function loadProfileUsdcRewards() {
+  if (!userFid) return;
+  const { data } = await db.from('users').select('usdc_rewards').eq('fid', userFid).single();
+  if (data && data.usdc_rewards && data.usdc_rewards.length > 0) {
+    updateProfileUsdcReward(data.usdc_rewards);
+  }
 }
 
 function updateProfileMysteryBox(label){
@@ -993,17 +1780,146 @@ async function openWallet(){
     const{data}=await db.from('users').select('referral_tokens_claimed').eq('fid',userFid).single();
     document.getElementById('w-refbonus').textContent=(data?.referral_tokens_claimed||0)+' $FORGE';
   }
+
+  // Try Farcaster SDK wallet first
   try{
     const sdk=(window.miniapp&&window.miniapp.sdk)||window.FrameSDK;
     if(sdk){
       const ctx=await sdk.context;
       const addr=ctx?.user?.verifiedAddresses?.ethAddresses?.[0]||ctx?.user?.custodyAddress;
-      const addrEl=document.getElementById('wallet-addr-short'),connEl=document.getElementById('wallet-connected-badge');
-      if(addr){addrEl.textContent=addr.slice(0,6)+'...'+addr.slice(-4);if(connEl)connEl.style.display='inline-flex';}
-      else addrEl.textContent='No wallet connected';
+      if(addr){
+        setConnectedWallet(addr,'Farcaster');
+        return;
+      }
     }
   }catch(e){}
+
+  // If no Farcaster wallet, detect injected EVM wallets
+  detectEvmWallets();
 }
+
+function detectEvmWallets(){
+  const container=document.getElementById('wallet-connect-section');
+  const addrEl=document.getElementById('wallet-addr-short');
+  if(!container)return;
+
+  // Show loading first
+  container.innerHTML='<div style="font-size:12px;color:#7a5a30;text-align:center;padding:8px;">Detecting wallets...</div>';
+
+  // Delay to let injected providers load
+  setTimeout(()=>{
+    const wallets=[];
+
+    // EIP-6963 providers (modern multi-wallet)
+    if(window.__evm_providers && window.__evm_providers.length){
+      window.__evm_providers.forEach(p=>{
+        if(!wallets.find(w=>w.name===p.info?.name))
+          wallets.push({name:p.info?.name||'EVM Wallet',icon:p.info?.icon||null,provider:p.provider});
+      });
+    }
+
+    // Legacy window.ethereum
+    if(window.ethereum){
+      // Handle multiple providers (MetaMask + Rabby both installed)
+      const providers = window.ethereum.providers || [window.ethereum];
+      providers.forEach(p=>{
+        let name='Browser Wallet';
+        if(p.isRabby) name='Rabby';
+        else if(p.isMetaMask) name='MetaMask';
+        else if(p.isCoinbaseWallet) name='Coinbase Wallet';
+        else if(p.isTrust) name='Trust Wallet';
+        else if(p.isBraveWallet) name='Brave Wallet';
+        if(!wallets.find(w=>w.name===name))
+          wallets.push({name, icon:null, provider:p});
+      });
+    }
+
+    if(wallets.length===0){
+      if(addrEl) addrEl.textContent='No wallet found';
+      container.innerHTML='<div style="font-size:12px;color:#7a5a30;text-align:center;padding:8px;">No EVM wallet detected.<br>Install MetaMask or Rabby to connect.</div>';
+      return;
+    }
+
+    if(addrEl) addrEl.textContent='Not connected';
+    container.innerHTML=`
+      <div style="font-size:12px;color:#7a5a30;margin-bottom:8px;font-weight:600;">Connect Wallet</div>
+      <div id="wallet-list" style="display:flex;flex-direction:column;gap:8px;">
+        ${wallets.map((w,i)=>`
+          <button onclick="connectEvmWallet(${i})" style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;width:100%;text-align:left;">
+            <div style="width:32px;height:32px;border-radius:8px;background:#2a1400;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">
+              ${w.icon?`<img src="${w.icon}" style="width:24px;height:24px;border-radius:4px;">`:'🔗'}
+            </div>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:#ffd090;">${w.name}</div>
+              <div style="font-size:11px;color:#5a3a10;">Click to connect</div>
+            </div>
+            <svg style="margin-left:auto;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E85D04" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+          </button>`).join('')}
+      </div>`;
+    window.__detected_wallets = wallets;
+  }, 500);
+}
+
+async function connectEvmWallet(idx){
+  const wallets=window.__detected_wallets||[];
+  const wallet=wallets[idx];
+  if(!wallet)return;
+
+  const btn=document.querySelectorAll('#wallet-list button')[idx];
+  if(btn){btn.style.opacity='0.6';btn.innerHTML='<span style="color:#F48C06;font-size:13px;padding:4px;">Connecting...</span>';}
+
+  try{
+    const accounts=await wallet.provider.request({method:'eth_requestAccounts'});
+    if(accounts&&accounts[0]){
+      setConnectedWallet(accounts[0], wallet.name);
+      // Save wallet address to DB
+      if(userFid){
+        await db.from('users').update({wallet_address:accounts[0]}).eq('fid',userFid);
+      }
+      showToast('Wallet connected!');
+    }
+  }catch(e){
+    showToast('Connection rejected');
+    if(btn){btn.style.opacity='1';}
+    detectEvmWallets();
+  }
+}
+
+function setConnectedWallet(addr, walletName){
+  const addrEl=document.getElementById('wallet-addr-short');
+  const connEl=document.getElementById('wallet-connected-badge');
+  const container=document.getElementById('wallet-connect-section');
+  if(addrEl) addrEl.textContent=addr.slice(0,6)+'...'+addr.slice(-4);
+  if(connEl){connEl.style.display='inline-flex';}
+  if(container){
+    container.innerHTML=`
+      <div style="background:#1a0d00;border:0.5px solid #2ecc71;border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px;">
+        <div style="width:8px;height:8px;border-radius:50%;background:#2ecc71;flex-shrink:0;"></div>
+        <div style="flex:1;">
+          <div style="font-size:11px;color:#2ecc71;font-weight:600;">${walletName} Connected</div>
+          <div style="font-size:12px;color:#ffd090;font-family:monospace;">${addr.slice(0,10)}...${addr.slice(-6)}</div>
+        </div>
+        <button onclick="disconnectWallet()" style="background:#2a0a0a;border:0.5px solid #e74c3c;border-radius:6px;padding:4px 8px;color:#e74c3c;font-size:11px;cursor:pointer;">Disconnect</button>
+      </div>`;
+  }
+}
+
+function disconnectWallet(){
+  window.__detected_wallets=null;
+  const container=document.getElementById('wallet-connect-section');
+  const addrEl=document.getElementById('wallet-addr-short');
+  const connEl=document.getElementById('wallet-connected-badge');
+  if(addrEl) addrEl.textContent='Not connected';
+  if(connEl) connEl.style.display='none';
+  detectEvmWallets();
+}
+
+// EIP-6963 provider discovery
+window.__evm_providers=[];
+window.addEventListener('eip6963:announceProvider',(e)=>{
+  if(e.detail) window.__evm_providers.push(e.detail);
+});
+window.dispatchEvent(new Event('eip6963:requestProvider'));
 
 function closeWallet(e){
   if(e&&e.target!==document.getElementById('wallet-modal'))return;
@@ -1418,6 +2334,506 @@ function resetQuiz() {
   if (quizState.timer) clearInterval(quizState.timer);
 }
 
+// ── Forge Lottery ─────────────────────────────────────
+let lotteryCountdownInterval = null;
+let lotteryTimerInterval = null;
+
+async function loadLottery() {
+  // Get current active lottery
+  let { data: lottery } = await db.from('lottery_rounds')
+    .select('*')
+    .eq('status', 'active')
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single();
+
+  // No active lottery → create one
+  if (!lottery) {
+    const { data: newLot } = await db.from('lottery_rounds').insert({
+      status: 'active',
+      pool_eth: 0,
+      entry_count: 0,
+      created_at: new Date().toISOString(),
+      draw_at: new Date(Date.now() + 24*60*60*1000).toISOString()
+    }).select().single();
+    lottery = newLot;
+  }
+
+  if (!lottery) return;
+  window.__currentLottery = lottery;
+
+  // Get entries
+  const { data: entries, count } = await db.from('lottery_entries')
+    .select('*', { count: 'exact' })
+    .eq('round_id', lottery.id);
+
+  const entryCount = count || 0;
+  const poolUsd = entryCount * 5;
+  const prizeUsd = (poolUsd * 0.5).toFixed(2);
+
+  // Update UI
+  document.getElementById('lottery-pool').textContent = '$' + poolUsd.toFixed(2);
+  document.getElementById('lottery-prize').textContent = '$' + prizeUsd;
+  document.getElementById('lottery-entries').textContent = entryCount;
+
+  // Update nav badge
+  const badge = document.getElementById('lottery-nav-badge');
+  if (badge) badge.textContent = entryCount + ' entries';
+
+  // Check if user already entered
+  const myEntry = entries?.find(e => e.fid === userFid);
+
+  // Show entries list
+  showEntriesList(entries || []);
+
+  // Check lottery status
+  if (lottery.status === 'drawn') {
+    showWinnerState(lottery, myEntry);
+    return;
+  }
+
+  // Check if draw should happen (min 3 entries + 24h passed)
+  const drawTime = new Date(lottery.draw_at).getTime();
+  const now = Date.now();
+
+  if (entryCount >= 3 && now >= drawTime) {
+    // Draw when 3+ entries AND 24h passed
+    await drawLottery(lottery, entries);
+    return;
+  }
+
+  // Show countdown to draw
+  startDrawTimer(drawTime);
+
+  // Show manual draw for owner
+  const OWNER_FID = '237277';
+  const manualBtn = document.getElementById('lottery-manual-draw-btn');
+  if (manualBtn) manualBtn.style.display = userFid === OWNER_FID && entryCount >= 3 ? 'block' : 'none';
+
+  // Entry button
+  const btn = document.getElementById('lottery-enter-btn');
+  const statusEl = document.getElementById('lottery-entry-status');
+  const statusText = document.getElementById('lottery-status-text');
+
+  if (myEntry) {
+    statusText.innerHTML = '<span style="color:#2ecc71;font-weight:700;">✅ You are entered!</span><br><span style="color:#5a3a10;font-size:11px;">Good luck! Draw when 3+ entries & 24h passed.</span>';
+    if (btn) btn.style.display = 'none';
+  } else {
+    if (entryCount < 3) {
+      statusText.innerHTML = '<span style="color:#F48C06;">Need ' + (3 - entryCount) + ' more entr' + (3-entryCount===1?'y':'ies') + ' to trigger draw</span>';
+    } else {
+      statusText.innerHTML = '<span style="color:#2ecc71;">3+ entries ready! Draw after 24h countdown.</span>';
+    }
+    if (btn) btn.style.display = 'block';
+  }
+}
+
+function startDrawTimer(drawTime) {
+  if (lotteryTimerInterval) clearInterval(lotteryTimerInterval);
+  function update() {
+    const remaining = Math.max(0, drawTime - Date.now());
+    const h = Math.floor(remaining / 3600000);
+    const m = Math.floor((remaining % 3600000) / 60000);
+    const s = Math.floor((remaining % 60000) / 1000);
+    const el = document.getElementById('lottery-timer');
+    if (el) el.textContent = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+    if (remaining <= 0) { clearInterval(lotteryTimerInterval); loadLottery(); }
+  }
+  update();
+  lotteryTimerInterval = setInterval(update, 1000);
+}
+
+function startClaimCountdown(expiresAt) {
+  if (lotteryCountdownInterval) clearInterval(lotteryCountdownInterval);
+  function update() {
+    const remaining = Math.max(0, new Date(expiresAt).getTime() - Date.now());
+    const h = Math.floor(remaining / 3600000);
+    const m = Math.floor((remaining % 3600000) / 60000);
+    const s = Math.floor((remaining % 60000) / 1000);
+    const el = document.getElementById('lottery-countdown');
+    if (el) el.textContent = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+    if (remaining <= 0) {
+      clearInterval(lotteryCountdownInterval);
+      const el2 = document.getElementById('lottery-countdown');
+      if (el2) el2.textContent = 'EXPIRED';
+      const claimBtn = document.getElementById('lottery-claim-btn');
+      if (claimBtn) claimBtn.style.display = 'none';
+      const st = document.getElementById('lottery-status-text');
+      if (st) st.innerHTML = '<span style="color:#F48C06;">Claim expired. New round starting...</span>';
+      if (window.__currentLottery) {
+        db.from('lottery_rounds').update({ status: 'expired' }).eq('id', window.__currentLottery.id).then(()=>{
+          startNewLotteryRound();
+        });
+      }
+    }
+  }
+  update();
+  lotteryCountdownInterval = setInterval(update, 1000);
+}
+
+async function drawLottery(lottery, entries) {
+  // Random winner
+  const winnerEntry = entries[Math.floor(Math.random() * entries.length)];
+  const claimExpires = new Date(Date.now() + 2*60*60*1000).toISOString(); // 2 hrs
+
+  await db.from('lottery_rounds').update({
+    status: 'drawn',
+    winner_fid: winnerEntry.fid,
+    winner_username: winnerEntry.username,
+    claim_expires_at: claimExpires,
+    drawn_at: new Date().toISOString()
+  }).eq('id', lottery.id);
+
+  // Reload
+  await loadLottery();
+}
+
+function showWinnerState(lottery, myEntry) {
+  const winnerBox = document.getElementById('lottery-winner-box');
+  const winnerName = document.getElementById('lottery-winner-name');
+  const claimBtn = document.getElementById('lottery-claim-btn');
+  const statusEl = document.getElementById('lottery-entry-status');
+  const statusText = document.getElementById('lottery-status-text');
+  const enterBtn = document.getElementById('lottery-enter-btn');
+
+  if (winnerBox) winnerBox.style.display = 'block';
+  if (winnerName) winnerName.textContent = '@' + (lottery.winner_username || 'Unknown');
+  if (enterBtn) enterBtn.style.display = 'none';
+
+  const isWinner = lottery.winner_fid === userFid;
+  const claimExpires = lottery.claim_expires_at;
+  const expired = claimExpires && new Date(claimExpires).getTime() < Date.now();
+  const claimed = lottery.claimed;
+
+  if (isWinner && !claimed && !expired) {
+    if (claimBtn) claimBtn.style.display = 'block';
+    if (statusText) statusText.innerHTML = '<span style="color:#FFD700;font-weight:700;">🏆 YOU WON! Claim your prize!</span>';
+    startClaimCountdown(claimExpires);
+  } else if (isWinner && claimed) {
+    if (statusText) statusText.innerHTML = '<span style="color:#2ecc71;">✅ Prize claimed!</span>';
+  } else if (expired) {
+    if (statusText) statusText.innerHTML = '<span style="color:#F48C06;">Claim expired. Starting new round...</span>';
+    setTimeout(() => startNewLotteryRound(), 2000);
+  } else {
+    if (statusText) statusText.innerHTML = '<span style="color:#7a5a30;">Waiting for winner to claim...</span>';
+    startClaimCountdown(claimExpires);
+  }
+}
+
+async function manualDrawLottery() {
+  const lottery = window.__currentLottery;
+  if (!lottery) return;
+  const { data: entries } = await db.from('lottery_entries').select('*').eq('round_id', lottery.id);
+  if (!entries || entries.length < 3) { showToast('Need at least 3 entries!'); return; }
+  if (!confirm('Draw lottery now with ' + entries.length + ' entries?')) return;
+  await drawLottery(lottery, entries);
+}
+
+async function startNewLotteryRound() {
+  await db.from('lottery_rounds').insert({
+    status: 'active',
+    pool_eth: 0,
+    entry_count: 0,
+    created_at: new Date().toISOString(),
+    draw_at: new Date(Date.now() + 24*60*60*1000).toISOString()
+  });
+  showToast('New lottery round started!');
+  setTimeout(() => loadLottery(), 1500);
+}
+
+function showEntriesList(entries) {
+  const container = document.getElementById('lottery-entries-list');
+  if (!container) return;
+  if (!entries.length) {
+    container.innerHTML = '<div style="text-align:center;color:#5a3a10;font-size:13px;padding:12px;">No entries yet. Be the first!</div>';
+    return;
+  }
+  container.innerHTML = entries.map((e, i) => `
+    <div style="background:#160c00;border-radius:10px;padding:10px 14px;margin-bottom:8px;border:0.5px solid ${e.fid===userFid?'#FFD700':'#3a1a00'};display:flex;align-items:center;gap:10px;">
+      <div style="width:30px;height:30px;border-radius:50%;background:#E85D04;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;">${i+1}</div>
+      <div style="flex:1;">
+        <div style="font-size:13px;color:#ffd090;font-weight:600;">@${e.username||'Forger'}</div>
+        <div style="font-size:10px;color:#5a3a10;">${new Date(e.created_at).toLocaleString()}</div>
+      </div>
+      ${e.fid===userFid?'<span style="font-size:10px;color:#FFD700;font-weight:700;">YOU</span>':''}
+    </div>`).join('');
+}
+
+async function enterLottery() {
+  if (!userFid) return;
+  const sdk = (window.miniapp && window.miniapp.sdk) || window.FrameSDK;
+  if (!sdk) { showToast('SDK not found'); return; }
+
+  const btn = document.getElementById('lottery-enter-btn');
+  if (btn) { btn.textContent = 'Processing...'; btn.disabled = true; }
+
+  try {
+    let ethPrice = 3000;
+    try { const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'); const d = await r.json(); ethPrice = d.ethereum.usd; } catch(e) {}
+
+    // $5 entry fee in ETH
+    const entryWei = BigInt(Math.floor(5 / ethPrice * 1e18));
+
+    const provider = sdk.wallet && sdk.wallet.ethProvider;
+    if (!provider) throw new Error('No wallet');
+    let accs = []; try { accs = await provider.request({ method: 'eth_accounts' }); } catch(e) {}
+    if (!accs || !accs[0]) accs = await provider.request({ method: 'eth_requestAccounts' });
+
+    const txHash = await provider.request({
+      method: 'eth_sendTransaction',
+      params: [{ from: accs[0], to: CONTRACT, value: '0x' + entryWei.toString(16), chainId: '0x2105' }]
+    });
+
+    const lottery = window.__currentLottery;
+    if (!lottery) throw new Error('No active lottery');
+
+    // Save entry
+    const { data: ud } = await db.from('users').select('username, display_name').eq('fid', userFid).single();
+    await db.from('lottery_entries').insert({
+      round_id: lottery.id,
+      fid: userFid,
+      username: ud?.username || ud?.display_name || 'Forger',
+      tx_hash: txHash,
+      wallet: accs[0],
+      created_at: new Date().toISOString()
+    });
+
+    // Update pool
+    await db.from('lottery_rounds').update({
+      entry_count: (lottery.entry_count || 0) + 1
+    }).eq('id', lottery.id);
+
+    showToast('You are entered! Good luck!');
+    loadLottery();
+
+  } catch(e) {
+    showToast('Error: ' + (e.message || 'Entry failed'));
+    if (btn) { btn.textContent = 'Enter Lottery — $5 ETH'; btn.disabled = false; }
+  }
+}
+
+async function claimLotteryWin() {
+  if (!userFid) return;
+  const sdk = (window.miniapp && window.miniapp.sdk) || window.FrameSDK;
+  if (!sdk) { showToast('SDK not found'); return; }
+
+  const claimBtn = document.getElementById('lottery-claim-btn');
+  if (claimBtn) { claimBtn.textContent = 'Processing...'; claimBtn.disabled = true; }
+
+  try {
+    let ethPrice = 3000;
+    try { const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'); const d = await r.json(); ethPrice = d.ethereum.usd; } catch(e) {}
+
+    // $0.20 claim fee
+    const claimFeeWei = BigInt(Math.floor(0.20 / ethPrice * 1e18));
+
+    const provider = sdk.wallet && sdk.wallet.ethProvider;
+    if (!provider) throw new Error('No wallet');
+    let accs = []; try { accs = await provider.request({ method: 'eth_accounts' }); } catch(e) {}
+    if (!accs || !accs[0]) accs = await provider.request({ method: 'eth_requestAccounts' });
+
+    await provider.request({
+      method: 'eth_sendTransaction',
+      params: [{ from: accs[0], to: CONTRACT, value: '0x' + claimFeeWei.toString(16), chainId: '0x2105' }]
+    });
+
+    const lottery = window.__currentLottery;
+    await db.from('lottery_rounds').update({ claimed: true, claimed_at: new Date().toISOString(), winner_wallet: accs[0] }).eq('id', lottery.id);
+
+    if (lotteryCountdownInterval) clearInterval(lotteryCountdownInterval);
+    if (claimBtn) { claimBtn.style.display = 'none'; }
+
+    const statusText = document.getElementById('lottery-status-text');
+    if (statusText) statusText.innerHTML = '<span style="color:#2ecc71;font-weight:700;">Prize claimed! ETH will be sent to your wallet within 1hr.</span>';
+
+    showToast('Prize claimed! ETH being sent to your wallet!');
+
+  } catch(e) {
+    showToast('Error: ' + (e.message || 'Claim failed'));
+    if (claimBtn) { claimBtn.textContent = 'Claim Win (0.20$ fee)'; claimBtn.disabled = false; }
+  }
+}
+
+async function loadLotteryNavBadge() {
+  try {
+    const { count } = await db.from('lottery_entries')
+      .select('*', { count: 'exact' })
+      .eq('round_id', (await db.from('lottery_rounds').select('id').eq('status','active').order('created_at',{ascending:false}).limit(1).single()).data?.id || '');
+    const badge = document.getElementById('lottery-nav-badge');
+    if (badge) badge.textContent = (count || 0) + ' entries';
+  } catch(e) {}
+}
+
+function drawForgeDonut() {
+  const canvas = document.getElementById('forge-donut');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const cx = 110, cy = 110, r = 88, ir = 54;
+  const slices = [
+    { pct: 0.40, color: '#E85D04' },
+    { pct: 0.30, color: '#2ecc71' },
+    { pct: 0.20, color: '#3b82f6' },
+    { pct: 0.10, color: '#a855f7' },
+  ];
+  let start = -Math.PI / 2;
+  slices.forEach(s => {
+    const end = start + s.pct * 2 * Math.PI;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, start, end);
+    ctx.closePath();
+    ctx.fillStyle = s.color;
+    ctx.fill();
+    // Gap
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, end - 0.02, end + 0.02);
+    ctx.fillStyle = '#110800';
+    ctx.fill();
+    start = end;
+  });
+  ctx.beginPath();
+  ctx.arc(cx, cy, ir, 0, 2 * Math.PI);
+  ctx.fillStyle = '#110800';
+  ctx.fill();
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#ffd090';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.fillText('$FORGE', cx, cy - 10);
+  ctx.fillStyle = '#7a5a30';
+  ctx.font = '11px sans-serif';
+  ctx.fillText('5,000,000,000', cx, cy + 8);
+}
+
+// ── OG Mystery Box ─────────────────────────────────────
+const OG_TOTAL = 666;
+const OG_PRICE_ETH = 0.00025;
+
+const OG_RARITIES = [
+  { name:'Common',  emoji:'⚪', color:'#aaa',    amount:2500,  weight:90 },
+  { name:'Rare',    emoji:'🔵', color:'#3b82f6', amount:5000,  weight:5  },
+  { name:'Epic',    emoji:'🟣', color:'#a855f7', amount:10000, weight:2  },
+  { name:'Legendary',emoji:'🟡',color:'#FFD700', amount:15000, weight:2  },
+  { name:'Mythic',  emoji:'🔴', color:'#E85D04', amount:35000, weight:1  },
+];
+
+function rollRarity() {
+  const total = OG_RARITIES.reduce((a,r) => a + r.weight, 0);
+  let r = Math.random() * total;
+  for (const rarity of OG_RARITIES) {
+    r -= rarity.weight;
+    if (r <= 0) return rarity;
+  }
+  return OG_RARITIES[0];
+}
+
+async function loadOgMysteryBox() {
+  // Get total minted
+  const { count } = await db.from('og_boxes').select('*', { count: 'exact' });
+  const minted = count || 0;
+  const left = Math.max(0, OG_TOTAL - minted);
+  const pct = Math.min((minted / OG_TOTAL) * 100, 100);
+
+  const mintedEl = document.getElementById('og-minted');
+  const leftEl = document.getElementById('og-left');
+  const barEl = document.getElementById('og-progress-bar');
+  const pctEl = document.getElementById('og-pct');
+
+  if (mintedEl) mintedEl.textContent = minted + ' / 666';
+  if (leftEl) leftEl.textContent = left;
+  if (barEl) barEl.style.width = pct + '%';
+  if (pctEl) pctEl.textContent = pct.toFixed(1) + '% minted';
+
+  // Disable if sold out
+  const btn = document.getElementById('og-open-btn');
+  if (btn && left <= 0) {
+    btn.disabled = true;
+    btn.textContent = '🔒 Sold Out!';
+  }
+
+  // My boxes count
+  if (userFid) {
+    const { count: myCount } = await db.from('og_boxes').select('*', { count: 'exact' }).eq('fid', userFid);
+    const myEl = document.getElementById('og-my-count');
+    if (myEl) myEl.textContent = myCount || 0;
+  }
+}
+
+async function openMysteryBox() {
+  if (!userFid) return;
+  const btn = document.getElementById('og-open-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Processing...'; }
+
+  try {
+    const sdk = (window.miniapp && window.miniapp.sdk) || window.FrameSDK;
+    if (!sdk) throw new Error('SDK not found');
+
+    // Check supply
+    const { count } = await db.from('og_boxes').select('*', { count: 'exact' });
+    if ((count || 0) >= OG_TOTAL) throw new Error('All 666 boxes are minted!');
+
+    // Pay 0.00025 ETH
+    let ethPrice = 3000;
+    try { const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'); const d = await r.json(); ethPrice = d.ethereum.usd; } catch(e) {}
+    const wei = BigInt(Math.floor(OG_PRICE_ETH / ethPrice * 1e18));
+
+    // Get provider — Farcaster SDK or injected web3
+    let provider = sdk.wallet && sdk.wallet.ethProvider;
+    if (!provider && window.ethereum) provider = window.ethereum;
+    if (!provider) throw new Error('No wallet found. Please connect a wallet.');
+
+    let accs = [];
+    try { accs = await provider.request({ method: 'eth_accounts' }); } catch(e) {}
+    if (!accs || !accs[0]) accs = await provider.request({ method: 'eth_requestAccounts' });
+    if (!accs || !accs[0]) throw new Error('Wallet not connected');
+
+    const txHash = await provider.request({
+      method: 'eth_sendTransaction',
+      params: [{ from: accs[0], to: CONTRACT, value: '0x' + wei.toString(16), chainId: '0x2105' }]
+    });
+
+    // Roll rarity
+    const rarity = rollRarity();
+
+    // Save to DB
+    await db.from('og_boxes').insert({
+      fid: userFid,
+      rarity: rarity.name,
+      amount: rarity.amount,
+      tx_hash: txHash,
+      wallet: accs[0],
+      created_at: new Date().toISOString()
+    });
+
+    // Add tokens to user
+    const { data: u } = await db.from('users').select('tokens').eq('fid', userFid).single();
+    await db.from('users').update({ tokens: (u.tokens || 0) + rarity.amount }).eq('fid', userFid);
+    currentUser.tokens = (currentUser.tokens || 0) + rarity.amount;
+    updateStats();
+
+    // Show result
+    const resultEl = document.getElementById('og-result');
+    const emojiEl = document.getElementById('og-result-emoji');
+    const rarityEl = document.getElementById('og-result-rarity');
+    const amountEl = document.getElementById('og-result-amount');
+
+    if (resultEl) resultEl.style.display = 'block';
+    if (emojiEl) emojiEl.textContent = rarity.emoji;
+    if (rarityEl) { rarityEl.textContent = rarity.name + ' Box'; rarityEl.style.color = rarity.color; }
+    if (amountEl) { amountEl.textContent = rarity.amount.toLocaleString() + ' $FORGE'; amountEl.style.color = rarity.color; }
+
+    showToast(rarity.emoji + ' ' + rarity.name + '! +' + rarity.amount.toLocaleString() + ' $FORGE!');
+    loadOgMysteryBox();
+
+    if (btn) { btn.disabled = false; btn.textContent = '📦 Open Another Box'; }
+
+  } catch(e) {
+    showToast('Error: ' + (e.message || 'Failed'));
+    if (btn) { btn.disabled = false; btn.textContent = '📦 Open Box — 0.00025 ETH'; }
+  }
+}
+
 function initLavaBackground(){
   const canvas=document.getElementById('lavaCanvas');if(!canvas)return;
   function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
@@ -1470,7 +2886,9 @@ async function init(){
         const inviteUrl='https://farcaster.xyz/miniapps/7ZcAcVmacXA9/castforge-arena-?ref='+userFid;
         document.getElementById('invite-url').textContent=inviteUrl;
         window.__inviteUrl=inviteUrl;window.__userFid=userFid;
-        updateStats();loadCompletedTasks();setTimeout(loadForgePrice,500);return;
+        updateStats();loadCompletedTasks();setTimeout(loadForgePrice,500);
+        // Reload tasks if on tasks tab
+        return;
       }
     }
   }catch(e){console.log('SDK error:',e.message);}
