@@ -1,17 +1,17 @@
 {
   "accountAssociation": {
-    "header": "eyJmaWQiOjMzMzE2MDIsInR5cGUiOiJhdXRoIiwia2V5IjoiMHg2MEYxMzYzOWVERjZlMGQ1MGQ1M2QxNjY5NWI2ZTkzQzYxNTg3NTJmIn0",
-    "payload": "eyJkb21haW4iOiJjYXN0Zm9yZ2UtYXJlbmEudmVyY2VsLmFwcCJ9",
-    "signature": "NckU0t7cqpZeGAtv8QVzB6gm8rjFkdTfOPo7SmnUXMdVVoXvfb4wsKbVuJp1xhUHssglfX4jqMisj0ylSScrgRw="
+    "header": "eyJmaWQiOjIzNzI3NywidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweDQ1NTU1MkU4MzM4MkU0MWZlQjBmRGU1NGNlMDg4OEE4RDM0ZDI0YzgifQ",
+    "payload": "eyJ1cmwiOiJodHRwczovL2Nhc3Rmb3JnZS1hcmVuYS52ZXJjZWwuYXBwIn0",
+    "signature": "MHg0NWY4NTI5NjNkMzFkMzFjNDIzNTY3ZDcxNjEzMmJhOGFjMzdiMjJhZjg3MDkyMGE4MWQ3ZjNiOTZiZjNlNDUzNTA1OTRhZWY4NzQwYmIwNTM4ZjkwNzJhZTE4MDZiNTUzZjQ2NzNhNTM0MWU4N2U4Zjc5NmFhZWVmZDE4NDFj"
   },
   "frame": {
     "version": "1",
-    "name": "CastForge Arena ⚒",
-    "iconUrl": "https://castforge-arena.vercel.app/icon.png",
+    "name": "CastForge Arena",
+    "iconUrl": "https://castforge-arena.vercel.app/og.png",
     "homeUrl": "https://castforge-arena.vercel.app",
-    "imageUrl": "https://castforge-arena.vercel.app/image.png",
-    "buttonTitle": "⚒ Enter the Arena",
-    "splashImageUrl": "https://castforge-arena.vercel.app/splash.png",
-    "splashBackgroundColor": "#1a1a1a"
+    "imageUrl": "https://castforge-arena.vercel.app/og.png",
+    "buttonTitle": "⚒ Claim Airdrop",
+    "splashImageUrl": "https://castforge-arena.vercel.app/og.png",
+    "splashBackgroundColor": "#0a0500"
   }
 }
