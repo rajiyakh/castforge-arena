@@ -1366,41 +1366,32 @@ async function doClaim(type){
     let ethPrice=3000;
     try{const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');const d=await r.json();ethPrice=d.ethereum.usd;}catch(e){}
 
+    // Get provider — Farcaster or web browser
+    let provider=sdk.wallet&&sdk.wallet.ethProvider;
+    if(!provider&&window.ethereum)provider=window.ethereum;
+    if(!provider)throw new Error('No wallet found');
+    let accs=[];
+    try{accs=await provider.request({method:'eth_accounts'});}catch(e){}
+    if(!accs||!accs[0])accs=await provider.request({method:'eth_requestAccounts'});
+    if(!accs||!accs[0])throw new Error('Wallet not connected');
+
     if(type==='token'){
-      // $FORGE token claim → call FORGE_TOKEN contract claim() with 10 cent fee
+      // $FORGE token claim → 5 cent fee to CONTRACT
       const amount=currentUser.tokens||0;
       if(amount<=0){showToast('No $FORGE to claim!');return;}
-
-      const claimFeeWei=BigInt(Math.floor(0.10/ethPrice*1e18));
-
-      // Encode claim() function selector: 0x4e71d92d
-      const claimData='0x4e71d92d';
-
-      const provider=sdk.wallet&&sdk.wallet.ethProvider;
-      if(!provider)throw new Error('No wallet');
-      let accs=[];
-      try{accs=await provider.request({method:'eth_accounts'});}catch(e){}
-      if(!accs||!accs[0])accs=await provider.request({method:'eth_requestAccounts'});
-
+      const wei=BigInt(Math.floor(0.05/ethPrice*1e18));
       const txHash=await provider.request({
         method:'eth_sendTransaction',
-        params:[{from:accs[0],to:FORGE_TOKEN,value:'0x'+claimFeeWei.toString(16),data:claimData,chainId:'0x2105'}]
+        params:[{from:accs[0],to:CONTRACT,value:'0x'+wei.toString(16),chainId:'0x2105'}]
       });
-
-      // Update DB
       await db.from('claim_history').insert({fid:userFid,claim_type:'forge_token',amount,tx_hash:txHash,wallet_address:accs[0]});
-      await db.from('users').update({tokens:0}).eq('fid',userFid);
+      await db.from('users').update({tokens:0,wallet_address:accs[0]}).eq('fid',userFid);
       currentUser.tokens=0;updateStats();
-      showToast('🎉 $FORGE tokens claimed onchain!');
+      showToast('🎉 $FORGE claim recorded! Tokens will be sent to your wallet.');
 
     } else {
-      // Points claim → $0.05 fee to arena contract
+      // Points claim → $0.05 fee to CONTRACT
       const wei=BigInt(Math.floor(0.05/ethPrice*1e18));
-      const provider=sdk.wallet&&sdk.wallet.ethProvider;
-      if(!provider)throw new Error('No wallet');
-      let accs=[];
-      try{accs=await provider.request({method:'eth_accounts'});}catch(e){}
-      if(!accs||!accs[0])accs=await provider.request({method:'eth_requestAccounts'});
       const txHash=await provider.request({method:'eth_sendTransaction',params:[{from:accs[0],to:CONTRACT,value:'0x'+wei.toString(16),chainId:'0x2105'}]});
       const amount=currentUser.points||0;
       await db.from('claim_history').insert({fid:userFid,claim_type:'points',amount,tx_hash:txHash});
