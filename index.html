@@ -480,6 +480,19 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
         </button>
       </div>
 
+    <!-- About CastForge Arena -->
+    <a href="https://castforge.fun" target="_blank" style="text-decoration:none;display:block;margin-top:12px;">
+      <div style="background:#110800;border:1px solid #E85D04;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;position:relative;overflow:hidden;cursor:pointer;">
+        <div style="position:absolute;top:0;left:-100%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(232,93,4,0.08),transparent);animation:tbShimmer 2.5s linear infinite;pointer-events:none;"></div>
+        <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#8B2500,#E85D04);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 2px 10px rgba(232,93,4,0.3);">⚒</div>
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:700;color:#ffd090;">About CastForge Arena</div>
+          <div style="font-size:11px;color:#5a3a10;margin-top:2px;">castforge.fun ↗</div>
+        </div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E85D04" stroke-width="2.5" stroke-linecap="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </div>
+    </a>
+
       <!-- Withdraw Modal -->
       <div id="withdraw-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:9500;background:rgba(0,0,0,0.85);overflow-y:auto;" onclick="closeWithdrawModal(event)">
         <div style="background:#110800;border-radius:20px 20px 0 0;padding:20px 16px 40px;border-top:1px solid #3a1a00;position:absolute;bottom:0;left:0;right:0;">
@@ -1740,6 +1753,37 @@ async function loadMilestones(fid){
       if(!btn)return;
       if(isClaimed){btn.textContent='✓ Claimed';btn.style.background='#1a3a1a';btn.style.color='#2ecc71';btn.onclick=null;}
       else if(achieved){btn.textContent='Claim!';btn.style.background=m.id===50?'#7c3aed':'#E85D04';btn.style.color='#fff';btn.style.cursor='pointer';btn.onclick=()=>claimMilestone(m,claimed);}
+    });
+    // KOL USDC milestones
+    const usdcMilestones=[
+      {id:'u100',  target:10,   usdc:'0.5 USDC', color:'#2ecc71'},
+      {id:'u499',  target:100,  usdc:'2 USDC',   color:'#00bcd4'},
+      {id:'u750',  target:300,  usdc:'5 USDC',   color:'#F48C06'},
+      {id:'u1500', target:500,  usdc:'10 USDC',  color:'#E85D04'},
+      {id:'u3000', target:1500, usdc:'25 USDC',  color:'#FFD700'},
+    ];
+    const claimedUsdc=ud?.usdc_rewards||[];
+    usdcMilestones.forEach(m=>{
+      const pct=Math.min((total/m.target)*100,100);
+      const achieved=total>=m.target;
+      const isClaimed=claimedUsdc.includes(m.usdc);
+      const fill=document.getElementById('ms-fill-'+m.id);
+      const prog=document.getElementById('ms-prog-'+m.id);
+      const btn=document.getElementById('ms-btn-'+m.id);
+      if(fill)fill.style.width=pct+'%';
+      if(prog)prog.textContent=Math.min(total,m.target);
+      if(!btn)return;
+      if(isClaimed){
+        btn.textContent='✓ Claimed';btn.style.background='#0a2a1a';
+        btn.style.color='#2ecc71';btn.onclick=null;
+      } else if(achieved){
+        btn.textContent='Claim!';btn.style.background=m.color;
+        btn.style.color='#000';btn.style.cursor='pointer';
+        btn.onclick=()=>claimUsdcMilestone(m);
+      } else {
+        btn.textContent='Locked';btn.style.cursor='default';
+        btn.onclick=null;
+      }
     });
   }catch(e){console.log('milestone err',e);}
 }
