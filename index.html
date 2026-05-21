@@ -126,6 +126,7 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
 @keyframes cyberDot{0%,100%{opacity:0.3}50%{opacity:1}}
 @keyframes coinSpin{0%{transform:rotate(-10deg) scale(1);}100%{transform:rotate(10deg) scale(1.15);}}
 @keyframes holoBtn{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes goldPoolGlow{0%,100%{box-shadow:0 0 8px rgba(255,215,0,0.2)}50%{box-shadow:0 0 28px rgba(255,215,0,0.6),0 0 50px rgba(255,165,0,0.2)}}
 @keyframes ogNavGlow{0%{box-shadow:0 0 8px rgba(232,93,4,0.4);}100%{box-shadow:0 0 18px rgba(232,93,4,0.8),0 0 30px rgba(255,215,0,0.3);}}
 </style>
 </head>
@@ -177,6 +178,39 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
 
   <!-- Games -->
   <div class="screen" id="s-games">
+
+    <!-- Cyber Presale Banner -->
+    <div style="background:#00080f;border:1px solid #003344;border-radius:10px;overflow:hidden;padding:7px 0;margin-bottom:14px;position:relative;">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:28px;background:linear-gradient(90deg,#00080f,transparent);z-index:2;pointer-events:none;"></div>
+      <div style="position:absolute;right:0;top:0;bottom:0;width:28px;background:linear-gradient(270deg,#00080f,transparent);z-index:2;pointer-events:none;"></div>
+      <div style="display:flex;animation:cyberScroll 14s linear infinite;width:max-content;">
+        <div style="display:flex;align-items:center;gap:10px;padding:0 16px;white-space:nowrap;">
+          <span style="font-size:11px;color:#00ffff;animation:cyberDot 0.8s infinite;">▶</span>
+          <span style="font-size:13px;font-weight:800;color:#00ffff;letter-spacing:2px;animation:cyberGlow 1.5s ease-in-out infinite;font-family:monospace;">$FORGE</span>
+          <span style="font-size:12px;color:#0088ff;font-family:monospace;animation:cyberGlow 1.5s ease-in-out infinite 0.3s;">PRESALE</span>
+          <span style="font-size:12px;color:#004466;font-family:monospace;">COMING_SOON</span>
+          <span style="font-size:11px;color:#00ffff;animation:cyberDot 0.8s infinite 0.4s;">◈</span>
+          <span style="font-size:12px;color:#00ccff;font-family:monospace;animation:cyberGlow 1.5s ease-in-out infinite 0.6s;">LIMITED_SPOT</span>
+          <span style="font-size:11px;color:#0088ff;animation:cyberDot 0.8s infinite 0.2s;">▶</span>
+          <span style="font-size:13px;font-weight:800;color:#00ffff;letter-spacing:2px;font-family:monospace;animation:cyberGlow 1.5s ease-in-out infinite 0.9s;">$FORGE</span>
+          <span style="font-size:12px;color:#0088ff;font-family:monospace;animation:cyberGlow 1.5s ease-in-out infinite 1.2s;">PRESALE</span>
+          <span style="font-size:12px;color:#004466;font-family:monospace;">COMING_SOON</span>
+          <span style="font-size:11px;color:#00ffff;animation:cyberDot 0.8s infinite 0.4s;">◈</span>
+          <span style="font-size:12px;color:#00ccff;font-family:monospace;animation:cyberGlow 1.5s ease-in-out infinite 1.5s;">LIMITED_SPOT</span>
+          <span style="font-size:11px;color:#0088ff;animation:cyberDot 0.8s infinite 0.2s;">▶</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:0 16px;white-space:nowrap;">
+          <span style="font-size:11px;color:#00ffff;animation:cyberDot 0.8s infinite;">▶</span>
+          <span style="font-size:13px;font-weight:800;color:#00ffff;letter-spacing:2px;animation:cyberGlow 1.5s ease-in-out infinite;font-family:monospace;">$FORGE</span>
+          <span style="font-size:12px;color:#0088ff;font-family:monospace;animation:cyberGlow 1.5s ease-in-out infinite 0.3s;">PRESALE</span>
+          <span style="font-size:12px;color:#004466;font-family:monospace;">COMING_SOON</span>
+          <span style="font-size:11px;color:#00ffff;animation:cyberDot 0.8s infinite 0.4s;">◈</span>
+          <span style="font-size:12px;color:#00ccff;font-family:monospace;animation:cyberGlow 1.5s ease-in-out infinite 0.6s;">LIMITED_SPOT</span>
+          <span style="font-size:11px;color:#0088ff;animation:cyberDot 0.8s infinite 0.2s;">▶</span>
+        </div>
+      </div>
+    </div>
+
     <div style="padding:8px 0 14px;text-align:center;">
       <div style="font-size:18px;font-weight:700;color:#ffd090;margin-bottom:4px;">⚒ Games Arena</div>
       <div style="font-size:12px;color:#7a5a30;">Pick a game to earn rewards</div>
@@ -333,7 +367,7 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
         <div>
           <div style="font-size:12px;color:#7a5a30;margin-bottom:2px;">Current Pool</div>
           <div style="font-size:28px;font-weight:700;color:#FFD700;" id="lottery-pool">$0.00</div>
-          <div style="font-size:11px;color:#5a3a10;" id="lottery-pool-sub">0 entries × $5 ETH</div>
+          <div style="font-size:11px;color:#5a3a10;" id="lottery-pool-sub">0 entries × $1 ETH</div>
         </div>
         <div style="text-align:right;">
           <div style="font-size:12px;color:#7a5a30;margin-bottom:2px;">Winner Gets</div>
@@ -373,8 +407,8 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
     <div style="background:#110800;border-radius:12px;padding:14px;margin-bottom:14px;">
       <div style="font-size:12px;color:#7a5a30;font-weight:700;margin-bottom:10px;">How it works</div>
       <div style="display:flex;flex-direction:column;gap:8px;">
-        <div style="display:flex;align-items:center;gap:10px;font-size:12px;color:#7a5a30;"><div style="width:22px;height:22px;border-radius:50%;background:#E85D04;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">1</div>Pay $5 ETH → enters contract wallet</div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:12px;color:#7a5a30;"><div style="width:22px;height:22px;border-radius:50%;background:#E85D04;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">2</div>3+ entries + 24h → random draw</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:12px;color:#7a5a30;"><div style="width:22px;height:22px;border-radius:50%;background:#E85D04;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">1</div>Pay $1 ETH → enters contract wallet</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:12px;color:#7a5a30;"><div style="width:22px;height:22px;border-radius:50%;background:#E85D04;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">2</div>3+ entries + 6h → random draw</div>
         <div style="display:flex;align-items:center;gap:10px;font-size:12px;color:#7a5a30;"><div style="width:22px;height:22px;border-radius:50%;background:#FFD700;color:#000;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">3</div>Winner gets 50% pool → 2hr claim window</div>
         <div style="display:flex;align-items:center;gap:10px;font-size:12px;color:#7a5a30;"><div style="width:22px;height:22px;border-radius:50%;background:#2ecc71;color:#000;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">4</div>Unclaimed → next round auto start</div>
       </div>
@@ -392,18 +426,33 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
       <div class="profile-avatar" id="profile-avatar">⚒</div>
       <div class="profile-name" id="profile-name">—</div>
       <div class="profile-handle" id="profile-handle">—</div>
-      <div style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:12px;padding:16px;margin-bottom:12px;">
-        <div style="font-size:12px;color:#7a5a30;margin-bottom:12px;font-weight:600;">Farcaster Info</div>
-        <div style="display:flex;flex-direction:column;gap:10px;">
-          <div style="display:flex;justify-content:space-between;"><span style="font-size:13px;color:#7a5a30;">Username</span><span style="font-size:13px;color:#ffd090;font-weight:600;" id="profile-username">—</span></div>
-          <div style="display:flex;justify-content:space-between;"><span style="font-size:13px;color:#7a5a30;">FID</span><span style="font-size:13px;color:#ffd090;font-weight:600;" id="profile-fid">—</span></div>
-          <div style="display:flex;justify-content:space-between;"><span style="font-size:13px;color:#7a5a30;">Joined</span><span style="font-size:13px;color:#ffd090;font-weight:600;" id="profile-joined">—</span></div>
+      <div style="padding:2px;border-radius:16px;background:linear-gradient(90deg,#E85D04,#FFD700,#E85D04);animation:goldPoolGlow 2s ease-in-out infinite;margin-bottom:12px;">
+        <div style="background:#110800;border-radius:14px;padding:14px;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:0;left:-100%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,150,0,0.06),transparent);animation:tbShimmer 2s linear infinite;pointer-events:none;"></div>
+          <div style="font-size:11px;color:#E85D04;margin-bottom:10px;font-weight:700;letter-spacing:1px;">FARCASTER INFO</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;justify-content:space-between;"><span style="font-size:13px;color:#7a5a30;">Username</span><span style="font-size:13px;color:#ffd090;font-weight:600;" id="profile-username">—</span></div>
+            <div style="display:flex;justify-content:space-between;"><span style="font-size:13px;color:#7a5a30;">FID</span><span style="font-size:13px;color:#ffd090;font-weight:600;" id="profile-fid">—</span></div>
+            <div style="display:flex;justify-content:space-between;"><span style="font-size:13px;color:#7a5a30;">Joined</span><span style="font-size:13px;color:#ffd090;font-weight:600;" id="profile-joined">—</span></div>
+          </div>
         </div>
       </div>
       <div class="stat-grid">
-        <div class="stat-card"><div class="stat-val" id="stat-points">0</div><div class="stat-label">Points</div></div>
-        <div class="stat-card"><div class="stat-val" id="stat-tokens">0</div><div class="stat-label">$FORGE</div></div>
-        <div class="stat-card"><div class="stat-val" id="stat-freespins" style="color:#2ecc71;">0</div><div class="stat-label">Free Spins</div></div>
+        <div class="stat-card" style="position:relative;overflow:hidden;border-color:#7c3aed;">
+          <div style="position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(124,58,237,0.08),transparent);animation:tbShimmer 3s linear infinite;pointer-events:none;"></div>
+          <div class="stat-val" id="stat-points" style="color:#a855f7;">0</div>
+          <div class="stat-label" style="color:#7c3aed;font-weight:700;letter-spacing:0.5px;">Points</div>
+        </div>
+        <div class="stat-card" style="border-color:#E85D04;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(232,93,4,0.08),transparent);animation:tbShimmer 2.5s linear infinite;pointer-events:none;"></div>
+          <div class="stat-val" id="stat-tokens" style="color:#E85D04;">0</div>
+          <div class="stat-label" style="color:#E85D04;font-weight:700;letter-spacing:0.5px;">$FORGE</div>
+        </div>
+        <div class="stat-card" style="border-color:#2ecc71;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(46,204,113,0.08),transparent);animation:tbShimmer 3.5s linear infinite;pointer-events:none;"></div>
+          <div class="stat-val" id="stat-freespins" style="color:#2ecc71;">0</div>
+          <div class="stat-label" style="color:#2ecc71;font-weight:700;letter-spacing:0.5px;">USDC</div>
+        </div>
       </div>
       <div class="rank-badge">
         <span style="font-size:13px;color:#c07830;">Rank</span>
@@ -765,7 +814,20 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
 
   <!-- Pool -->
   <div class="screen" id="s-pool">
-    <div class="pool-total"><div class="pool-label">Total Pool</div><div class="pool-amount">5,000,000</div><div class="pool-token">$FORGE</div></div>
+    <div style="background:linear-gradient(135deg,#120e00,#1e1800,#120e00);border:1px solid #8B6914;border-radius:16px;padding:22px 16px;text-align:center;position:relative;overflow:hidden;animation:goldPoolGlow 2.5s ease-in-out infinite;margin-bottom:14px;">
+      <div style="position:absolute;top:0;left:-100%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,215,0,0.1),transparent);animation:tbShimmer 3s linear infinite;pointer-events:none;"></div>
+      <div style="position:absolute;top:12px;left:14px;width:5px;height:5px;border-radius:50%;background:#8B6914;animation:glowPulse 2s infinite;"></div>
+      <div style="position:absolute;top:12px;right:14px;width:5px;height:5px;border-radius:50%;background:#8B6914;animation:glowPulse 2s infinite 0.5s;"></div>
+      <div style="position:absolute;bottom:12px;left:14px;width:5px;height:5px;border-radius:50%;background:#8B6914;animation:glowPulse 2s infinite 1s;"></div>
+      <div style="position:absolute;bottom:12px;right:14px;width:5px;height:5px;border-radius:50%;background:#8B6914;animation:glowPulse 2s infinite 1.5s;"></div>
+      <div style="font-size:9px;color:#8B6914;letter-spacing:3px;font-weight:700;margin-bottom:14px;">✦ TOTAL POOL ✦</div>
+      <div style="font-size:42px;font-weight:900;color:#FFD700;letter-spacing:-1px;line-height:1;">5,000,000</div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-top:10px;">
+        <div style="height:1px;background:linear-gradient(90deg,transparent,#8B6914);width:50px;"></div>
+        <span style="font-size:14px;font-weight:700;color:#8B6914;letter-spacing:3px;">$FORGE</span>
+        <div style="height:1px;background:linear-gradient(90deg,#8B6914,transparent);width:50px;"></div>
+      </div>
+    </div>
     <div class="fcfs-box" style="border-color:#E85D04;">
       <div style="display:flex;align-items:center;margin-bottom:6px;">
         <div class="fcfs-title">New User Airdrop</div>
@@ -780,12 +842,31 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
         </div>
         <div class="hammer-label"><span>0</span><span id="fcfs-pct">slots filled</span><span id="fcfs-joined">0 / 5,000</span></div>
       </div>
+
       <div id="fcfs-reward-info" style="font-size:12px;color:#F48C06;margin-top:10px;text-align:center;display:none;"></div>
       <button class="fcfs-claim-btn" id="fcfsClaim" onclick="doFcfsClaim()" style="width:100%;background:linear-gradient(90deg,#E85D04,#F48C06);color:#fff;border:none;border-radius:10px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;margin-top:12px;display:none;">🔥 Claim 1,000 $FORGE</button>
     </div>
-    <div class="pool-row">
-      <div class="pool-mini"><div class="pool-mini-label">FCFS</div><div class="pool-mini-val">5,000</div></div>
-      <div class="pool-mini"><div class="pool-mini-label">Each Claim</div><div class="pool-mini-val">1,000</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;">
+      <div style="padding:1.5px;border-radius:12px;background:linear-gradient(135deg,#E85D04,#FFD700);animation:goldPoolGlow 2s ease-in-out infinite;">
+        <div style="background:#110800;border-radius:11px;padding:10px 8px;text-align:center;height:100%;box-sizing:border-box;">
+          <div style="font-size:9px;color:#E85D04;margin-bottom:4px;font-weight:700;letter-spacing:1px;">FCFS</div>
+          <div style="font-size:17px;font-weight:800;color:#ffd090;">5,000</div>
+          <div style="font-size:8px;color:#5a3a10;margin-top:2px;">slots</div>
+        </div>
+      </div>
+      <div style="padding:1.5px;border-radius:12px;background:linear-gradient(135deg,#FFD700,#E85D04);animation:goldPoolGlow 2.5s ease-in-out infinite;">
+        <div style="background:#110800;border-radius:11px;padding:10px 8px;text-align:center;height:100%;box-sizing:border-box;">
+          <div style="font-size:9px;color:#FFD700;margin-bottom:4px;font-weight:700;letter-spacing:1px;">EACH CLAIM</div>
+          <div style="font-size:17px;font-weight:800;color:#FFD700;">1,000</div>
+          <div style="font-size:8px;color:#5a3a10;margin-top:2px;">$FORGE</div>
+        </div>
+      </div>
+      <div style="background:linear-gradient(135deg,#0d0800,#1a1000);border-radius:10px;padding:10px 8px;border:1px solid #E85D04;text-align:center;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,150,0,0.1),transparent);animation:tbShimmer 2.5s linear infinite;pointer-events:none;"></div>
+        <div style="font-size:9px;color:#6a3a08;margin-bottom:4px;">ICO Worth</div>
+        <div style="font-size:16px;font-weight:800;color:#2ecc71;animation:greenCount 2s ease-in-out infinite;">$1.10</div>
+        <div style="font-size:8px;color:#E85D04;margin-top:2px;">→ $1K at $1 🚀</div>
+      </div>
     </div>
     <div class="claim-box">
       <div class="claim-title">Your $FORGE Tokens</div>
@@ -986,19 +1067,19 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
   <!-- Tasks -->
   <div class="screen" id="s-tasks">
     <div class="section-title">Social Tasks</div>
-    <div class="task-card"><div class="task-info"><div class="task-name">Follow CastForge</div><div class="task-desc">Follow @castforge on Farcaster</div></div><div class="task-right"><div class="task-pts">+50 $FORGE</div><button class="task-btn" id="task-follow" onclick="doTask('follow',50,'https://farcaster.xyz/castforge')">Follow</button></div></div>
-    <div class="task-card"><div class="task-info"><div class="task-name">Like official cast</div><div class="task-desc">Like the pinned cast</div></div><div class="task-right"><div class="task-pts">+30 $FORGE</div><button class="task-btn" id="task-like" onclick="doTask('like',30,'https://farcaster.xyz/castforge/0x3955ed79')">Like</button></div></div>
-    <div class="task-card"><div class="task-info"><div class="task-name">Recast official cast</div><div class="task-desc">Share to your followers</div></div><div class="task-right"><div class="task-pts">+50 $FORGE</div><button class="task-btn" id="task-recast" onclick="doTask('recast',50,'https://farcaster.xyz/castforge/0x3955ed79')">Recast</button></div></div>
+    <div class="task-card"><div class="task-info"><div class="task-name">Follow CastForge</div><div class="task-desc">Follow @castforge on Farcaster</div></div><div class="task-right"><div class="task-pts">+15 $FORGE</div><button class="task-btn" id="task-follow" onclick="doTask('follow',15,'https://farcaster.xyz/castforge')">Follow</button></div></div>
+    <div class="task-card"><div class="task-info"><div class="task-name">Like official cast</div><div class="task-desc">Like the pinned cast</div></div><div class="task-right"><div class="task-pts">+10 $FORGE</div><button class="task-btn" id="task-like" onclick="doTask('like',10,'https://farcaster.xyz/castforge/0x3955ed79')">Like</button></div></div>
+    <div class="task-card"><div class="task-info"><div class="task-name">Recast official cast</div><div class="task-desc">Share to your followers</div></div><div class="task-right"><div class="task-pts">+15 $FORGE</div><button class="task-btn" id="task-recast" onclick="doTask('recast',15,'https://farcaster.xyz/castforge/0x3955ed79')">Recast</button></div></div>
     <div class="section-title" style="margin-top:16px">Game Tasks</div>
-    <div class="task-card"><div class="task-info"><div class="task-name">Spin the wheel once</div><div class="task-desc">Complete 1 spin to earn points</div></div><div class="task-right"><div class="task-pts">+20 $FORGE</div><button class="task-btn" id="task-firstspin" onclick="startGameTask('firstspin',20,'spin')">Play</button></div></div>
-    <div class="task-card"><div class="task-info"><div class="task-name">Spin 3 times</div><div class="task-desc">Complete 3 spins total</div></div><div class="task-right"><div class="task-pts">+50 $FORGE</div><button class="task-btn" id="task-spin3" onclick="startGameTask('spin3',50,'spin')">Play</button></div></div>
-    <div class="task-card"><div class="task-info"><div class="task-name">Play Token Rush</div><div class="task-desc">Complete a full Token Rush game</div></div><div class="task-right"><div class="task-pts">+75 $FORGE</div><button class="task-btn" id="task-tokenrush" onclick="startGameTask('tokenrush',75,'tokenrush')">Play</button></div></div>
-    <div class="task-card"><div class="task-info"><div class="task-name">Catch 10 coins</div><div class="task-desc">Catch 10+ coins in one Token Rush game</div></div><div class="task-right"><div class="task-pts">+100 $FORGE</div><button class="task-btn" id="task-coins10" onclick="startGameTask('coins10',100,'tokenrush')">Play</button></div></div>
-    <div class="task-card"><div class="task-info"><div class="task-name">Win $FORGE from spin</div><div class="task-desc">Land on any $FORGE reward</div></div><div class="task-right"><div class="task-pts">+60 $FORGE</div><button class="task-btn" id="task-winforge" onclick="startGameTask('winforge',60,'spin')">Play</button></div></div>
+    <div class="task-card"><div class="task-info"><div class="task-name">Spin the wheel once</div><div class="task-desc">Complete 1 spin to earn points</div></div><div class="task-right"><div class="task-pts">+10 $FORGE</div><button class="task-btn" id="task-firstspin" onclick="startGameTask('firstspin',10,'spin')">Play</button></div></div>
+    <div class="task-card"><div class="task-info"><div class="task-name">Spin 3 times</div><div class="task-desc">Complete 3 spins total</div></div><div class="task-right"><div class="task-pts">+15 $FORGE</div><button class="task-btn" id="task-spin3" onclick="startGameTask('spin3',15,'spin')">Play</button></div></div>
+    <div class="task-card"><div class="task-info"><div class="task-name">Play Token Rush</div><div class="task-desc">Complete a full Token Rush game</div></div><div class="task-right"><div class="task-pts">+10 $FORGE</div><button class="task-btn" id="task-tokenrush" onclick="startGameTask('tokenrush',10,'tokenrush')">Play</button></div></div>
+    <div class="task-card"><div class="task-info"><div class="task-name">Catch 10 coins</div><div class="task-desc">Catch 10+ coins in one Token Rush game</div></div><div class="task-right"><div class="task-pts">+20 $FORGE</div><button class="task-btn" id="task-coins10" onclick="startGameTask('coins10',20,'tokenrush')">Play</button></div></div>
+    <div class="task-card"><div class="task-info"><div class="task-name">Win $FORGE from spin</div><div class="task-desc">Land on any $FORGE reward</div></div><div class="task-right"><div class="task-pts">+30 $FORGE</div><button class="task-btn" id="task-winforge" onclick="startGameTask('winforge',30,'spin')">Play</button></div></div>
     <div class="section-title" style="margin-top:16px">Quiz Tasks</div>
-    <div class="task-card"><div class="task-info"><div class="task-name">Play Forge Quiz</div><div class="task-desc">Complete one full quiz</div></div><div class="task-right"><div class="task-pts">+50 $FORGE</div><button class="task-btn" id="task-quiz1" onclick="startGameTask('quiz1',50,'quiz')">Play</button></div></div>
-    <div class="task-card"><div class="task-info"><div class="task-name">Answer 3 correctly</div><div class="task-desc">Get 3+ correct in one quiz</div></div><div class="task-right"><div class="task-pts">+80 $FORGE</div><button class="task-btn" id="task-quiz3" onclick="startGameTask('quiz3',80,'quiz')">Play</button></div></div>
-    <div class="task-card"><div class="task-info"><div class="task-name">Perfect Score!</div><div class="task-desc">Answer all 5 correctly</div></div><div class="task-right"><div class="task-pts">+150 $FORGE</div><button class="task-btn" id="task-quizperfect" onclick="startGameTask('quizperfect',150,'quiz')">Play</button></div></div>
+    <div class="task-card"><div class="task-info"><div class="task-name">Play Forge Quiz</div><div class="task-desc">Complete one full quiz</div></div><div class="task-right"><div class="task-pts">+10 $FORGE</div><button class="task-btn" id="task-quiz1" onclick="startGameTask('quiz1',10,'quiz')">Play</button></div></div>
+    <div class="task-card"><div class="task-info"><div class="task-name">Answer 3 correctly</div><div class="task-desc">Get 3+ correct in one quiz</div></div><div class="task-right"><div class="task-pts">+15 $FORGE</div><button class="task-btn" id="task-quiz3" onclick="startGameTask('quiz3',15,'quiz')">Play</button></div></div>
+    <div class="task-card"><div class="task-info"><div class="task-name">Perfect Score!</div><div class="task-desc">Answer all 5 correctly</div></div><div class="task-right"><div class="task-pts">+25 $FORGE</div><button class="task-btn" id="task-quizperfect" onclick="startGameTask('quizperfect',25,'quiz')">Play</button></div></div>
     <div class="section-title" style="margin-top:16px">Invite Tasks</div>
     <div class="task-card"><div class="task-info"><div class="task-name">Invite 1 friend</div><div class="task-desc">Earn 25% bonus from their spins</div></div><div class="task-right"><div class="task-pts">+100 $FORGE</div><button class="task-btn" onclick="switchTab('invite')">Invite</button></div></div>
   </div>
@@ -1272,7 +1353,7 @@ function switchTab(name){
     else{ni.style.background='#2a4a2a';ni.style.transform='scale(1)';ni.style.boxShadow='none';nl.style.color='#7a5a30';}
   });
   if(name==='leaders')loadLeaderboard();
-  if(name==='tasks'){setTimeout(loadCompletedTasks,100);}
+  if(name==='tasks'){setTimeout(()=>{loadCompletedTasks();checkSocialTasksComplete();},100);}
   if(name==='og'){setTimeout(loadOgMysteryBox,100);}
   if(name==='games'){setTimeout(loadLotteryNavBadge,300);}
   if(name==='profile'){setTimeout(loadForgePrice,200);}
@@ -1350,6 +1431,7 @@ async function loadFcfsStatus(){
     if(userData?.fcfs_claimed){
       if(claimBtn){claimBtn.style.display='block';claimBtn.disabled=true;claimBtn.textContent='✓ Already Claimed';}
     const eyeBtn2=document.getElementById('fcfs-eye-btn');if(eyeBtn2)eyeBtn2.style.display='none';
+    const worthBanner2=document.getElementById('fcfs-worth-banner');if(worthBanner2)worthBanner2.style.display='none';
       if(rewardInfo){rewardInfo.style.display='block';rewardInfo.textContent='✅ You claimed your 1,000 $FORGE!';rewardInfo.style.color='#4ade80';}
     } else if(claimed>=5000){
       if(claimBtn)claimBtn.style.display='none';
@@ -1357,6 +1439,7 @@ async function loadFcfsStatus(){
     } else {
       if(claimBtn){claimBtn.style.display='block';claimBtn.disabled=false;claimBtn.textContent='🔥 Claim 1,000 $FORGE';}
     const eyeBtn=document.getElementById('fcfs-eye-btn');if(eyeBtn)eyeBtn.style.display='flex';
+    const worthBanner=document.getElementById('fcfs-worth-banner');if(worthBanner)worthBanner.style.display='block';
       if(rewardInfo){rewardInfo.style.display='block';rewardInfo.textContent='🎉 You are eligible! Claim your 1,000 $FORGE';rewardInfo.style.color='#F48C06';}
     }
   } catch(e) {
@@ -1627,6 +1710,14 @@ function updateProfileUsdcReward(rewards) {
   label.textContent = rewards.join(' + ');
   if (wBtn) wBtn.style.display = 'block';
   if (currentUser) currentUser.usdc_rewards = rewards;
+
+  // Update profile USDC stat card - show latest claimed
+  const usdcStat = document.getElementById('stat-freespins');
+  if (usdcStat && rewards.length > 0) {
+    const latest = rewards[rewards.length - 1];
+    const num = parseFloat(latest);
+    usdcStat.textContent = isNaN(num) ? latest : num;
+  }
 }
 
 async function loadMilestones(fid){
@@ -1695,43 +1786,6 @@ async function claimMilestone(milestone,alreadyClaimed){
   loadMilestones(userFid);
 }
 
-function openWithdrawModal() {
-  const modal = document.getElementById('withdraw-modal');
-  if (!modal) return;
-  modal.style.display = 'block';
-
-  // Auto-fill FID
-  const fidEl = document.getElementById('wr-fid');
-  if (fidEl && userFid) fidEl.value = userFid;
-
-  // Auto-fill invites
-  if (userFid) {
-    db.from('invites').select('*', { count: 'exact' }).eq('inviter_fid', userFid).then(({ count }) => {
-      const el = document.getElementById('wr-invites');
-      if (el) el.value = (count || 0) + ' invites';
-    });
-  }
-
-  // Auto-fill USDC
-  if (currentUser && currentUser.usdc_rewards && currentUser.usdc_rewards.length > 0) {
-    const el = document.getElementById('wr-usdc');
-    if (el) el.value = currentUser.usdc_rewards.join(' + ');
-  }
-
-  // Auto-fill wallet from Farcaster context
-  try {
-    const sdk = (window.miniapp && window.miniapp.sdk) || window.FrameSDK;
-    if (sdk) {
-      sdk.context.then(ctx => {
-        const addr = ctx?.user?.verifiedAddresses?.ethAddresses?.[0] || ctx?.user?.custodyAddress;
-        if (addr) {
-          const el = document.getElementById('wr-wallet');
-          if (el && !el.value) el.value = addr;
-        }
-      });
-    }
-  } catch(e) {}
-}
 
 function closeWithdrawModal(e) {
   if (e && e.target !== document.getElementById('withdraw-modal')) return;
@@ -2111,7 +2165,8 @@ async function payAndStartRush(){
     let ethPrice=3000;
     try{const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');const d=await r.json();ethPrice=d.ethereum.usd;}catch(e){}
     const wei=BigInt(Math.floor(0.05/ethPrice*1e18));
-    const provider=sdk.wallet.ethProvider;
+    let provider=sdk.wallet&&sdk.wallet.ethProvider;
+  if(!provider&&window.ethereum)provider=window.ethereum;
     if(!provider)throw new Error('No wallet provider');
     let accounts=[];
     try{accounts=await provider.request({method:'eth_accounts'});}catch(e){}
@@ -2347,7 +2402,8 @@ async function payAndStartQuiz() {
       if (sdk.wallet && sdk.wallet.sendTransaction) {
         await sdk.wallet.sendTransaction({ chainId: 'eip155:8453', calls: [{ to: CONTRACT, value: '0x' + wei.toString(16), data: '0x' }] });
       } else {
-        const provider = sdk.wallet.ethProvider;
+        let provider = sdk.wallet && sdk.wallet.ethProvider;
+    if (!provider && window.ethereum) provider = window.ethereum;
         if (!provider) throw new Error('No wallet');
         let accs = []; try { accs = await provider.request({ method: 'eth_accounts' }); } catch(e) {}
         if (!accs || !accs[0]) accs = await provider.request({ method: 'eth_requestAccounts' });
@@ -2840,7 +2896,7 @@ async function enterLottery() {
     try { const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'); const d = await r.json(); ethPrice = d.ethereum.usd; } catch(e) {}
 
     // $5 entry fee in ETH
-    const entryWei = BigInt(Math.floor(5 / ethPrice * 1e18));
+    const entryWei = BigInt(Math.floor(1 / ethPrice * 1e18));
 
     let provider = sdk.wallet && sdk.wallet.ethProvider;
     if (!provider && window.ethereum) provider = window.ethereum;
@@ -3347,6 +3403,49 @@ function toggleFcfsWorth() {
   const popup = document.getElementById('fcfs-worth-popup');
   if (!popup) return;
   popup.style.display = popup.style.display === 'none' ? 'block' : 'none';
+}
+
+function checkSocialTasksComplete() {
+  if (!userFid) return;
+  db.from('users').select('completed_tasks').eq('fid', userFid).single().then(({data}) => {
+    const completed = data?.completed_tasks || [];
+    const allDone = ['follow','like','recast'].every(t => completed.includes(t));
+    const box = document.getElementById('social-claim-box');
+    const btn = document.getElementById('social-claim-btn');
+    if (!box) return;
+    if (allDone) {
+      box.style.display = 'block';
+      // Check if already claimed
+      if (completed.includes('social_all')) {
+        if (btn) { btn.disabled = true; btn.textContent = '✓ Claimed'; btn.style.opacity = '0.6'; }
+      }
+    } else {
+      box.style.display = 'none';
+    }
+  });
+}
+
+async function claimSocialReward() {
+  if (!userFid) return;
+  const btn = document.getElementById('social-claim-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Claiming...'; }
+
+  // Check not already claimed
+  const {data: ud} = await db.from('users').select('completed_tasks,tokens').eq('fid', userFid).single();
+  if (ud?.completed_tasks?.includes('social_all')) {
+    if (btn) { btn.textContent = '✓ Claimed'; btn.style.opacity = '0.6'; }
+    return;
+  }
+
+  // Add reward + mark claimed
+  const newTokens = (ud?.tokens || 0) + 40;
+  const newCompleted = [...(ud?.completed_tasks || []), 'social_all'];
+  await db.from('users').update({ tokens: newTokens, completed_tasks: newCompleted }).eq('fid', userFid);
+  currentUser.tokens = newTokens;
+  updateStats();
+
+  if (btn) { btn.textContent = '✓ Claimed'; btn.style.opacity = '0.6'; }
+  showToast('🎉 Social reward claimed! +40 $FORGE');
 }
 
 function initLavaBackground(){
