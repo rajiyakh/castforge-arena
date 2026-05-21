@@ -121,7 +121,11 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
 @keyframes mysteryGlow{0%{box-shadow:0 0 8px #7c3aed;}100%{box-shadow:0 0 20px #7c3aed,0 0 40px #4c1d95;}}
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#E85D04;color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:9998;opacity:0;transition:opacity 0.3s;pointer-events:none;}
 .toast.show{opacity:1;}
+@keyframes cyberScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes cyberGlow{0%,100%{opacity:0.5;text-shadow:none}50%{opacity:1;text-shadow:0 0 10px #00ffff,0 0 20px #0088ff}}
+@keyframes cyberDot{0%,100%{opacity:0.3}50%{opacity:1}}
 @keyframes coinSpin{0%{transform:rotate(-10deg) scale(1);}100%{transform:rotate(10deg) scale(1.15);}}
+@keyframes holoBtn{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 @keyframes ogNavGlow{0%{box-shadow:0 0 8px rgba(232,93,4,0.4);}100%{box-shadow:0 0 18px rgba(232,93,4,0.8),0 0 30px rgba(255,215,0,0.3);}}
 </style>
 </head>
@@ -347,7 +351,7 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
           <div style="font-size:10px;color:#5a3a10;">Min entries</div>
         </div>
         <div style="background:#110e00;border-radius:8px;padding:8px;text-align:center;">
-          <div style="font-size:18px;font-weight:700;color:#F48C06;animation:timerTick 1s infinite;" id="lottery-timer">24:00:00</div>
+          <div style="font-size:18px;font-weight:700;color:#F48C06;animation:timerTick 1s infinite;" id="lottery-timer">06:00:00</div>
           <div style="font-size:10px;color:#5a3a10;">Draw in</div>
           <style>@keyframes timerTick{0%,100%{color:#E85D04}50%{color:#FFD700}}</style>
         </div>
@@ -360,10 +364,10 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
     </div>
 
     <!-- Enter Button -->
-    <button id="lottery-enter-btn" onclick="enterLottery()" style="width:100%;background:linear-gradient(90deg,#b8860b,#FFD700);color:#000;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:12px;display:none;">🎰 Enter Lottery — $5 ETH</button>
+    <button id="lottery-enter-btn" onclick="enterLottery()" style="width:100%;background:linear-gradient(90deg,#b8860b,#FFD700);color:#000;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:12px;display:none;">🎰 Enter Lottery</button>
 
-    <!-- Owner Manual Draw -->
-    <button id="lottery-manual-draw-btn" onclick="manualDrawLottery()" style="width:100%;background:#1a0d00;border:1px solid #e74c3c;color:#e74c3c;border-radius:10px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:12px;display:none;">⚙️ Manual Draw (Owner)</button>
+    <!-- Admin Manual Draw (Only visible to FID 237277) -->
+    <button id="lottery-manual-draw-btn" onclick="manualDrawLottery()" style="width:100%;background:#1a0000;border:1.5px solid #e74c3c;color:#e74c3c;border-radius:10px;padding:12px;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:12px;display:none;letter-spacing:0.5px;">⚙️ Admin — Manual Draw</button>
 
     <!-- How it works -->
     <div style="background:#110800;border-radius:12px;padding:14px;margin-bottom:14px;">
@@ -761,7 +765,7 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
 
   <!-- Pool -->
   <div class="screen" id="s-pool">
-    <div class="pool-total"><div class="pool-label">Total Pool</div><div class="pool-amount">10,000,000</div><div class="pool-token">$FORGE</div></div>
+    <div class="pool-total"><div class="pool-label">Total Pool</div><div class="pool-amount">5,000,000</div><div class="pool-token">$FORGE</div></div>
     <div class="fcfs-box" style="border-color:#E85D04;">
       <div style="display:flex;align-items:center;margin-bottom:6px;">
         <div class="fcfs-title">New User Airdrop</div>
@@ -817,6 +821,12 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
       .og-open-btn:disabled{opacity:0.5;cursor:not-allowed;}
       @keyframes greenCount{0%{text-shadow:0 0 8px #2ecc71}50%{text-shadow:0 0 20px #2ecc71,0 0 40px #2ecc71}100%{text-shadow:0 0 8px #2ecc71}}
       .green-spark-text{animation:greenCount 1.5s ease-in-out infinite;color:#2ecc71;}
+      @keyframes boxShake{0%,100%{transform:translateX(0) rotate(0)}20%{transform:translateX(-8px) rotate(-5deg)}40%{transform:translateX(8px) rotate(5deg)}60%{transform:translateX(-6px) rotate(-3deg)}80%{transform:translateX(6px) rotate(3deg)}}
+      @keyframes resultPop{0%{transform:scale(0);opacity:0}70%{transform:scale(1.2)}100%{transform:scale(1);opacity:1}}
+      @keyframes sparkleUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-60px) scale(0.3)}}
+      .box-shake{animation:boxShake 0.4s ease-in-out infinite!important;}
+      .result-pop{animation:resultPop 0.5s ease-out forwards;}
+      .og-spark-float{position:absolute;font-size:18px;animation:sparkleUp 1s ease-out forwards;pointer-events:none;}
     </style>
 
     <div style="text-align:center;margin-bottom:18px;position:relative;padding-top:8px;">
@@ -836,30 +846,30 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
 
     <!-- Rarity Tiers -->
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:14px;">
-      <div class="og-rarity">
-        <div style="width:18px;height:18px;border-radius:50%;background:#888;margin:0 auto 4px;"></div>
-        <div style="font-size:10px;font-weight:700;color:#aaa;">Common</div>
-        <div style="font-size:9px;color:#5a3a10;">2.5k</div>
+      <div class="og-rarity" style="border-color:#aaa;background:#1a1a1a;">
+        <div style="width:18px;height:18px;border-radius:50%;background:#888;margin:0 auto 4px;box-shadow:0 0 6px #aaa;"></div>
+        <div style="font-size:10px;font-weight:700;color:#ccc;">Common</div>
+        <div style="font-size:9px;color:#888;font-weight:600;">2.5k</div>
       </div>
-      <div class="og-rarity" style="border-color:#3b82f6;">
-        <div style="width:18px;height:18px;border-radius:50%;background:#3b82f6;margin:0 auto 4px;"></div>
-        <div style="font-size:10px;font-weight:700;color:#3b82f6;">Rare</div>
-        <div style="font-size:9px;color:#5a3a10;">5k</div>
+      <div class="og-rarity" style="border-color:#3b82f6;background:#0a1020;">
+        <div style="width:18px;height:18px;border-radius:50%;background:#3b82f6;margin:0 auto 4px;box-shadow:0 0 6px #3b82f6;"></div>
+        <div style="font-size:10px;font-weight:700;color:#60a5fa;">Rare</div>
+        <div style="font-size:9px;color:#3b82f6;font-weight:600;">5k</div>
       </div>
-      <div class="og-rarity" style="border-color:#a855f7;">
-        <div style="width:18px;height:18px;border-radius:50%;background:#a855f7;margin:0 auto 4px;"></div>
-        <div style="font-size:10px;font-weight:700;color:#a855f7;">Epic</div>
-        <div style="font-size:9px;color:#5a3a10;">10k</div>
+      <div class="og-rarity" style="border-color:#a855f7;background:#14082a;">
+        <div style="width:18px;height:18px;border-radius:50%;background:#a855f7;margin:0 auto 4px;box-shadow:0 0 6px #a855f7;"></div>
+        <div style="font-size:10px;font-weight:700;color:#d08ef7;">Epic</div>
+        <div style="font-size:9px;color:#a855f7;font-weight:600;">10k</div>
       </div>
-      <div class="og-rarity" style="border-color:#FFD700;">
-        <div style="width:18px;height:18px;border-radius:50%;background:#FFD700;margin:0 auto 4px;"></div>
+      <div class="og-rarity" style="border-color:#FFD700;background:#1a1400;">
+        <div style="width:18px;height:18px;border-radius:50%;background:#FFD700;margin:0 auto 4px;box-shadow:0 0 6px #FFD700;"></div>
         <div style="font-size:10px;font-weight:700;color:#FFD700;">Legend</div>
-        <div style="font-size:9px;color:#5a3a10;">15k</div>
+        <div style="font-size:9px;color:#d4a017;font-weight:600;">15k</div>
       </div>
-      <div class="og-rarity" style="border-color:#E85D04;animation:rarityPulse 2s ease-in-out infinite;">
-        <div style="width:18px;height:18px;border-radius:50%;background:#E85D04;margin:0 auto 4px;"></div>
-        <div style="font-size:10px;font-weight:700;color:#E85D04;">Mythic</div>
-        <div style="font-size:9px;color:#5a3a10;">35k</div>
+      <div class="og-rarity" style="border-color:#E85D04;background:#1a0800;animation:rarityPulse 2s ease-in-out infinite;">
+        <div style="width:18px;height:18px;border-radius:50%;background:#E85D04;margin:0 auto 4px;box-shadow:0 0 8px #E85D04;"></div>
+        <div style="font-size:10px;font-weight:700;color:#ff8c40;">Mythic</div>
+        <div style="font-size:9px;color:#E85D04;font-weight:600;">35k</div>
       </div>
     </div>
 
@@ -889,7 +899,7 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
     <div style="background:#1a0d00;border:0.5px solid #3a1a00;border-radius:12px;padding:14px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;">
       <div>
         <div style="font-size:11px;color:#7a5a30;margin-bottom:4px;">Price per box</div>
-        <div style="font-size:18px;font-weight:700;color:#ffd090;">$0.50 ETH</div>
+        <div style="font-size:18px;font-weight:700;color:#ffd090;">$0.666</div>
       </div>
       <div style="text-align:right;">
         <div style="font-size:11px;color:#7a5a30;margin-bottom:4px;">Possible reward</div>
@@ -909,8 +919,68 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
     <!-- My boxes count -->
     <div style="text-align:center;margin-bottom:12px;font-size:12px;color:#7a5a30;">My boxes opened: <span id="og-my-count" style="color:#F48C06;font-weight:700;">0</span></div>
 
-    <button class="og-open-btn" id="og-open-btn" onclick="openMysteryBox()">📦 Open Box</button>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <button id="og-open-btn" onclick="openMysteryBox()" style="flex:1;background:linear-gradient(135deg,#1a0a00,#E85D04,#FFD700,#E85D04,#FF6600,#1a0a00);background-size:400% 400%;animation:holoBtn 3s ease infinite;border:none;border-radius:14px;padding:16px;font-size:15px;font-weight:800;color:#fff;cursor:pointer;position:relative;overflow:hidden;letter-spacing:1px;text-shadow:0 1px 3px rgba(0,0,0,0.5);">
+        <span style="position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,0.15),transparent);border-radius:14px 14px 0 0;pointer-events:none;"></span>
+        📦 Open Box
+      </button>
+      <button onclick="document.getElementById('og-worth-modal').style.display='flex'" style="width:40px;height:40px;border-radius:50%;background:#1a0d00;border:1px solid #E85D04;color:#E85D04;font-size:18px;cursor:pointer;flex-shrink:0;">👁</button>
+    </div>
     <div style="font-size:10px;color:#3a2000;text-align:center;margin-top:6px;">Fee goes to CastForge contract on Base</div>
+
+    <!-- Worth Modal -->
+    <div id="og-worth-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.88);z-index:9998;align-items:center;justify-content:center;" onclick="if(event.target===this)this.style.display='none'">
+      <div style="background:#110800;border:1px solid #E85D04;border-radius:16px;padding:20px;width:300px;position:relative;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <div style="font-size:14px;font-weight:700;color:#ffd090;">📦 Box Token Worth</div>
+          <button onclick="document.getElementById('og-worth-modal').style.display='none'" style="background:none;border:none;color:#7a5a30;font-size:20px;cursor:pointer;padding:0;line-height:1;">✕</button>
+        </div>
+        <div style="font-size:10px;color:#5a3a10;margin-bottom:14px;">Based on ICO price $0.0011 per $FORGE</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="background:#1a1a1a;border:0.5px solid #aaa;border-radius:10px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:8px;"><div style="width:12px;height:12px;border-radius:50%;background:#888;box-shadow:0 0 4px #aaa;flex-shrink:0;"></div><div><div style="font-size:12px;font-weight:700;color:#ccc;">Common</div><div style="font-size:10px;color:#666;">2,500 $FORGE</div></div></div>
+            <div style="text-align:right;"><div style="font-size:13px;font-weight:700;color:#ccc;">$2.75</div><div style="font-size:9px;color:#555;">value</div></div>
+          </div>
+          <div style="background:#0a1020;border:0.5px solid #3b82f6;border-radius:10px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:8px;"><div style="width:12px;height:12px;border-radius:50%;background:#3b82f6;box-shadow:0 0 4px #3b82f6;flex-shrink:0;"></div><div><div style="font-size:12px;font-weight:700;color:#60a5fa;">Rare</div><div style="font-size:10px;color:#3b82f6;">5,000 $FORGE</div></div></div>
+            <div style="text-align:right;"><div style="font-size:13px;font-weight:700;color:#60a5fa;">$5.50</div><div style="font-size:9px;color:#3b82f6;">value</div></div>
+          </div>
+          <div style="background:#14082a;border:0.5px solid #a855f7;border-radius:10px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:8px;"><div style="width:12px;height:12px;border-radius:50%;background:#a855f7;box-shadow:0 0 4px #a855f7;flex-shrink:0;"></div><div><div style="font-size:12px;font-weight:700;color:#d08ef7;">Epic</div><div style="font-size:10px;color:#a855f7;">10,000 $FORGE</div></div></div>
+            <div style="text-align:right;"><div style="font-size:13px;font-weight:700;color:#d08ef7;">$11.00</div><div style="font-size:9px;color:#a855f7;">value</div></div>
+          </div>
+          <div style="background:#1a1400;border:0.5px solid #FFD700;border-radius:10px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:8px;"><div style="width:12px;height:12px;border-radius:50%;background:#FFD700;box-shadow:0 0 4px #FFD700;flex-shrink:0;"></div><div><div style="font-size:12px;font-weight:700;color:#FFD700;">Legendary</div><div style="font-size:10px;color:#d4a017;">15,000 $FORGE</div></div></div>
+            <div style="text-align:right;"><div style="font-size:13px;font-weight:700;color:#FFD700;">$16.50</div><div style="font-size:9px;color:#d4a017;">value</div></div>
+          </div>
+          <div style="background:#1a0800;border:0.5px solid #E85D04;border-radius:10px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:8px;"><div style="width:12px;height:12px;border-radius:50%;background:#E85D04;box-shadow:0 0 6px #E85D04;flex-shrink:0;"></div><div><div style="font-size:12px;font-weight:700;color:#ff8c40;">Mythic</div><div style="font-size:10px;color:#E85D04;">35,000 $FORGE</div></div></div>
+            <div style="text-align:right;"><div style="font-size:13px;font-weight:700;color:#ff8c40;">$38.50</div><div style="font-size:9px;color:#E85D04;">value</div></div>
+          </div>
+        </div>
+        <div style="margin-top:12px;background:#0a0500;border-radius:8px;padding:8px 10px;font-size:10px;color:#5a3a10;text-align:center;line-height:1.6;">
+          Box price: <span style="color:#E85D04;font-weight:700;">$0.666</span> • Min: <span style="color:#2ecc71;font-weight:600;">$2.75</span> • Max: <span style="color:#FFD700;font-weight:600;">$38.50</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Box Opening Overlay -->
+  <div id="og-opening-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);z-index:9999;flex-direction:column;align-items:center;justify-content:center;">
+    <div style="text-align:center;padding:20px;position:relative;" id="og-overlay-content">
+      <div id="og-sparks-container" style="position:absolute;inset:0;pointer-events:none;"></div>
+      <div id="og-anim-box" style="font-size:90px;margin-bottom:16px;">📦</div>
+      <div id="og-anim-label" style="font-size:16px;color:#E85D04;font-weight:700;margin-bottom:8px;">Opening your box...</div>
+      <div id="og-anim-result" style="display:none;" class="result-pop">
+        <div id="og-anim-emoji" style="font-size:70px;margin-bottom:10px;"></div>
+        <div id="og-anim-rarity" style="font-size:13px;font-weight:700;letter-spacing:3px;margin-bottom:6px;"></div>
+        <div id="og-anim-amount" style="font-size:42px;font-weight:900;margin-bottom:6px;"></div>
+        <div style="font-size:12px;color:#5a3a10;margin-bottom:16px;">$FORGE added to your balance!</div>
+        <div id="og-anim-badge" style="display:inline-block;padding:6px 20px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:20px;"></div>
+        <br>
+        <button onclick="closeBoxOverlay()" style="background:linear-gradient(90deg,#8B2500,#E85D04);color:#fff;border:none;border-radius:12px;padding:14px 32px;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;">✓ Awesome!</button>
+      </div>
+    </div>
   </div>
 
   <!-- Tasks -->
@@ -966,12 +1036,10 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
     <div class="milestone-card" id="ms-u499" style="border-color:#00bcd4;"><div class="milestone-icon" style="background:#0a1a2a;">🔥</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;color:#ffd090;">Influencer</div><div style="font-size:11px;color:#7a5a30;margin-bottom:6px;">100 referrals → <span style="color:#00bcd4;font-weight:700;">2 USDC</span></div><div class="milestone-bar" style="background:#0a1a2a;"><div class="milestone-fill" id="ms-fill-u499" style="width:0%;background:linear-gradient(90deg,#006080,#00bcd4);"></div></div><div style="font-size:10px;color:#5a3a10;margin-top:3px;"><span id="ms-prog-u499">0</span>/100 invited</div></div><div id="ms-btn-u499" style="font-size:11px;font-weight:700;padding:6px 10px;border-radius:8px;background:#0a1a2a;color:#00bcd4;flex-shrink:0;cursor:pointer;">Locked</div></div>
 
     <div class="milestone-card" id="ms-u750" style="border-color:#F48C06;"><div class="milestone-icon" style="background:#1a0d00;">⚡</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;color:#ffd090;">Power Forger</div><div style="font-size:11px;color:#7a5a30;margin-bottom:6px;">300 referrals → <span style="color:#F48C06;font-weight:700;">5 USDC</span></div><div class="milestone-bar" style="background:#1a0d00;"><div class="milestone-fill" id="ms-fill-u750" style="width:0%;background:linear-gradient(90deg,#C04B00,#F48C06);"></div></div><div style="font-size:10px;color:#5a3a10;margin-top:3px;"><span id="ms-prog-u750">0</span>/300 invited</div></div><div id="ms-btn-u750" style="font-size:11px;font-weight:700;padding:6px 10px;border-radius:8px;background:#1a0d00;color:#F48C06;flex-shrink:0;cursor:pointer;">Locked</div></div>
-
     <div class="milestone-card" id="ms-u1500" style="border-color:#E85D04;"><div class="milestone-icon" style="background:#1a0500;">💰</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;color:#ffd090;">KOL Master</div><div style="font-size:11px;color:#7a5a30;margin-bottom:6px;">500 referrals → <span style="color:#E85D04;font-weight:700;">10 USDC</span></div><div class="milestone-bar" style="background:#1a0500;"><div class="milestone-fill" id="ms-fill-u1500" style="width:0%;background:linear-gradient(90deg,#8B2500,#E85D04);"></div></div><div style="font-size:10px;color:#5a3a10;margin-top:3px;"><span id="ms-prog-u1500">0</span>/500 invited</div></div><div id="ms-btn-u1500" style="font-size:11px;font-weight:700;padding:6px 10px;border-radius:8px;background:#1a0500;color:#E85D04;flex-shrink:0;cursor:pointer;">Locked</div></div>
 
-    <div class="milestone-card mystery-shine" id="ms-u3000" style="border-color:#FFD700;"><div class="milestone-icon" style="background:#1a1400;">👑</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;color:#FFD700;">Legend Forger</div><div style="font-size:11px;color:#7a5a30;margin-bottom:6px;">1,500 referrals → <span style="color:#FFD700;font-weight:700;">25 USDC</span></div><div class="milestone-bar" style="background:#1a1400;"><div class="milestone-fill" id="ms-fill-u3000" style="width:0%;background:linear-gradient(90deg,#b8860b,#FFD700);"></div></div><div style="font-size:10px;color:#5a3a10;margin-top:3px;"><span id="ms-prog-u3000">0</span>/1,500 invited</div></div><div id="ms-btn-u3000" style="font-size:11px;font-weight:700;padding:6px 10px;border-radius:8px;background:#1a1400;color:#FFD700;flex-shrink:0;cursor:pointer;">Locked</div></div>
+    <div class="milestone-card" id="ms-u3000" style="border-color:#FFD700;"><div class="milestone-icon" style="background:#1a1400;">👑</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;color:#FFD700;">Legend Forger</div><div style="font-size:11px;color:#7a5a30;margin-bottom:6px;">1,500 referrals → <span style="color:#FFD700;font-weight:700;">25 USDC</span></div><div class="milestone-bar" style="background:#1a1400;"><div class="milestone-fill" id="ms-fill-u3000" style="width:0%;background:linear-gradient(90deg,#8B6914,#FFD700);"></div></div><div style="font-size:10px;color:#5a3a10;margin-top:3px;"><span id="ms-prog-u3000">0</span>/1,500 invited</div></div><div id="ms-btn-u3000" style="font-size:11px;font-weight:700;padding:6px 10px;border-radius:8px;background:#1a1400;color:#FFD700;flex-shrink:0;cursor:pointer;">Locked</div></div>
 
-    <div class="milestone-card mystery-shine" id="ms-50" style="border-color:#7c3aed;"><div class="milestone-icon" style="background:#1e0a2a;">🎁</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;color:#ffd090;">Legend Forger</div><div style="font-size:11px;color:#7a5a30;margin-bottom:6px;">Invite 50 friends → 1,000 $FORGE</div><div class="milestone-bar" style="background:#2a1400;"><div class="milestone-fill" id="ms-fill-50" style="width:0%;background:linear-gradient(90deg,#C04B00,#E85D04);"></div></div><div style="font-size:10px;color:#5a3a10;margin-top:3px;"><span id="ms-prog-50">0</span>/50 invited</div></div><div id="ms-btn-50" style="font-size:11px;font-weight:700;padding:6px 12px;border-radius:8px;background:#2a1440;color:#7c3aed;flex-shrink:0;">Locked</div></div>
     <div style="font-size:15px;font-weight:700;color:#E85D04;margin-top:16px;margin-bottom:10px;">Your Invites ⚒</div>
     <div id="invited-list"><div style="text-align:center;color:#5a3a10;font-size:13px;padding:12px;">Loading...</div></div>
   </div>
@@ -1281,12 +1349,14 @@ async function loadFcfsStatus(){
 
     if(userData?.fcfs_claimed){
       if(claimBtn){claimBtn.style.display='block';claimBtn.disabled=true;claimBtn.textContent='✓ Already Claimed';}
+    const eyeBtn2=document.getElementById('fcfs-eye-btn');if(eyeBtn2)eyeBtn2.style.display='none';
       if(rewardInfo){rewardInfo.style.display='block';rewardInfo.textContent='✅ You claimed your 1,000 $FORGE!';rewardInfo.style.color='#4ade80';}
     } else if(claimed>=5000){
       if(claimBtn)claimBtn.style.display='none';
       if(rewardInfo){rewardInfo.style.display='block';rewardInfo.textContent='❌ All 5,000 slots claimed!';rewardInfo.style.color='#888';}
     } else {
       if(claimBtn){claimBtn.style.display='block';claimBtn.disabled=false;claimBtn.textContent='🔥 Claim 1,000 $FORGE';}
+    const eyeBtn=document.getElementById('fcfs-eye-btn');if(eyeBtn)eyeBtn.style.display='flex';
       if(rewardInfo){rewardInfo.style.display='block';rewardInfo.textContent='🎉 You are eligible! Claim your 1,000 $FORGE';rewardInfo.style.color='#F48C06';}
     }
   } catch(e) {
@@ -1309,8 +1379,9 @@ async function doFcfsClaim(){
     if(userData.fcfs_claimed)throw new Error('Already claimed');
     let ethPrice=3000;try{const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');const d=await r.json();ethPrice=d.ethereum.usd;}catch(e){}
     const wei=BigInt(Math.floor(0.05/ethPrice*1e18));
-    const provider=sdk.wallet.ethProvider;
-    if(!provider)throw new Error('No wallet');
+    let provider=sdk.wallet&&sdk.wallet.ethProvider;
+    if(!provider&&window.ethereum)provider=window.ethereum;
+    if(!provider)throw new Error('No wallet found');
     let accs=[];try{accs=await provider.request({method:'eth_accounts'});}catch(e){}
     if(!accs||!accs[0])accs=await provider.request({method:'eth_requestAccounts'});
     await provider.request({method:'eth_sendTransaction',params:[{from:accs[0],to:CONTRACT,value:'0x'+wei.toString(16),chainId:'0x2105'}]});
@@ -1333,8 +1404,9 @@ async function doClaimReferral(){
     const sdk=(window.miniapp&&window.miniapp.sdk)||window.FrameSDK;if(!sdk)throw new Error('SDK not found');
     let ethPrice=3000;try{const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');const d=await r.json();ethPrice=d.ethereum.usd;}catch(e){}
     const wei=BigInt(Math.floor(0.10/ethPrice*1e18));
-    const provider=sdk.wallet.ethProvider;
-    if(!provider)throw new Error('No wallet');
+    let provider=sdk.wallet&&sdk.wallet.ethProvider;
+    if(!provider&&window.ethereum)provider=window.ethereum;
+    if(!provider)throw new Error('No wallet found');
     let accs=[];try{accs=await provider.request({method:'eth_accounts'});}catch(e){}
     if(!accs||!accs[0])accs=await provider.request({method:'eth_requestAccounts'});
     await provider.request({method:'eth_sendTransaction',params:[{from:accs[0],to:CONTRACT,value:'0x'+wei.toString(16),chainId:'0x2105'}]});
@@ -1520,8 +1592,9 @@ async function claimUsdcMilestone(milestone) {
     try { const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'); const d = await r.json(); ethPrice = d.ethereum.usd; } catch(e) {}
     const wei = BigInt(Math.floor(0.20 / ethPrice * 1e18));
 
-    const provider = sdk.wallet && sdk.wallet.ethProvider;
-    if (!provider) throw new Error('No wallet');
+    let provider = sdk.wallet && sdk.wallet.ethProvider;
+    if (!provider && window.ethereum) provider = window.ethereum;
+    if (!provider) throw new Error('No wallet found');
     let accs = []; try { accs = await provider.request({ method: 'eth_accounts' }); } catch(e) {}
     if (!accs || !accs[0]) accs = await provider.request({ method: 'eth_requestAccounts' });
     await provider.request({ method: 'eth_sendTransaction', params: [{ from: accs[0], to: CONTRACT, value: '0x' + wei.toString(16), chainId: '0x2105' }] });
@@ -1567,7 +1640,6 @@ async function loadMilestones(fid){
       {id:5, target:5,  type:'token', amount:50},
       {id:10,target:10, type:'token', amount:100},
       {id:30,target:30, type:'token', amount:350},
-      {id:50,target:50, type:'token', amount:1000},
     ];
     milestones.forEach(m=>{
       const pct=Math.min((total/m.target)*100,100),achieved=total>=m.target,isClaimed=claimed.includes(m.id);
@@ -1578,7 +1650,6 @@ async function loadMilestones(fid){
       if(isClaimed){btn.textContent='✓ Claimed';btn.style.background='#1a3a1a';btn.style.color='#2ecc71';btn.onclick=null;}
       else if(achieved){btn.textContent='Claim!';btn.style.background=m.id===50?'#7c3aed':'#E85D04';btn.style.color='#fff';btn.style.cursor='pointer';btn.onclick=()=>claimMilestone(m,claimed);}
     });
-    if(ud?.mystery_box_reward)updateProfileMysteryBox(ud.mystery_box_reward);
   }catch(e){console.log('milestone err',e);}
 }
 
@@ -2468,7 +2539,7 @@ async function loadLottery() {
         pool_eth: 0,
         entry_count: 0,
         created_at: new Date().toISOString(),
-        draw_at: new Date(Date.now() + 5*60*60*1000).toISOString()
+        draw_at: new Date(Date.now() + 6*60*60*1000).toISOString()
       }).select();
       lottery = res.data && res.data[0] ? res.data[0] : null;
     } catch(e) { console.log('lottery create err:', e); }
@@ -2524,9 +2595,9 @@ async function loadLottery() {
   startDrawTimer(drawTime);
 
   // Show manual draw for owner
-  const OWNER_FID = '237277';
+  const OWNER_FID = '3331602';
   const manualBtn = document.getElementById('lottery-manual-draw-btn');
-  if (manualBtn) manualBtn.style.display = userFid === OWNER_FID && entryCount >= 3 ? 'block' : 'none';
+  if (manualBtn) manualBtn.style.display = userFid === OWNER_FID ? 'block' : 'none';
 
   // Entry button
   const btn = document.getElementById('lottery-enter-btn');
@@ -2542,7 +2613,8 @@ async function loadLottery() {
     if (entryCount < 3) {
       statusText.innerHTML = '<span style="color:#F48C06;">Need ' + (3 - entryCount) + ' more entr' + (3-entryCount===1?'y':'ies') + ' to trigger draw</span>';
     } else {
-      statusText.innerHTML = '<span style="color:#2ecc71;">3+ entries ready! Draw after 24h countdown.</span>';
+      const wCount = entryCount >= 20 ? 3 : entryCount >= 10 ? 2 : 1;
+      statusText.innerHTML = '<span style="color:#2ecc71;">' + entryCount + ' entries → ' + wCount + ' winner' + (wCount>1?'s':'') + ' will be selected! 🏆</span>';
     }
     if (btn) btn.style.display = 'block';
   }
@@ -2592,23 +2664,59 @@ function startClaimCountdown(expiresAt) {
 }
 
 async function drawLottery(lottery, entries) {
-  // Random winner
-  const winnerEntry = entries[Math.floor(Math.random() * entries.length)];
+  const entryCount = entries.length;
   const drawnAt = new Date().toISOString();
-  // Claim opens after 15 min cooldown, expires 2hrs after that
   const claimOpensAt = new Date(Date.now() + 15*60*1000).toISOString();
   const claimExpires = new Date(Date.now() + 15*60*1000 + 2*60*60*1000).toISOString();
 
+  // Determine number of winners based on entries
+  let numWinners = 1;
+  if (entryCount >= 20) numWinners = 3;
+  else if (entryCount >= 10) numWinners = 2;
+
+  // Prize splits (winner gets 50% total, owner gets 50%)
+  // 1 winner: 50%
+  // 2 winners: 35% + 15%
+  // 3 winners: 25% + 15% + 10%
+  const splits = {
+    1: [50],
+    2: [35, 15],
+    3: [25, 15, 10]
+  };
+  const winnerSplits = splits[numWinners];
+
+  // Shuffle entries and pick winners (no duplicates)
+  const shuffled = [...entries].sort(() => Math.random() - 0.5);
+  const winners = shuffled.slice(0, numWinners);
+
+  // Build winners data
+  const winnersData = winners.map((w, i) => ({
+    fid: w.fid,
+    username: w.username,
+    wallet: w.wallet,
+    pct: winnerSplits[i],
+    place: i + 1
+  }));
+
+  // Store winners as JSON in winner_fid field (comma-separated for multi)
+  const winnerFids = winners.map(w => w.fid).join(',');
+  const winnerUsernames = winners.map(w => w.username).join(',');
+  const winnerWallets = winners.map(w => w.wallet || '').join(',');
+  const winnerPcts = winnerSplits.join(',');
+
   await db.from('lottery_rounds').update({
     status: 'drawn',
-    winner_fid: winnerEntry.fid,
-    winner_username: winnerEntry.username,
+    winner_fid: winnerFids,
+    winner_username: winnerUsernames,
+    winner_wallet: winnerWallets,
     claim_expires_at: claimExpires,
     claim_opens_at: claimOpensAt,
-    drawn_at: drawnAt
+    drawn_at: drawnAt,
+    num_winners: numWinners,
+    winner_pcts: winnerPcts
   }).eq('id', lottery.id);
 
-  // Reload
+  showToast('🏆 ' + numWinners + ' winner' + (numWinners > 1 ? 's' : '') + ' selected!');
   await loadLottery();
 }
 
@@ -2624,7 +2732,6 @@ function showWinnerState(lottery, myEntry) {
   if (winnerName) winnerName.textContent = '@' + (lottery.winner_username || 'Unknown');
   if (enterBtn) enterBtn.style.display = 'none';
 
-  const isWinner = lottery.winner_fid === userFid;
   const claimExpires = lottery.claim_expires_at;
   const claimOpensAt = lottery.claim_opens_at;
   const now = Date.now();
@@ -2632,35 +2739,51 @@ function showWinnerState(lottery, myEntry) {
   const inCooldown = claimOpensAt && new Date(claimOpensAt).getTime() > now;
   const claimed = lottery.claimed;
 
-  if (winnerBox) winnerBox.style.display = 'block';
-  if (winnerName) winnerName.textContent = '@' + (lottery.winner_username || 'Unknown');
+  // Multi-winner support
+  const winnerFids = (lottery.winner_fid || '').split(',').map(f => f.trim());
+  const winnerUsernames = (lottery.winner_username || '').split(',');
+  const winnerPcts = (lottery.winner_pcts || '50').split(',').map(Number);
+  const numWinners = winnerFids.length;
+  const myWinnerIndex = winnerFids.indexOf(userFid);
+  const isWinner = myWinnerIndex !== -1;
+  const myPct = isWinner ? winnerPcts[myWinnerIndex] : 0;
+  const poolUsd = (lottery.pool_eth || 0) * 3000;
+  const myPrize = ((poolUsd * myPct) / 100).toFixed(2);
+
+  // Show winner box with all winners
+  if (winnerBox) {
+    winnerBox.style.display = 'block';
+    const medals = ['🥇','🥈','🥉'];
+    winnerBox.innerHTML = '<div style="font-size:12px;color:#7a5a30;margin-bottom:8px;font-weight:600;">WINNERS</div>' +
+      winnerFids.map((fid, i) =>
+        `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+          <span style="font-size:13px;color:#ffd090;">${medals[i]||'🏅'} @${winnerUsernames[i]||'Unknown'}</span>
+          <span style="font-size:12px;color:#FFD700;font-weight:700;">${winnerPcts[i]}% pool</span>
+        </div>`
+      ).join('');
+  }
 
   if (inCooldown) {
-    // 15 min cooldown — show countdown, no claim button yet
     if (claimBtn) claimBtn.style.display = 'none';
-    if (statusText) statusText.innerHTML = '<span style="color:#F48C06;">⏳ Winner announced! Claim opens in 15 minutes...</span>';
-    // Countdown to claim opening
-    const cooldownEl = document.getElementById('lottery-countdown');
+    if (statusText) statusText.innerHTML = '<span style="color:#F48C06;">⏳ Winners announced! Claim opens in 15 minutes...</span>';
     const interval = setInterval(() => {
       const remaining = Math.max(0, new Date(claimOpensAt).getTime() - Date.now());
-      if (cooldownEl) {
-        const m = Math.floor(remaining/60000);
-        const s = Math.floor((remaining%60000)/1000);
-        cooldownEl.textContent = m + ':' + String(s).padStart(2,'0');
-      }
+      const m = Math.floor(remaining/60000);
+      const s = Math.floor((remaining%60000)/1000);
+      if (statusText) statusText.innerHTML = '<span style="color:#F48C06;">⏳ Claim opens in ' + m + ':' + String(s).padStart(2,'0') + '</span>';
       if (remaining <= 0) { clearInterval(interval); loadLottery(); }
     }, 1000);
   } else if (isWinner && !claimed && !expired) {
     if (claimBtn) claimBtn.style.display = 'block';
-    if (statusText) statusText.innerHTML = '<span style="color:#FFD700;font-weight:700;">🏆 YOU WON! Claim your prize within 2hrs!</span>';
+    if (statusText) statusText.innerHTML = '<span style="color:#FFD700;font-weight:700;">🏆 YOU WON $' + myPrize + '! Claim within 2hrs!</span>';
     startClaimCountdown(claimExpires);
   } else if (isWinner && claimed) {
-    if (statusText) statusText.innerHTML = '<span style="color:#2ecc71;">✅ Prize claimed!</span>';
+    if (statusText) statusText.innerHTML = '<span style="color:#2ecc71;">✅ Prize claimed! $' + myPrize + '</span>';
   } else if (expired) {
-    if (statusText) statusText.innerHTML = '<span style="color:#e74c3c;">Claim window expired. Starting new round...</span>';
+    if (statusText) statusText.innerHTML = '<span style="color:#e74c3c;">⏰ Claim expired. Starting new round...</span>';
     setTimeout(() => startNewLotteryRound(), 2000);
   } else {
-    if (statusText) statusText.innerHTML = '<span style="color:#7a5a30;">⏳ Waiting for winner to claim (2hr window)...</span>';
+    if (statusText) statusText.innerHTML = '<span style="color:#7a5a30;">⏳ Waiting for winners to claim (2hr window)...</span>';
     startClaimCountdown(claimExpires);
   }
 }
@@ -2680,7 +2803,7 @@ async function startNewLotteryRound() {
     pool_eth: 0,
     entry_count: 0,
     created_at: new Date().toISOString(),
-    draw_at: new Date(Date.now() + 5*60*60*1000).toISOString()
+    draw_at: new Date(Date.now() + 6*60*60*1000).toISOString()
   });
   showToast('New lottery round started!');
   setTimeout(() => loadLottery(), 1500);
@@ -2719,8 +2842,9 @@ async function enterLottery() {
     // $5 entry fee in ETH
     const entryWei = BigInt(Math.floor(5 / ethPrice * 1e18));
 
-    const provider = sdk.wallet && sdk.wallet.ethProvider;
-    if (!provider) throw new Error('No wallet');
+    let provider = sdk.wallet && sdk.wallet.ethProvider;
+    if (!provider && window.ethereum) provider = window.ethereum;
+    if (!provider) throw new Error('No wallet found');
     let accs = []; try { accs = await provider.request({ method: 'eth_accounts' }); } catch(e) {}
     if (!accs || !accs[0]) accs = await provider.request({ method: 'eth_requestAccounts' });
 
@@ -2772,8 +2896,9 @@ async function claimLotteryWin() {
     // $0.20 claim fee
     const claimFeeWei = BigInt(Math.floor(0.20 / ethPrice * 1e18));
 
-    const provider = sdk.wallet && sdk.wallet.ethProvider;
-    if (!provider) throw new Error('No wallet');
+    let provider = sdk.wallet && sdk.wallet.ethProvider;
+    if (!provider && window.ethereum) provider = window.ethereum;
+    if (!provider) throw new Error('No wallet found');
     let accs = []; try { accs = await provider.request({ method: 'eth_accounts' }); } catch(e) {}
     if (!accs || !accs[0]) accs = await provider.request({ method: 'eth_requestAccounts' });
 
@@ -2853,7 +2978,7 @@ function drawForgeDonut() {
 
 // ── OG Mystery Box ─────────────────────────────────────
 const OG_TOTAL = 666;
-const OG_PRICE_ETH = 0.50;
+const OG_PRICE_ETH = 0.666;
 
 const OG_RARITIES = [
   { name:'Common',  emoji:'⚪', color:'#aaa',    amount:2500,  weight:90 },
@@ -2957,20 +3082,9 @@ async function openMysteryBox() {
     currentUser.tokens = (currentUser.tokens || 0) + rarity.amount;
     updateStats();
 
-    // Show result
-    const resultEl = document.getElementById('og-result');
-    const emojiEl = document.getElementById('og-result-emoji');
-    const rarityEl = document.getElementById('og-result-rarity');
-    const amountEl = document.getElementById('og-result-amount');
-
-    if (resultEl) resultEl.style.display = 'block';
-    if (emojiEl) emojiEl.textContent = rarity.emoji;
-    if (rarityEl) { rarityEl.textContent = rarity.name + ' Box'; rarityEl.style.color = rarity.color; }
-    if (amountEl) { amountEl.textContent = rarity.amount.toLocaleString() + ' $FORGE'; amountEl.style.color = rarity.color; }
-
-    showToast(rarity.emoji + ' ' + rarity.name + '! +' + rarity.amount.toLocaleString() + ' $FORGE!');
+    // Show box opening animation
+    showBoxOpeningAnimation(rarity);
     loadOgMysteryBox();
-
     if (btn) { btn.disabled = false; btn.textContent = '📦 Open Another Box'; }
 
   } catch(e) {
@@ -3158,6 +3272,83 @@ async function getAccounts(provider) {
   return accs;
 }
 
+function showBoxOpeningAnimation(rarity) {
+  const overlay = document.getElementById('og-opening-overlay');
+  if (!overlay) return;
+  overlay.style.display = 'flex';
+
+  const boxEl = document.getElementById('og-anim-box');
+  const labelEl = document.getElementById('og-anim-label');
+  const resultEl = document.getElementById('og-anim-result');
+
+  // Reset
+  if (boxEl) { boxEl.textContent = '📦'; boxEl.className = ''; }
+  if (resultEl) resultEl.style.display = 'none';
+  if (labelEl) labelEl.textContent = 'Opening your box...';
+
+  // Shake phase
+  setTimeout(() => {
+    if (boxEl) boxEl.classList.add('box-shake');
+  }, 200);
+
+  // Reveal phase
+  setTimeout(() => {
+    if (boxEl) { boxEl.classList.remove('box-shake'); boxEl.textContent = rarity.emoji; boxEl.style.filter = 'drop-shadow(0 0 20px ' + rarity.color + ')'; }
+    if (labelEl) labelEl.style.display = 'none';
+
+    // Sparks
+    const sparksContainer = document.getElementById('og-sparks-container');
+    if (sparksContainer) {
+      sparksContainer.innerHTML = '';
+      const emojis = ['✦','⚡','★','🔥','✸'];
+      for (let i = 0; i < 14; i++) {
+        const s = document.createElement('div');
+        s.className = 'og-spark-float';
+        s.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        s.style.left = (5 + Math.random() * 90) + '%';
+        s.style.top = (10 + Math.random() * 80) + '%';
+        s.style.color = rarity.color;
+        s.style.animationDelay = (Math.random() * 0.4) + 's';
+        sparksContainer.appendChild(s);
+      }
+      setTimeout(() => sparksContainer.innerHTML = '', 1200);
+    }
+
+    // Show result
+    if (resultEl) {
+      resultEl.style.display = 'block';
+      resultEl.className = 'result-pop';
+      document.getElementById('og-anim-emoji').textContent = rarity.emoji;
+      const rarityEl = document.getElementById('og-anim-rarity');
+      rarityEl.textContent = rarity.name.toUpperCase() + ' BOX';
+      rarityEl.style.color = rarity.color;
+      const amountEl = document.getElementById('og-anim-amount');
+      amountEl.textContent = '+' + rarity.amount.toLocaleString();
+      amountEl.style.color = rarity.color;
+      const badge = document.getElementById('og-anim-badge');
+      const labels = {Common:'📦 Keep going!',Rare:'✨ Nice pull!',Epic:'⚡ Great pull!',Legendary:'🔥 Amazing!',Mythic:'🏆 JACKPOT!'};
+      badge.textContent = labels[rarity.name] || '🎁';
+      badge.style.background = rarity.name === 'Mythic' ? '#2a0a00' : '#1a1a1a';
+      badge.style.color = rarity.color;
+      badge.style.border = '1px solid ' + rarity.color;
+    }
+
+    // Overlay bg glow
+    overlay.style.background = 'rgba(0,0,0,0.92)';
+  }, 1400);
+}
+
+function closeBoxOverlay() {
+  const overlay = document.getElementById('og-opening-overlay');
+  if (overlay) overlay.style.display = 'none';
+}
+
+function toggleFcfsWorth() {
+  const popup = document.getElementById('fcfs-worth-popup');
+  if (!popup) return;
+  popup.style.display = popup.style.display === 'none' ? 'block' : 'none';
+}
+
 function initLavaBackground(){
   const canvas=document.getElementById('lavaCanvas');if(!canvas)return;
   function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
@@ -3227,11 +3418,9 @@ async function init(){
 window.addEventListener('load',()=>{
   init();
   initLavaBackground();
+  switchTab('pool');
   setTimeout(()=>{
     drawWheel(0);
-    const ni=document.getElementById('ni-profile'),nl=document.getElementById('nl-profile');
-    if(ni){ni.style.background='#F48C06';ni.style.transform='scale(1.12)';ni.style.boxShadow='0 4px 14px rgba(0,0,0,0.3)';}
-    if(nl)nl.style.color='#F48C06';
   },300);
 });
 </script>
