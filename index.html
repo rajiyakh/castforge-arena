@@ -2235,6 +2235,7 @@ async function loadForgePrice(){drawForgePriceChart();}
 async function openWallet(){
   const modal=document.getElementById('wallet-modal');if(!modal)return;
   modal.style.display='block';
+  fetchEthBalance();
   if(!currentUser)return;
   document.getElementById('w-tokens').textContent=currentUser.tokens||0;
   const usdcRew=currentUser.usdc_rewards||[];
