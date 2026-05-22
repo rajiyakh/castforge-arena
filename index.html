@@ -2237,7 +2237,7 @@ async function openWallet(){
   modal.style.display='block';
   // Reset addr immediately - dont show Loading...
   const addrEl=document.getElementById('wallet-addr-short');
-  if(addrEl)addrEl.textContent='Detecting...';
+  if(addrEl)addrEl.textContent='Tap to connect';
   fetchEthBalance();
   if(!currentUser)return;
   document.getElementById('w-tokens').textContent=currentUser.tokens||0;
@@ -2252,26 +2252,21 @@ async function openWallet(){
     document.getElementById('w-refbonus').textContent=(data?.referral_tokens_claimed||0)+' $FORGE';
   }
 
-  // Try Farcaster SDK wallet first with timeout
+  // Detect EVM wallets immediately
+  detectEvmWallets();
+
+  // Also try Farcaster SDK wallet in background
   try{
     const sdk=(window.miniapp&&window.miniapp.sdk)||window.FrameSDK;
-    if(sdk){
-      const ctxPromise = Promise.race([
-        sdk.context,
-        new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),2000))
-      ]);
-      const ctx = await ctxPromise;
-      const addr=ctx?.user?.verifiedAddresses?.ethAddresses?.[0]||ctx?.user?.custodyAddress;
-      if(addr){
-        setConnectedWallet(addr,'Farcaster');
+    if(sdk && sdk.wallet && sdk.wallet.ethProvider){
+      const provider = sdk.wallet.ethProvider;
+      const accounts = await provider.request({method:'eth_accounts'});
+      if(accounts && accounts[0]){
+        setConnectedWallet(accounts[0],'Farcaster');
         fetchEthBalance();
-        return;
       }
     }
   }catch(e){}
-
-  // If no Farcaster wallet, detect injected EVM wallets
-  detectEvmWallets();
 }
 
 function detectEvmWallets(){
