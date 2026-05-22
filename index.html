@@ -1231,7 +1231,7 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
       <div style="font-size:18px;font-weight:700;color:#ffd090;margin-bottom:8px;">⚒ My Wallet</div>
       <div style="display:inline-flex;align-items:center;gap:6px;background:#1a0d00;border:0.5px solid #3a1a00;border-radius:20px;padding:6px 14px;">
         <div id="wallet-connected-badge" style="display:none;align-items:center;gap:4px;"><div style="width:8px;height:8px;border-radius:50%;background:#2ecc71;"></div><span style="font-size:11px;color:#2ecc71;font-weight:600;">Connected</span><span style="color:#3a1a00;">|</span></div>
-        <span style="font-size:12px;color:#5a3a10;font-family:monospace;" id="wallet-addr-short">Not connected</span>
+        <span onclick="document.getElementById('wallet-connect-section').scrollIntoView({behavior:'smooth'})" style="font-size:12px;color:#E85D04;font-family:monospace;cursor:pointer;text-decoration:underline;text-underline-offset:3px;" id="wallet-addr-short">Not connected</span>
       </div>
     </div>
     <!-- ETH Balance Card -->
