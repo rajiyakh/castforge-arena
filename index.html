@@ -2249,14 +2249,19 @@ async function openWallet(){
     document.getElementById('w-refbonus').textContent=(data?.referral_tokens_claimed||0)+' $FORGE';
   }
 
-  // Try Farcaster SDK wallet first
+  // Try Farcaster SDK wallet first with timeout
   try{
     const sdk=(window.miniapp&&window.miniapp.sdk)||window.FrameSDK;
     if(sdk){
-      const ctx=await sdk.context;
+      const ctxPromise = Promise.race([
+        sdk.context,
+        new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),2000))
+      ]);
+      const ctx = await ctxPromise;
       const addr=ctx?.user?.verifiedAddresses?.ethAddresses?.[0]||ctx?.user?.custodyAddress;
       if(addr){
         setConnectedWallet(addr,'Farcaster');
+        fetchEthBalance();
         return;
       }
     }
@@ -3699,10 +3704,10 @@ async function fetchEthBalance() {
     if (!accounts || !accounts[0]) return;
 
     const wallet = accounts[0];
-    const balanceHex = await provider.request({
-      method: 'eth_getBalance',
-      params: [wallet, 'latest']
-    });
+    const balanceHex = await Promise.race([
+      provider.request({ method: 'eth_getBalance', params: [wallet, 'latest'] }),
+      new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),5000))
+    ]);
 
     const balanceWei = parseInt(balanceHex, 16);
     const balanceEth = (balanceWei / 1e18).toFixed(4);
