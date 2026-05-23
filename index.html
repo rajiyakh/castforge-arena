@@ -126,6 +126,7 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
 @keyframes cyberDot{0%,100%{opacity:0.3}50%{opacity:1}}
 @keyframes coinSpin{0%{transform:rotate(-10deg) scale(1);}100%{transform:rotate(10deg) scale(1.15);}}
 @keyframes holoBtn{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes streakPop{0%{transform:scale(0.8);opacity:0}100%{transform:scale(1);opacity:1}}
 @keyframes goldPoolGlow{0%,100%{box-shadow:0 0 8px rgba(255,215,0,0.2)}50%{box-shadow:0 0 28px rgba(255,215,0,0.6),0 0 50px rgba(255,165,0,0.2)}}
 @keyframes ogNavGlow{0%{box-shadow:0 0 8px rgba(232,93,4,0.4);}100%{box-shadow:0 0 18px rgba(232,93,4,0.8),0 0 30px rgba(255,215,0,0.3);}}
 </style>
@@ -849,6 +850,31 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
         <button class="fcfs-claim-btn" id="fcfsClaim" onclick="doFcfsClaim()" style="flex:1;background:linear-gradient(90deg,#E85D04,#F48C06);color:#fff;border:none;border-radius:10px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;display:none;">🔥 Claim 1,000 $FORGE</button>
         <button id="fcfs-eye-btn" onclick="toggleFcfsWorth()" style="width:44px;height:44px;border-radius:50%;background:#1a0d00;border:1px solid #E85D04;color:#E85D04;font-size:20px;cursor:pointer;flex-shrink:0;display:none;align-items:center;justify-content:center;">👁</button>
       </div>
+
+      <!-- Worth Popup -->
+      <div id="fcfs-worth-popup" style="display:none;margin-top:10px;">
+        <div style="background:#110800;border:1px solid #E85D04;border-radius:12px;padding:14px;">
+          <div style="font-size:12px;color:#7a5a30;margin-bottom:10px;font-weight:600;">1,000 $FORGE Token Worth</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <div style="font-size:13px;color:#ffd090;">At ICO Price <span style="color:#5a3a10;font-size:11px;">($0.0011)</span></div>
+            <div style="font-size:18px;font-weight:700;color:#2ecc71;">$1.10</div>
+          </div>
+          <div style="height:1px;background:#2a1400;margin-bottom:8px;"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <div style="font-size:12px;color:#7a5a30;">If $FORGE hits $0.01</div>
+            <div style="font-size:15px;font-weight:700;color:#F48C06;">$10.00</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <div style="font-size:12px;color:#7a5a30;">If $FORGE hits $0.10</div>
+            <div style="font-size:15px;font-weight:700;color:#FFD700;">$100.00</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div style="font-size:12px;color:#7a5a30;">If $FORGE hits $1.00</div>
+            <div style="font-size:15px;font-weight:700;color:#E85D04;">$1,000 🚀</div>
+          </div>
+          <div style="margin-top:10px;font-size:10px;color:#3a2000;text-align:center;line-height:1.5;">Early claim = early advantage. DYOR.</div>
+        </div>
+      </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;">
       <div style="padding:1.5px;border-radius:12px;background:linear-gradient(135deg,#E85D04,#FFD700);animation:goldPoolGlow 2s ease-in-out infinite;">
@@ -1072,13 +1098,14 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
   <div class="screen" id="s-tasks">
     <div class="section-title">Social Tasks</div>
     <div class="task-card"><div class="task-info"><div class="task-name">Follow CastForge</div><div class="task-desc">Follow @castforge on Farcaster</div></div><div class="task-right"><div class="task-pts">+15 $FORGE</div><button class="task-btn" id="task-follow" onclick="doTask('follow',15,'https://farcaster.xyz/castforge')">Follow</button></div></div>
+    <div class="task-card"><div class="task-info"><div class="task-name">Follow on X (Twitter)</div><div class="task-desc">Follow @castforgearena on X</div></div><div class="task-right"><div class="task-pts">+15 $FORGE</div><button class="task-btn" id="task-twitter-follow" onclick="doTask('twitter_follow',15,'https://x.com/castforgearena')">Follow</button></div></div>
     <div class="task-card"><div class="task-info"><div class="task-name">Like official cast</div><div class="task-desc">Like the pinned cast</div></div><div class="task-right"><div class="task-pts">+10 $FORGE</div><button class="task-btn" id="task-like" onclick="doTask('like',10,'https://farcaster.xyz/castforge/0x3955ed79')">Like</button></div></div>
     <div class="task-card"><div class="task-info"><div class="task-name">Recast official cast</div><div class="task-desc">Share to your followers</div></div><div class="task-right"><div class="task-pts">+15 $FORGE</div><button class="task-btn" id="task-recast" onclick="doTask('recast',15,'https://farcaster.xyz/castforge/0x3955ed79')">Recast</button></div></div>
     <div id="social-claim-box" style="display:none;background:#1a0d00;border:1px solid #2ecc71;border-radius:12px;padding:14px;margin-top:4px;">
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <div>
           <div style="font-size:13px;font-weight:700;color:#2ecc71;">🎉 All Social Tasks Done!</div>
-          <div style="font-size:11px;color:#5a3a10;margin-top:2px;">Claim your 40 $FORGE reward</div>
+          <div style="font-size:11px;color:#5a3a10;margin-top:2px;">Claim your 55 $FORGE reward</div>
         </div>
         <button id="social-claim-btn" onclick="claimSocialReward()" style="background:linear-gradient(90deg,#0a7a3a,#2ecc71);color:#000;border:none;border-radius:10px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;">Claim!</button>
       </div>
@@ -1231,7 +1258,7 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
       <div style="font-size:18px;font-weight:700;color:#ffd090;margin-bottom:8px;">⚒ My Wallet</div>
       <div style="display:inline-flex;align-items:center;gap:6px;background:#1a0d00;border:0.5px solid #3a1a00;border-radius:20px;padding:6px 14px;">
         <div id="wallet-connected-badge" style="display:none;align-items:center;gap:4px;"><div style="width:8px;height:8px;border-radius:50%;background:#2ecc71;"></div><span style="font-size:11px;color:#2ecc71;font-weight:600;">Connected</span><span style="color:#3a1a00;">|</span></div>
-        <span onclick="document.getElementById('wallet-connect-section').scrollIntoView({behavior:'smooth'})" style="font-size:12px;color:#E85D04;font-family:monospace;cursor:pointer;text-decoration:underline;text-underline-offset:3px;" id="wallet-addr-short">Not connected</span>
+        <span style="font-size:12px;color:#5a3a10;font-family:monospace;" id="wallet-addr-short"></span>
       </div>
     </div>
     <!-- ETH Balance Card -->
@@ -1710,7 +1737,7 @@ async function doTask(taskName,pts,url){
   }
 
   // Social tasks - open URL then verify via Neynar API
-  const socialTasks=['follow','like','recast'];
+  const socialTasks=['follow','like','recast','twitter_follow'];
   if(socialTasks.includes(taskName)){
     if(url){
       try{
@@ -1750,7 +1777,8 @@ async function verifySocialTask(taskName,pts,btn){
   try{
     let verified=false;
 
-    if(taskName==='follow'){
+    if(taskName==='twitter_follow'){verified=true;}// Twitter no API verify
+    else if(taskName==='follow'){
       // Check if user follows castforge via Neynar
       const resp=await fetch(
         `https://api.neynar.com/v2/farcaster/user/bulk?fids=${userFid}&viewer_fid=${CASTFORGE_FID}`,
@@ -2237,7 +2265,7 @@ async function openWallet(){
   modal.style.display='block';
   // Reset addr immediately - dont show Loading...
   const addrEl=document.getElementById('wallet-addr-short');
-  if(addrEl)addrEl.textContent='Tap to connect';
+  if(addrEl)addrEl.textContent='';
   fetchEthBalance();
   if(!currentUser)return;
   document.getElementById('w-tokens').textContent=currentUser.tokens||0;
@@ -3651,7 +3679,7 @@ function checkSocialTasksComplete() {
   if (!userFid) return;
   db.from('users').select('completed_tasks').eq('fid', userFid).single().then(({data}) => {
     const completed = data?.completed_tasks || [];
-    const allDone = ['follow','like','recast'].every(t => completed.includes(t));
+    const allDone = ['follow','like','recast','twitter_follow'].every(t => completed.includes(t));
     const box = document.getElementById('social-claim-box');
     const btn = document.getElementById('social-claim-btn');
     if (!box) return;
@@ -3680,14 +3708,14 @@ async function claimSocialReward() {
   }
 
   // Add reward + mark claimed
-  const newTokens = (ud?.tokens || 0) + 40;
+  const newTokens = (ud?.tokens || 0) + 55;
   const newCompleted = [...(ud?.completed_tasks || []), 'social_all'];
   await db.from('users').update({ tokens: newTokens, completed_tasks: newCompleted }).eq('fid', userFid);
   currentUser.tokens = newTokens;
   updateStats();
 
   if (btn) { btn.textContent = '✓ Claimed'; btn.style.opacity = '0.6'; }
-  showToast('🎉 Social reward claimed! +40 $FORGE');
+  showToast('🎉 Social reward claimed! +55 $FORGE');
 }
 
 async function fetchEthBalance() {
@@ -3733,6 +3761,124 @@ async function fetchEthBalance() {
   } catch(e) {
     console.log('ETH balance err:', e);
   }
+}
+
+async function loadOgCount(){
+  try{
+    const {data} = await db.from('og_boxes').select('id', {count:'exact'});
+    const opened = data ? data.length : 0;
+    const openedEl = document.getElementById('og-opened-count');
+    const remEl = document.getElementById('og-remaining-count');
+    if(openedEl) openedEl.textContent = opened;
+    if(remEl) remEl.textContent = Math.max(0, 666 - opened);
+  }catch(e){}
+}
+
+async function loadDailyStreak() {
+  if (!userFid) return;
+  const { data: ud } = await db.from('users').select('streak_count,streak_last_claim,tokens,fcfs_claimed').eq('fid', userFid).single();
+  if (!ud) return;
+
+  const streak = ud.streak_count || 0;
+  const lastClaim = ud.streak_last_claim ? new Date(ud.streak_last_claim) : null;
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const lastDay = lastClaim ? new Date(lastClaim.getFullYear(), lastClaim.getMonth(), lastClaim.getDate()) : null;
+  const claimedToday = lastDay && lastDay.getTime() === today.getTime();
+  const missedDay = lastDay && (today - lastDay) > 86400000 * 1.5;
+
+  // Update streak count display
+  const countEl = document.getElementById('streak-count');
+  const subEl = document.getElementById('streak-sub');
+  const btn = document.getElementById('streak-claim-btn');
+  const boxesEl = document.getElementById('streak-boxes');
+
+  const displayStreak = missedDay ? 0 : streak;
+  if (countEl) countEl.textContent = displayStreak;
+
+  // Draw 7 boxes
+  if (boxesEl) {
+    boxesEl.innerHTML = '';
+    for (let i = 1; i <= 7; i++) {
+      const box = document.createElement('div');
+      box.style.cssText = 'width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;';
+      if (i === 7) {
+        box.style.background = i <= displayStreak ? '#FFD700' : '#1a1200';
+        box.style.border = '1px solid #FFD700';
+        box.textContent = i <= displayStreak ? '⭐' : '⭐';
+        box.style.opacity = i <= displayStreak ? '1' : '0.3';
+      } else {
+        box.style.background = i <= displayStreak ? '#E85D04' : '#2a1400';
+        box.style.border = i <= displayStreak ? 'none' : '1px solid #3a1a00';
+        box.textContent = i <= displayStreak ? '🔥' : i;
+        box.style.color = '#3a1a00';
+      }
+      boxesEl.appendChild(box);
+    }
+  }
+
+  if (claimedToday) {
+    if (btn) { btn.textContent = '✓ Claimed today — Come back tomorrow!'; btn.disabled = true; btn.style.opacity = '0.6'; }
+    if (subEl) subEl.textContent = 'Next bonus in ' + getTimeUntilMidnight();
+  } else {
+    const bonus = displayStreak + 1 === 7 ? '+50 $FORGE (7-day bonus!)' : '+5 $FORGE';
+    if (btn) { btn.textContent = '🔥 Claim Daily Bonus (' + bonus + ')'; btn.disabled = false; btn.style.opacity = '1'; }
+    if (subEl) subEl.textContent = missedDay ? 'Streak reset — start again!' : 'Day ' + (displayStreak + 1) + ' — claim now!';
+  }
+
+  // OG Badge - first 100 FCFS claimers
+  const { count } = await db.from('users').select('*', { count: 'exact', head: true })
+    .eq('fcfs_claimed', true)
+    .lt('created_at', ud.created_at || now.toISOString());
+  const ogBadge = document.getElementById('og-badge');
+  if (ogBadge && ud.fcfs_claimed && count < 100) {
+    ogBadge.style.display = 'flex';
+  }
+}
+
+function getTimeUntilMidnight() {
+  const now = new Date();
+  const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+  const diff = midnight - now;
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  return h + 'h ' + m + 'm';
+}
+
+async function claimDailyStreak() {
+  if (!userFid) return;
+  const btn = document.getElementById('streak-claim-btn');
+  if (btn) { btn.textContent = 'Claiming...'; btn.disabled = true; }
+
+  const { data: ud } = await db.from('users').select('streak_count,streak_last_claim,tokens').eq('fid', userFid).single();
+  if (!ud) return;
+
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const lastClaim = ud.streak_last_claim ? new Date(ud.streak_last_claim) : null;
+  const lastDay = lastClaim ? new Date(lastClaim.getFullYear(), lastClaim.getMonth(), lastClaim.getDate()) : null;
+
+  if (lastDay && lastDay.getTime() === today.getTime()) {
+    showToast('Already claimed today!');
+    loadDailyStreak();
+    return;
+  }
+
+  const missedDay = lastDay && (today - lastDay) > 86400000 * 1.5;
+  const newStreak = missedDay ? 1 : (ud.streak_count || 0) + 1;
+  const bonus = newStreak === 7 ? 50 : 5;
+  const newTokens = (ud.tokens || 0) + bonus;
+
+  await db.from('users').update({
+    streak_count: newStreak,
+    streak_last_claim: now.toISOString(),
+    tokens: newTokens
+  }).eq('fid', userFid);
+
+  currentUser.tokens = newTokens;
+  updateStats();
+  showToast('🔥 Day ' + newStreak + ' streak! +' + bonus + ' $FORGE');
+  loadDailyStreak();
 }
 
 function initLavaBackground(){
