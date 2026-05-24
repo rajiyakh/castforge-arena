@@ -3384,8 +3384,8 @@ function rollRarity() {
 }
 
 async function loadOgMysteryBox() {
-  // Get total minted
-  const { count } = await db.from('og_boxes').select('*', { count: 'exact' });
+  // Get total minted - use head:true for accurate count
+  const { count } = await db.from('og_boxes').select('*', { count: 'exact', head: true });
   const minted = count || 0;
   const left = Math.max(0, OG_TOTAL - minted);
   const pct = Math.min((minted / OG_TOTAL) * 100, 100);
@@ -3422,7 +3422,7 @@ async function openMysteryBox() {
 
   try {
     // Check supply
-    const { count } = await db.from('og_boxes').select('*', { count: 'exact' });
+    const { count } = await db.from('og_boxes').select('*', { count: 'exact', head: true });
     if ((count || 0) >= OG_TOTAL) throw new Error('All 666 boxes are minted!');
 
     // Get ETH price
