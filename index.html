@@ -127,6 +127,8 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
 @keyframes coinSpin{0%{transform:rotate(-10deg) scale(1);}100%{transform:rotate(10deg) scale(1.15);}}
 @keyframes holoBtn{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 @keyframes streakPop{0%{transform:scale(0.8);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes floatBtn{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes resultPop{0%{transform:scale(0.5);opacity:0}60%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
 @keyframes goldPoolGlow{0%,100%{box-shadow:0 0 8px rgba(255,215,0,0.2)}50%{box-shadow:0 0 28px rgba(255,215,0,0.6),0 0 50px rgba(255,165,0,0.2)}}
 @keyframes ogNavGlow{0%{box-shadow:0 0 8px rgba(232,93,4,0.4);}100%{box-shadow:0 0 18px rgba(232,93,4,0.8),0 0 30px rgba(255,215,0,0.3);}}
 </style>
@@ -425,7 +427,13 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
     <div class="loading" id="profile-loading">Loading...</div>
     <div id="profile-content" style="display:none">
       <div class="profile-avatar" id="profile-avatar">⚒</div>
-      <div class="profile-name" id="profile-name">—</div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <div class="profile-name" id="profile-name">—</div>
+          <div id="og-badge" style="display:none;background:linear-gradient(135deg,#1a1400,#2a2000);border:1px solid #FFD700;border-radius:20px;padding:3px 10px;align-items:center;gap:4px;">
+            <span style="font-size:12px;">🏅</span>
+            <span style="font-size:10px;font-weight:800;color:#FFD700;letter-spacing:1px;">OG</span>
+          </div>
+        </div>
       <div class="profile-handle" id="profile-handle">—</div>
       <div style="padding:2px;border-radius:16px;background:linear-gradient(90deg,#E85D04,#FFD700,#E85D04);animation:goldPoolGlow 2s ease-in-out infinite;margin-bottom:12px;">
         <div style="background:#110800;border-radius:14px;padding:14px;position:relative;overflow:hidden;">
@@ -830,19 +838,37 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
         <div style="height:1px;background:linear-gradient(90deg,#8B6914,transparent);width:50px;"></div>
       </div>
     </div>
+
     <div class="fcfs-box" style="border-color:#E85D04;">
       <div style="display:flex;align-items:center;margin-bottom:6px;">
         <div class="fcfs-title">New User Airdrop</div>
         <span class="fcfs-badge" id="fcfs-badge">LIVE</span>
       </div>
       <div style="font-size:13px;color:#ffd090;margin-bottom:8px;line-height:1.6;">First <span style="color:#E85D04;font-weight:700;">5,000 users</span> get 1,000 $FORGE free!<br><span style="font-size:11px;color:#7a5a30;">Open the app to be eligible. First come, first served!</span></div>
+      <!-- Claims Counter -->
+      <div style="background:linear-gradient(135deg,#0d0800,#1a1000);border:1px solid #2a1400;border-radius:12px;padding:12px 14px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:-100%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(232,93,4,0.06),transparent);animation:tbShimmer 3s linear infinite;pointer-events:none;"></div>
+        <div>
+          <div style="font-size:9px;color:#5a3a10;letter-spacing:1px;font-weight:700;margin-bottom:3px;">TOTAL CLAIMED</div>
+          <div style="display:flex;align-items:baseline;gap:6px;">
+            <span style="font-size:26px;font-weight:900;color:#E85D04;" id="fcfs-claimed-count">0</span>
+            <span style="font-size:11px;color:#7a5a30;">/ 5,000 slots</span>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:9px;color:#5a3a10;margin-bottom:3px;">Remaining</div>
+          <div style="font-size:18px;font-weight:800;color:#2ecc71;" id="fcfs-remaining">5,000</div>
+        </div>
+      </div>
+
       <div class="hammer-bar-wrap">
         <div class="hammer-track">
           <div class="hammer-fill" id="wave-fill" style="width:0%"></div>
+          <div class="hammer-fill" id="fcfs-fill" style="width:0%;display:none;"></div>
           <div class="hammer-icon" id="hammer-icon" style="left:0%">⚒</div>
           <div class="spark-burst" id="spark-burst" style="left:0%">✦</div>
         </div>
-        <div class="hammer-label"><span>0</span><span id="fcfs-pct">slots filled</span><span id="fcfs-joined">0 / 5,000</span></div>
+        <div class="hammer-label"><span>0</span><span id="fcfs-claimed-label" style="color:#E85D04;font-weight:600;">0 claimed 🔥</span><span id="fcfs-joined">0 / 5,000</span></div>
       </div>
 
       <div id="fcfs-reward-info" style="font-size:12px;color:#F48C06;margin-top:10px;text-align:center;display:none;"></div>
@@ -1096,6 +1122,29 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
 
   <!-- Tasks -->
   <div class="screen" id="s-tasks">
+
+    <!-- Daily Streak -->
+    <div id="daily-streak-section" style="margin-bottom:16px;">
+      <div style="background:linear-gradient(135deg,#1a0800,#110500);border:1px solid #E85D04;border-radius:12px;padding:14px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:-100%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(232,93,4,0.08),transparent);animation:tbShimmer 2.5s linear infinite;pointer-events:none;"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div>
+            <div style="font-size:10px;color:#5a3a10;letter-spacing:1px;font-weight:700;margin-bottom:4px;">🔥 DAILY STREAK</div>
+            <div style="display:flex;align-items:baseline;gap:6px;">
+              <span style="font-size:30px;font-weight:900;color:#E85D04;line-height:1;" id="streak-count">0</span>
+              <span style="font-size:12px;color:#7a5a30;">days</span>
+            </div>
+            <div style="font-size:10px;color:#5a3a10;margin-top:3px;" id="streak-sub">Claim your daily bonus!</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="display:flex;gap:4px;margin-bottom:6px;" id="streak-boxes"></div>
+            <div style="font-size:9px;color:#5a3a10;">7 day streak = +50 $FORGE 🎯</div>
+          </div>
+        </div>
+        <button id="streak-claim-btn" onclick="claimDailyStreak()" style="width:100%;background:linear-gradient(90deg,#8B2500,#E85D04);color:#fff;border:none;border-radius:8px;padding:9px;font-size:12px;font-weight:700;cursor:pointer;">🔥 Claim Daily Bonus (+5 $FORGE)</button>
+      </div>
+    </div>
+
     <div class="section-title">Social Tasks</div>
     <div class="task-card"><div class="task-info"><div class="task-name">Follow CastForge</div><div class="task-desc">Follow @castforge on Farcaster</div></div><div class="task-right"><div class="task-pts">+15 $FORGE</div><button class="task-btn" id="task-follow" onclick="doTask('follow',15,'https://farcaster.xyz/castforge')">Follow</button></div></div>
     <div class="task-card"><div class="task-info"><div class="task-name">Follow on X (Twitter)</div><div class="task-desc">Follow @castforgearena on X</div></div><div class="task-right"><div class="task-pts">+15 $FORGE</div><button class="task-btn" id="task-twitter-follow" onclick="doTask('twitter_follow',15,'https://x.com/castforgearena')">Follow</button></div></div>
@@ -1111,10 +1160,11 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
       </div>
     </div>
     <div class="section-title" style="margin-top:16px">Game Tasks</div>
-
-
+    <div class="task-card"><div class="task-info"><div class="task-name">Play Price Guess</div><div class="task-desc">Make your first ETH price guess</div></div><div class="task-right"><div class="task-pts">+10 $FORGE</div><button class="task-btn" id="task-priceguess1" onclick="startGameTask('priceguess1',10,'priceguess')">Play</button></div></div>
+    <div class="task-card"><div class="task-info"><div class="task-name">Win a Price Guess round</div><div class="task-desc">Guess ETH direction correctly</div></div><div class="task-right"><div class="task-pts">+15 $FORGE</div><button class="task-btn" id="task-priceguesswin" onclick="startGameTask('priceguesswin',15,'priceguess')">Play</button></div></div>
     <div class="task-card"><div class="task-info"><div class="task-name">Play Token Rush</div><div class="task-desc">Complete a full Token Rush game</div></div><div class="task-right"><div class="task-pts">+10 $FORGE</div><button class="task-btn" id="task-tokenrush" onclick="startGameTask('tokenrush',10,'tokenrush')">Play</button></div></div>
     <div class="task-card"><div class="task-info"><div class="task-name">Catch 10 coins</div><div class="task-desc">Catch 10+ coins in one Token Rush game</div></div><div class="task-right"><div class="task-pts">+20 $FORGE</div><button class="task-btn" id="task-coins10" onclick="startGameTask('coins10',20,'tokenrush')">Play</button></div></div>
+    <div class="task-card"><div class="task-info"><div class="task-name">Enter the Lottery</div><div class="task-desc">Buy a lottery entry ticket</div></div><div class="task-right"><div class="task-pts">+30 $FORGE</div><button class="task-btn" id="task-lottery1" onclick="startGameTask('lottery1',30,'lottery')">Play</button></div></div>
 
     <div class="section-title" style="margin-top:16px">Quiz Tasks</div>
     <div class="task-card"><div class="task-info"><div class="task-name">Play Forge Quiz</div><div class="task-desc">Complete one full quiz</div></div><div class="task-right"><div class="task-pts">+10 $FORGE</div><button class="task-btn" id="task-quiz1" onclick="startGameTask('quiz1',10,'quiz')">Play</button></div></div>
@@ -1478,7 +1528,7 @@ function switchTab(name){
   if(name==='og'){setTimeout(loadOgMysteryBox,100);}
   if(name==='games'){setTimeout(loadLotteryNavBadge,300);}
   if(name==='profile'){setTimeout(loadForgePrice,200);}
-  if(name==='pool'){updateStats();updateReferralRewards();setTimeout(()=>{if(userFid)loadFcfsStatus();},300);}
+  if(name==='pool'){updateStats();updateReferralRewards();setTimeout(()=>{if(userFid){loadFcfsStatus();loadDailyStreak();}},300);}
   if(name==='invite'&&window.__userFid){setTimeout(()=>{loadInvitedUsers(window.__userFid).catch(()=>{});loadMilestones(window.__userFid).catch(()=>{});},100);}
   if(name==='spin'){setTimeout(()=>drawWheel(0),100);}
   // Only hammer animation for profile tab
@@ -1531,9 +1581,18 @@ async function loadFcfsStatus(){
     const pct=Math.min((claimed/5000)*100,100).toFixed(1);
 
     const fillEl=document.getElementById('wave-fill');
+    const fcfsFillEl=document.getElementById('fcfs-fill');
     const joinedEl=document.getElementById('fcfs-joined');
     if(fillEl)fillEl.style.width=Math.min(parseFloat(pct),100)+'%';
+    if(fcfsFillEl)fcfsFillEl.style.width=Math.min(parseFloat(pct),100)+'%';
     if(joinedEl)joinedEl.textContent=claimed.toLocaleString()+' / 5,000';
+    // Update claims counter
+    const claimedCountEl=document.getElementById('fcfs-claimed-count');
+    const remainingEl=document.getElementById('fcfs-remaining');
+    const claimedLabelEl=document.getElementById('fcfs-claimed-label');
+    if(claimedCountEl)claimedCountEl.textContent=claimed.toLocaleString();
+    if(remainingEl)remainingEl.textContent=Math.max(0,5000-claimed).toLocaleString();
+    if(claimedLabelEl)claimedLabelEl.textContent=claimed+' claimed 🔥';
 
     const badge=document.getElementById('fcfs-badge');
     if(claimed>=5000&&badge){badge.textContent='CLOSED';badge.style.background='#555';}
@@ -3362,22 +3421,19 @@ async function openMysteryBox() {
   if (btn) { btn.disabled = true; btn.textContent = 'Processing...'; }
 
   try {
-    const sdk = (window.miniapp && window.miniapp.sdk) || window.FrameSDK;
-    if (!sdk) throw new Error('SDK not found');
-
     // Check supply
     const { count } = await db.from('og_boxes').select('*', { count: 'exact' });
     if ((count || 0) >= OG_TOTAL) throw new Error('All 666 boxes are minted!');
 
-    // Pay $0.50 ETH
+    // Get ETH price
     let ethPrice = 3000;
     try { const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'); const d = await r.json(); ethPrice = d.ethereum.usd; } catch(e) {}
     const wei = BigInt(Math.floor(OG_PRICE_ETH / ethPrice * 1e18));
 
-    // Get provider — Farcaster SDK or injected web3
-    let provider = sdk.wallet && sdk.wallet.ethProvider;
-    if (!provider && window.ethereum) provider = window.ethereum;
-    if (!provider) throw new Error('No wallet found. Please connect a wallet.');
+    // Get provider — try SDK first, then injected wallet
+    const sdk = (window.miniapp && window.miniapp.sdk) || window.FrameSDK;
+    let provider = (sdk && sdk.wallet && sdk.wallet.ethProvider) || window.ethereum || null;
+    if (!provider) throw new Error('No wallet found. Please connect a wallet first.');
 
     let accs = [];
     try { accs = await provider.request({ method: 'eth_accounts' }); } catch(e) {}
@@ -3388,6 +3444,27 @@ async function openMysteryBox() {
       method: 'eth_sendTransaction',
       params: [{ from: accs[0], to: CONTRACT, value: '0x' + wei.toString(16), chainId: '0x2105' }]
     });
+
+    if (!txHash) throw new Error('Transaction cancelled or failed');
+
+    // Wait for transaction confirmation
+    if (btn) btn.textContent = '⏳ Confirming...';
+    let confirmed = false;
+    for (let i = 0; i < 30; i++) {
+      await new Promise(r => setTimeout(r, 2000));
+      try {
+        const receipt = await provider.request({
+          method: 'eth_getTransactionReceipt',
+          params: [txHash]
+        });
+        if (receipt && receipt.blockNumber) {
+          if (receipt.status === '0x0') throw new Error('Transaction failed on chain!');
+          confirmed = true;
+          break;
+        }
+      } catch(e) { if (e.message && e.message.includes('failed')) throw e; }
+    }
+    if (!confirmed) throw new Error('Transaction not confirmed. Please try again.');
 
     // Roll rarity
     const rarity = rollRarity();
@@ -3411,6 +3488,8 @@ async function openMysteryBox() {
     // Show box opening animation
     showBoxOpeningAnimation(rarity);
     loadOgMysteryBox();
+    // Check OG badge
+    loadDailyStreak();
     if (btn) { btn.disabled = false; btn.textContent = '📦 Open Another Box'; }
 
   } catch(e) {
@@ -3602,15 +3681,16 @@ function showBoxOpeningAnimation(rarity) {
   const overlay = document.getElementById('og-opening-overlay');
   if (!overlay) return;
   overlay.style.display = 'flex';
+  overlay.style.background = 'rgba(0,0,0,0.93)';
 
   const boxEl = document.getElementById('og-anim-box');
   const labelEl = document.getElementById('og-anim-label');
   const resultEl = document.getElementById('og-anim-result');
 
   // Reset
-  if (boxEl) { boxEl.textContent = '📦'; boxEl.className = ''; }
+  if (boxEl) { boxEl.textContent = '📦'; boxEl.style.filter = ''; boxEl.className = ''; }
   if (resultEl) resultEl.style.display = 'none';
-  if (labelEl) labelEl.textContent = 'Opening your box...';
+  if (labelEl) { labelEl.textContent = 'Opening your box...'; labelEl.style.display = 'block'; }
 
   // Shake phase
   setTimeout(() => {
@@ -3619,48 +3699,70 @@ function showBoxOpeningAnimation(rarity) {
 
   // Reveal phase
   setTimeout(() => {
-    if (boxEl) { boxEl.classList.remove('box-shake'); boxEl.textContent = rarity.emoji; boxEl.style.filter = 'drop-shadow(0 0 20px ' + rarity.color + ')'; }
+    if (boxEl) {
+      boxEl.classList.remove('box-shake');
+      boxEl.textContent = '📦';
+      boxEl.style.fontSize = '72px';
+      boxEl.style.filter = 'drop-shadow(0 0 30px ' + rarity.color + ')';
+      boxEl.style.animation = 'resultPop 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards';
+    }
     if (labelEl) labelEl.style.display = 'none';
 
-    // Sparks
+    // Confetti/sparks
     const sparksContainer = document.getElementById('og-sparks-container');
     if (sparksContainer) {
       sparksContainer.innerHTML = '';
-      const emojis = ['✦','⚡','★','🔥','✸'];
-      for (let i = 0; i < 14; i++) {
+      const emojis = ['✦','⚡','★','🔥','✸','💫'];
+      for (let i = 0; i < 18; i++) {
         const s = document.createElement('div');
         s.className = 'og-spark-float';
         s.textContent = emojis[Math.floor(Math.random() * emojis.length)];
         s.style.left = (5 + Math.random() * 90) + '%';
-        s.style.top = (10 + Math.random() * 80) + '%';
+        s.style.top = (5 + Math.random() * 90) + '%';
         s.style.color = rarity.color;
-        s.style.animationDelay = (Math.random() * 0.4) + 's';
+        s.style.animationDelay = (Math.random() * 0.5) + 's';
         sparksContainer.appendChild(s);
       }
-      setTimeout(() => sparksContainer.innerHTML = '', 1200);
+      setTimeout(() => sparksContainer.innerHTML = '', 1500);
     }
 
-    // Show result
+    // Show premium result
     if (resultEl) {
       resultEl.style.display = 'block';
-      resultEl.className = 'result-pop';
-      document.getElementById('og-anim-emoji').textContent = rarity.emoji;
-      const rarityEl = document.getElementById('og-anim-rarity');
-      rarityEl.textContent = rarity.name.toUpperCase() + ' BOX';
-      rarityEl.style.color = rarity.color;
-      const amountEl = document.getElementById('og-anim-amount');
-      amountEl.textContent = '+' + rarity.amount.toLocaleString();
-      amountEl.style.color = rarity.color;
-      const badge = document.getElementById('og-anim-badge');
-      const labels = {Common:'📦 Keep going!',Rare:'✨ Nice pull!',Epic:'⚡ Great pull!',Legendary:'🔥 Amazing!',Mythic:'🏆 JACKPOT!'};
-      badge.textContent = labels[rarity.name] || '🎁';
-      badge.style.background = rarity.name === 'Mythic' ? '#2a0a00' : '#1a1a1a';
-      badge.style.color = rarity.color;
-      badge.style.border = '1px solid ' + rarity.color;
+      resultEl.innerHTML = `
+        <div style="background:linear-gradient(135deg,${rarity.color}22,${rarity.color}11);border:1.5px solid ${rarity.color};border-radius:16px;padding:20px 20px 16px;text-align:center;width:100%;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:0;left:-100%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent);animation:tbShimmer 1.5s linear infinite;pointer-events:none;"></div>
+          <div style="background:${rarity.color}33;border:1px solid ${rarity.color};border-radius:20px;padding:4px 18px;display:inline-block;margin-bottom:12px;">
+            <span style="font-size:12px;font-weight:800;color:${rarity.color};letter-spacing:2px;">✦ ${rarity.name.toUpperCase()} ✦</span>
+          </div>
+          <div style="font-size:13px;color:#7a5a30;margin-bottom:4px;font-weight:600;">YOU RECEIVED</div>
+          <div style="font-size:50px;font-weight:900;color:${rarity.color};line-height:1;margin-bottom:4px;">${rarity.amount.toLocaleString()}</div>
+          <div style="font-size:16px;font-weight:700;letter-spacing:2px;margin-bottom:14px;color:${rarity.color}99;">$FORGE</div>
+          <div style="height:1px;background:linear-gradient(90deg,transparent,${rarity.color},transparent);margin-bottom:12px;"></div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:14px;">
+            <div style="text-align:center;">
+              <div style="font-size:9px;color:#5a3a10;">ICO Worth</div>
+              <div style="font-size:13px;font-weight:700;color:#2ecc71;">$${(rarity.amount * 0.0011).toFixed(2)}</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:9px;color:#5a3a10;">If $FORGE = $1</div>
+              <div style="font-size:13px;font-weight:700;color:#E85D04;">$${rarity.amount.toLocaleString()} 🚀</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:9px;color:#5a3a10;">Rarity</div>
+              <div style="font-size:13px;font-weight:700;color:${rarity.color};">${rarity.name}</div>
+            </div>
+          </div>
+          <div style="font-size:11px;color:#5a3a10;margin-bottom:12px;">Added to your $FORGE balance ✅</div>
+          <div style="display:flex;gap:10px;">
+            <button onclick="closeBoxOverlay()" style="flex:1;background:#1a0d00;border:1px solid ${rarity.color};color:${rarity.color};border-radius:12px;padding:11px;font-size:12px;font-weight:700;cursor:pointer;">📦 Open Another</button>
+            <button onclick="closeBoxOverlay()" style="flex:1;background:linear-gradient(90deg,#8B2500,#E85D04);color:#fff;border:none;border-radius:12px;padding:11px;font-size:12px;font-weight:700;cursor:pointer;">✓ Done</button>
+          </div>
+        </div>
+      `;
     }
 
-    // Overlay bg glow
-    overlay.style.background = 'rgba(0,0,0,0.92)';
+    overlay.style.background = 'rgba(0,0,0,0.93)';
   }, 1400);
 }
 
@@ -3796,6 +3898,7 @@ async function loadDailyStreak() {
   const displayStreak = missedDay ? 0 : streak;
   if (countEl) countEl.textContent = displayStreak;
 
+
   // Draw 7 boxes
   if (boxesEl) {
     boxesEl.innerHTML = '';
@@ -3826,13 +3929,16 @@ async function loadDailyStreak() {
     if (subEl) subEl.textContent = missedDay ? 'Streak reset — start again!' : 'Day ' + (displayStreak + 1) + ' — claim now!';
   }
 
-  // OG Badge - first 100 FCFS claimers
-  const { count } = await db.from('users').select('*', { count: 'exact', head: true })
-    .eq('fcfs_claimed', true)
-    .lt('created_at', ud.created_at || now.toISOString());
-  const ogBadge = document.getElementById('og-badge');
-  if (ogBadge && ud.fcfs_claimed && count < 100) {
-    ogBadge.style.display = 'flex';
+  // OG Badge - first 100 OG Box buyers
+  const { data: myBox } = await db.from('og_boxes').select('id').eq('fid', userFid).limit(1).single();
+  if (myBox) {
+    const { count: boxCount } = await db.from('og_boxes')
+      .select('*', { count: 'exact', head: true })
+      .lt('created_at', myBox.created_at || now.toISOString());
+    const ogBadge = document.getElementById('og-badge');
+    if (ogBadge && boxCount < 100) {
+      ogBadge.style.display = 'flex';
+    }
   }
 }
 
