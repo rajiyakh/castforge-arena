@@ -3384,34 +3384,39 @@ function rollRarity() {
 }
 
 async function loadOgMysteryBox() {
-  // Get total minted - use head:true for accurate count
-  const { count } = await db.from('og_boxes').select('*', { count: 'exact', head: true });
-  const minted = count || 0;
-  const left = Math.max(0, OG_TOTAL - minted);
-  const pct = Math.min((minted / OG_TOTAL) * 100, 100);
+  try {
+    // Fetch all boxes to get accurate count
+    const { data: allBoxes, error } = await db.from('og_boxes').select('id, fid');
+    if (error) throw error;
+    const minted = allBoxes ? allBoxes.length : 0;
+    const left = Math.max(0, OG_TOTAL - minted);
+    const pct = Math.min((minted / OG_TOTAL) * 100, 100);
 
-  const mintedEl = document.getElementById('og-minted');
-  const leftEl = document.getElementById('og-left');
-  const barEl = document.getElementById('og-progress-bar');
-  const pctEl = document.getElementById('og-pct');
+    const mintedEl = document.getElementById('og-minted');
+    const leftEl = document.getElementById('og-left');
+    const barEl = document.getElementById('og-progress-bar');
+    const pctEl = document.getElementById('og-pct');
 
-  if (mintedEl) mintedEl.textContent = minted + ' / 666';
-  if (leftEl) leftEl.textContent = left;
-  if (barEl) barEl.style.width = pct + '%';
-  if (pctEl) pctEl.textContent = pct.toFixed(1) + '% minted';
+    if (mintedEl) mintedEl.textContent = minted + ' / 666';
+    if (leftEl) leftEl.textContent = left;
+    if (barEl) barEl.style.width = pct + '%';
+    if (pctEl) pctEl.textContent = pct.toFixed(1) + '% minted';
 
-  // Disable if sold out
-  const btn = document.getElementById('og-open-btn');
-  if (btn && left <= 0) {
-    btn.disabled = true;
-    btn.textContent = '🔒 Sold Out!';
-  }
+    // Disable if sold out
+    const btn = document.getElementById('og-open-btn');
+    if (btn && left <= 0) {
+      btn.disabled = true;
+      btn.textContent = '🔒 Sold Out!';
+    }
 
-  // My boxes count
-  if (userFid) {
-    const { count: myCount } = await db.from('og_boxes').select('*', { count: 'exact' }).eq('fid', userFid);
-    const myEl = document.getElementById('og-my-count');
-    if (myEl) myEl.textContent = myCount || 0;
+    // My boxes count
+    if (userFid && allBoxes) {
+      const myCount = allBoxes.filter(b => b.fid === String(userFid)).length;
+      const myEl = document.getElementById('og-my-count');
+      if (myEl) myEl.textContent = myCount;
+    }
+  } catch(e) {
+    console.log('loadOgMysteryBox err:', e);
   }
 }
 
