@@ -1147,7 +1147,7 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
 
     <div class="section-title">Social Tasks</div>
     <div class="task-card"><div class="task-info"><div class="task-name">Follow CastForge</div><div class="task-desc">Follow @castforge on Farcaster</div></div><div class="task-right"><div class="task-pts">+15 $FORGE</div><button class="task-btn" id="task-follow" onclick="doTask('follow',15,'https://farcaster.xyz/castforge')">Follow</button></div></div>
-    <div class="task-card"><div class="task-info"><div class="task-name">Follow on X (Twitter)</div><div class="task-desc">Follow @castforgearena on X</div></div><div class="task-right"><div class="task-pts">+15 $FORGE</div><button class="task-btn" id="task-twitter-follow" onclick="doTask('twitter_follow',15,'https://x.com/castforgearena')">Follow</button></div></div>
+    <div class="task-card"><div class="task-info"><div class="task-name">Follow on X (Twitter)</div><div class="task-desc">Follow @castforgearena on X</div></div><div class="task-right"><div class="task-pts">+15 $FORGE</div><a href="https://x.com/castforgearena" target="_blank" rel="noopener" onclick="setTimeout(()=>doTask('twitter_follow',15,''),8000)" style="text-decoration:none;"><button class="task-btn" id="task-twitter-follow">Follow</button></a></div></div>
     <div class="task-card"><div class="task-info"><div class="task-name">Like official cast</div><div class="task-desc">Like the pinned cast</div></div><div class="task-right"><div class="task-pts">+10 $FORGE</div><button class="task-btn" id="task-like" onclick="doTask('like',10,'https://farcaster.xyz/castforge/0x3955ed79')">Like</button></div></div>
     <div class="task-card"><div class="task-info"><div class="task-name">Recast official cast</div><div class="task-desc">Share to your followers</div></div><div class="task-right"><div class="task-pts">+15 $FORGE</div><button class="task-btn" id="task-recast" onclick="doTask('recast',15,'https://farcaster.xyz/castforge/0x3955ed79')">Recast</button></div></div>
     <div id="social-claim-box" style="display:none;background:#1a0d00;border:1px solid #2ecc71;border-radius:12px;padding:14px;margin-top:4px;">
@@ -1799,16 +1799,16 @@ async function doTask(taskName,pts,url){
   if(socialTasks.includes(taskName)){
     if(url){
       try{
-        const sdk=(window.miniapp&&window.miniapp.sdk)||window.FrameSDK;
-        if(sdk&&sdk.actions&&sdk.actions.openUrl){
-          await sdk.actions.openUrl(url);
-        } else if(sdk&&sdk.openUrl){
-          await sdk.openUrl(url);
+        // Farcaster SDK openUrl - best method for Mini Apps
+        if(window.FrameSDK && window.FrameSDK.actions && window.FrameSDK.actions.openUrl){
+          window.FrameSDK.actions.openUrl(url);
+        } else if(window.miniapp && window.miniapp.sdk && window.miniapp.sdk.actions){
+          window.miniapp.sdk.actions.openUrl(url);
         } else {
-          window.location.href = url;
+          window.open(url, '_blank', 'noopener');
         }
       }catch(e){
-        window.location.href = url;
+        window.open(url, '_blank', 'noopener');
       }
     }
     // Waiting state
