@@ -1800,26 +1800,15 @@ async function doTask(taskName,pts,url){
     if(url){
       try{
         const sdk=(window.miniapp&&window.miniapp.sdk)||window.FrameSDK;
-        // Try SDK openUrl first (works in Farcaster Mini App)
         if(sdk&&sdk.actions&&sdk.actions.openUrl){
           await sdk.actions.openUrl(url);
         } else if(sdk&&sdk.openUrl){
           await sdk.openUrl(url);
         } else {
-          // Fallback for browser
-          const a=document.createElement('a');
-          a.href=url;a.target='_blank';a.rel='noopener';
-          document.body.appendChild(a);a.click();
-          document.body.removeChild(a);
+          window.location.href = url;
         }
       }catch(e){
-        // Last resort fallback
-        try{
-          const a=document.createElement('a');
-          a.href=url;a.target='_blank';a.rel='noopener';
-          document.body.appendChild(a);a.click();
-          document.body.removeChild(a);
-        }catch(e2){}
+        window.location.href = url;
       }
     }
     // Waiting state
