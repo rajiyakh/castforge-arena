@@ -1365,7 +1365,6 @@ body{background:#0a0500;color:#ffd090;font-family:-apple-system,BlinkMacSystemFo
 const SUPABASE_URL='https://qjpzgkvgmztqpotfital.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqcHpna3ZnbXp0cXBvdGZpdGFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxMTYxODIsImV4cCI6MjA5NDY5MjE4Mn0.cmt5X1v4gRKFlsF_gNMFSGVnxGr_06qjMctBpqa8NrQ';
 const CONTRACT='0x896E862D7629510141915308f07B1C32bb890590';
-const FORGE_TOKEN='0x987D6851288e6F4798FDc7191b31b7b9513D361D';
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let currentUser=null,userFid=null,isSpinning=false,currentAngle=0;
 
@@ -1801,9 +1800,27 @@ async function doTask(taskName,pts,url){
     if(url){
       try{
         const sdk=(window.miniapp&&window.miniapp.sdk)||window.FrameSDK;
-        if(sdk&&sdk.actions&&sdk.actions.openUrl)await sdk.actions.openUrl(url);
-        else window.open(url,'_blank');
-      }catch(e){window.open(url,'_blank');}
+        // Try SDK openUrl first (works in Farcaster Mini App)
+        if(sdk&&sdk.actions&&sdk.actions.openUrl){
+          await sdk.actions.openUrl(url);
+        } else if(sdk&&sdk.openUrl){
+          await sdk.openUrl(url);
+        } else {
+          // Fallback for browser
+          const a=document.createElement('a');
+          a.href=url;a.target='_blank';a.rel='noopener';
+          document.body.appendChild(a);a.click();
+          document.body.removeChild(a);
+        }
+      }catch(e){
+        // Last resort fallback
+        try{
+          const a=document.createElement('a');
+          a.href=url;a.target='_blank';a.rel='noopener';
+          document.body.appendChild(a);a.click();
+          document.body.removeChild(a);
+        }catch(e2){}
+      }
     }
     // Waiting state
     btn.textContent='...';
