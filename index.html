@@ -1575,8 +1575,9 @@ async function loadFcfsStatus(){
 
   try {
     // Total claimed count
-    const{count:totalClaimed}=await db.from('users').select('*',{count:'exact'}).eq('fcfs_claimed',true);
-    const claimed=totalClaimed||0;
+    const{data:claimedData}=await db.from('users').select('fid').eq('fcfs_claimed',true);
+    const claimed=(claimedData||[]).length;
+    
     const pct=Math.min((claimed/5000)*100,100).toFixed(1);
 
     const fillEl=document.getElementById('wave-fill');
